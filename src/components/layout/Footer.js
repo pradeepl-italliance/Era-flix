@@ -487,7 +487,7 @@ const Footer = () => {
                   color: 'rgba(255,255,255,0.9)',
                   textDecoration: 'none',
                   fontSize: '0.95rem',
-                  '&:hover': { color: 'secondary.light' },
+                  '&:hover': { color: 'secondary.light' }, 
                   whiteSpace: 'nowrap'
                 }}
               >
