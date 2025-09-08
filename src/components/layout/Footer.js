@@ -468,7 +468,7 @@ const Footer = () => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                thehappyscreens@gmail.com
+                Eraflix1@gmail.com
               </MuiLink>
             </Box>
 
@@ -481,7 +481,8 @@ const Footer = () => {
             }}>
               <PhoneIcon sx={{ mr: 2, fontSize: '1.3rem', color: 'secondary.light', flexShrink: 0 }} />
               <MuiLink
-                href="tel:+919945102299"
+                href="tel:+919964312117
+"
                 sx={{
                   color: 'rgba(255,255,255,0.9)',
                   textDecoration: 'none',
@@ -490,7 +491,8 @@ const Footer = () => {
                   whiteSpace: 'nowrap'
                 }}
               >
-                +91 9945102299
+                +91 9964312117
+
               </MuiLink>
             </Box>
 
@@ -507,7 +509,7 @@ const Footer = () => {
                 fontSize: '0.95rem',
                 whiteSpace: 'nowrap'
               }}>
-                Monday to Sunday 9:00 am - 12:00am
+               Mon to Sun 9:00 AM to 2:00 AM
               </Typography>
             </Box>
 
@@ -523,7 +525,7 @@ const Footer = () => {
                 lineHeight: 1.6,
                 fontSize: '0.95rem'
               }}>
-                475, 3, 1st Cross Rd, KHB Colony, 5th Block, Koramangala, Bengaluru, Karnataka 560095
+                 Next to KFC Basavanagudi, Gandhi bazaar Bangalore- 560004
               </Typography>
             </Box>
 

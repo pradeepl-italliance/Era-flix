@@ -11,31 +11,31 @@ export default function LocationsCarousel() {
   const locations = [
     { id:1, name:'Banashankari', color:'#F472B6',
       addr:'No.3804, 13th Cross, Banashankari 2nd Stage, Bengaluru 560070',
-      phone:'9945102299', email:'thehappyscreens@gmail.com',
+      phone:'9964312117', email:'Eraflix1@gmail.com',
       map:'https://maps.app.goo.gl/ZoS9DUsVR2eMmQQb7',
       img:'https://picsum.photos/400/250?random=1',
       city: 'Bengaluru' },
     { id:2, name:'Basaveshwara Nagara', color:'#60A5FA',
       addr:'33 / 60 Ft Rd, 4th Block, Basaveshwara Nagar, Bengaluru 560079',
-      phone:'9945102299', email:'thehappyscreens@gmail.com',
+      phone:'9964312117', email:'Eraflix1@gmail.com',
       map:'https://maps.app.goo.gl/1zuCm23xKkCw5inV6',
       img:'https://picsum.photos/400/250?random=2',
       city: 'Bengaluru' },
     { id:3, name:'Goregaon West', color:'#A855F7',
       addr:'Harmony Mall, Shop 14, New Link Rd, Mumbai 400104',
-      phone:'9945102299', email:'thehappyscreens@gmail.com',
+      phone:'9964312117', email:'Eraflix1@gmail.com',
       map:'https://maps.app.goo.gl/e8YKiR4VJ41ECCPD7',
       img:'https://picsum.photos/400/250?random=3',
       city: 'Mumbai' },
     { id:4, name:'Kalyan Nagar', color:'#10B981',
       addr:'49-50, 3rd Cross Rd, Kalyan Nagar, Bengaluru 560043',
-      phone:'9606622499', email:'thehappyscreens@gmail.com',
+      phone:'9964312117', email:'Eraflix1@gmail.com',
       map:'https://maps.app.goo.gl/e8YKiR4VJ41ECCPD7',
       img:'https://picsum.photos/400/250?random=4',
       city: 'Bengaluru' },
     { id:5, name:'Koramangala', color:'#F59E0B',
       addr:'475, 1st Cross Rd, 5th Block, Koramangala, Bengaluru 560095',
-      phone:'9035722199', email:'thehappyscreens@gmail.com',
+      phone:'9964312117', email:'Eraflix1@gmail.com',
       map:'https://maps.app.goo.gl/1zuCm23xKkCw5inV6',
       img:'https://picsum.photos/400/250?random=5',
       city: 'Bengaluru' }
@@ -93,9 +93,9 @@ export default function LocationsCarousel() {
 
   // ✅ Validations
   const validateName = (value) => {
-    const regex = /^[A-Za-z ]+$/;
+    const regex = /^(?!.*[.]{2,})(?!.*\s{2,})[A-Za-z .]+$/;
     if (!regex.test(value)) {
-      setNameError("Name should contain only letters and spaces");
+      setNameError("Name should contain only letters, spaces, and periods");
     } else {
       setNameError("");
     }
@@ -104,7 +104,7 @@ export default function LocationsCarousel() {
   const validatePhone = (value) => {
     const regex = /^[6-9]\d{9}$/;
     if (!regex.test(value)) {
-      setPhoneError("Enter valid 10-digit mobile number");
+      setPhoneError("Enter valid 10-digit mobile number starting with 6-9");
     } else {
       setPhoneError("");
     }
@@ -215,8 +215,9 @@ export default function LocationsCarousel() {
           fullWidth
           value={name}
           onChange={(e) => {
-            setName(e.target.value);
-            validateName(e.target.value);
+            const val = e.target.value.replace(/[^A-Za-z .]/g, ""); // strip unwanted chars
+            setName(val);
+            validateName(val);
           }}
           error={!!nameError}
           helperText={nameError}
@@ -247,13 +248,19 @@ export default function LocationsCarousel() {
           fullWidth
           value={phone}
           onChange={(e) => {
-            setPhone(e.target.value);
-            validatePhone(e.target.value);
+            const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+            setPhone(val);
+            validatePhone(val);
           }}
           error={!!phoneError}
           helperText={phoneError}
           sx={{ mb: 2, ...inputStyle }}
           FormHelperTextProps={{ style: { color: "red" } }}
+          inputProps={{
+            maxLength: 10,
+            inputMode: "numeric",
+            pattern: "[0-9]*"
+          }}
         />
 
         {/* Dropdown */}
@@ -279,11 +286,11 @@ export default function LocationsCarousel() {
         <Box sx={{ display: "flex", gap: 3, mt: 4 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box component="span">📞</Box>
-            <Typography variant="body2" sx={{ color: "#fff" }}>+91 9945102299</Typography>
+            <Typography variant="body2" sx={{ color: "#fff" }}>+91 9964312117</Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Box component="span">✉️</Box>
-            <Typography variant="body2" sx={{ color: "#fff" }}>thehappyscreens@gmail.com</Typography>
+            <Typography variant="body2" sx={{ color: "#fff" }}>Eraflix1@gmail.com</Typography>
           </Box>
         </Box>
       </Box>

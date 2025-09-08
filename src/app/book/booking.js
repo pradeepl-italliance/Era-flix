@@ -459,6 +459,7 @@ export default function PublicBookingPage() {
                     bgcolor: bookingForm.screen === screen.id ? 'primary.50' : 'inherit',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     height: isMobile ? 480 : 520, // ✅ fixed height
+                     width: isMobile ? '100%' : 320,
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: 2,

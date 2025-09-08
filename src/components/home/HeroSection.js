@@ -402,8 +402,10 @@ const HeroSection = () => {
                   >
                     Book Now
                   </Button>
-                  <Button variant="outlined" size="large" startIcon={<PhoneIcon />} href="tel:+919945102299" sx={{ borderRadius: 50, py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.1rem' }, fontWeight: 'bold', borderColor: 'white', color: 'white', borderWidth: 2, minWidth: { xs: 200, sm: 'auto' }, '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)', transform: 'translateY(-3px)', borderWidth: 2 }, transition: 'all 0.3s ease' }}>
-                    Call +91 99451 02299
+                  <Button variant="outlined" size="large" startIcon={<PhoneIcon />} href="tel:+919964312117
+" sx={{ borderRadius: 50, py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.1rem' }, fontWeight: 'bold', borderColor: 'white', color: 'white', borderWidth: 2, minWidth: { xs: 200, sm: 'auto' }, '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)', transform: 'translateY(-3px)', borderWidth: 2 }, transition: 'all 0.3s ease' }}>
+                    Call +91 9964312117
+
                   </Button>
                 </Stack>
 

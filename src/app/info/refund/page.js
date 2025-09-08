@@ -98,7 +98,8 @@ export default function RefundPage() {
                   fontSize: '1.1em'
                 }}
               >
-                994510 2299
+               99643 12117
+
               </Box>. 
               Refunds are initiated within 24 hours and typically complete in 5-7 days.
             </Typography>
@@ -243,7 +244,7 @@ export default function RefundPage() {
               fontWeight="bold"
               sx={{ fontSize: '1.1rem' }}
             >
-              994510 2299
+              99643 12117
             </Typography>
           </Paper>
         </Box>
