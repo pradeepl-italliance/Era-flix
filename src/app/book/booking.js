@@ -490,6 +490,8 @@ export default function PublicBookingPage() {
                         image={screen.images[0].url}
                         alt={screen.name}
                         sx={{
+                           width: '100%',          // ✅ always span full card width
+                           height: '100%', 
                           objectFit: 'cover',
                           transition: 'transform 0.4s ease-in-out',
                           '&:hover': {
