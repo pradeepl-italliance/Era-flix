@@ -207,9 +207,10 @@ const Navbar = () => {
               
             </Box>  */}
 
-             <Box sx={{width:'100px', height:'85px'}}>
-            <Image src={logo1} width={100} height={85} alt="logo" />
-             </Box> 
+             <Box sx={{ width: '100px', height: '75px', ml: 2 }}>
+  <Image src={logo1} width={100} height={75} alt="logo" />
+</Box>
+
             {/* <Typography
               variant="h6"
               sx={{

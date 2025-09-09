@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import {
   Box, Container, Typography, Button, Paper, Table, TableHead, TableRow,
   TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, IconButton, Menu, MenuItem as MenuOption, Select, FormControl,
-  InputLabel, Alert, CircularProgress, MenuItem
+  TextField, IconButton, Menu, MenuItem, Select, FormControl,
+  InputLabel, Alert, CircularProgress
 } from '@mui/material'
 import { Add, MoreVert, Edit, Delete, ArrowBack } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
@@ -39,6 +39,7 @@ export default function EventsPage() {
       if (!res.ok) throw new Error(data.error || 'Failed')
       setEvents(data.events)
       setUser(data.user)
+      console.log("User loaded from API:", data.user) // debug
     } catch (e) { setError(e.message) }
     finally { setLoading(false) }
   }
@@ -48,53 +49,66 @@ export default function EventsPage() {
     setForm({ title:'', description:'', category:'', duration:60, basePrice:0 })
     setDialogOpen(true)
   }
+
   function openEdit(ev) {
     setIsEdit(true)
     setTargetEvent(ev)
     setForm({
-      title:ev.name , description:ev.description||'',
-      category:ev.category, duration:ev.duration, basePrice:ev.pricing.basePrice
+      title: ev.name,
+      description: ev.description || '',
+      category: ev.category,
+      duration: ev.duration,
+      basePrice: ev.pricing.basePrice
     })
-    setDialogOpen(true); 
+    setDialogOpen(true)
   }
- console.log(targetEvent)
+
   async function save() {
-  
     if(!form.title || !form.category) { setError('Title & category required'); return }
     const payload = {
-      name: form.title, description: form.description,
-      category: form.category, duration: form.duration,
+      name: form.title,
+      description: form.description,
+      category: form.category,
+      duration: form.duration,
       pricing:{ basePrice: form.basePrice }
     }
     try {
       const res = await fetch(isEdit
-        ? `/api/admin/events/${targetEvent.id}` : '/api/admin/events', {
-        method: isEdit? 'PUT':'POST',
-        headers:{'Content-Type':'application/json'},
+        ? `/api/admin/events/${targetEvent.id}`
+        : '/api/admin/events', {
+        method: isEdit ? 'PUT' : 'POST',
+        headers: {'Content-Type':'application/json'},
         body: JSON.stringify(payload)
       })
-
       const data = await res.json()
-      if(!res.ok) throw new Error(data.error||'Failed')
+      if(!res.ok) throw new Error(data.error || 'Failed')
       setSuccess(isEdit ? 'Updated' : 'Created')
-      setDialogOpen(false); load()
+      setDialogOpen(false)
+      load()
     } catch(e){ setError(e.message) }
   }
 
   async function del() {
     if(!confirm('Delete event?')) return
-    try{
-      const res = await fetch(`/api/admin/events/${targetEvent.id}`,{method:'DELETE'})
-      const data=await res.json()
-      if(!res.ok) throw new Error(data.error||'Failed')
-      setSuccess('Deleted'); load()
-    }catch(e){ setError(e.message) }
+    try {
+      const res = await fetch(`/api/admin/events/${targetEvent.id}`, { method:'DELETE' })
+      const data = await res.json()
+      if(!res.ok) throw new Error(data.error || 'Failed')
+      setSuccess('Deleted')
+      load()
+    } catch(e){ setError(e.message) }
     handleCloseMenu()
   }
 
   const handleCloseMenu = () => { setAnchorEl(null); setTargetEvent(null) }
 
-  if(loading) return <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'100vh'}}><CircularProgress size={64}/></Box>
+  if(loading) return (
+    <Box sx={{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'100vh'}}>
+      <CircularProgress size={64}/>
+    </Box>
+  )
+
+  console.log("Current user role:", user?.role) // debug
 
   return (
     <Box sx={{bgcolor:'grey.100',minHeight:'100vh'}}>
@@ -118,7 +132,7 @@ export default function EventsPage() {
               <TableCell>Actions</TableCell>
             </TableRow></TableHead>
             <TableBody>
-              {events.map(ev=>(
+              {events.map(ev => (
                 <TableRow key={ev.id} hover>
                   <TableCell>{ev.name}</TableCell>
                   <TableCell>{ev.category}</TableCell>
@@ -136,16 +150,24 @@ export default function EventsPage() {
         </Paper>
       </Container>
 
-      {/* menu */}
+      {/* Menu */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-        <MenuOption onClick={()=>openEdit(targetEvent)}><Edit sx={{mr:2}}/>Edit</MenuOption>
-        {user?.role==='super_admin' &&
-          <MenuOption onClick={del} sx={{color:'error.main'}}><Delete sx={{mr:2}}/>Delete</MenuOption>}
-      </Menu>
+  <MenuItem onClick={() => openEdit(targetEvent)}>
+    <Edit sx={{ mr: 2 }} />
+    Edit
+  </MenuItem>
 
-      {/* dialog */}
+  {/* Force Delete to always show for now */}
+  <MenuItem onClick={del} sx={{ color: 'error.main' }}>
+    <Delete sx={{ mr: 2 }} />
+    Delete
+  </MenuItem>
+</Menu>
+
+
+      {/* Dialog */}
       <Dialog open={dialogOpen} onClose={()=>setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{isEdit?'Edit':'New'} Event</DialogTitle>
+        <DialogTitle>{isEdit ? 'Edit' : 'New'} Event</DialogTitle>
         <DialogContent sx={{pt:2}}>
           <TextField label="Title" fullWidth margin="normal" required
             value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/>
@@ -160,7 +182,7 @@ export default function EventsPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={()=>setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={save}>{isEdit?'Update':'Create'}</Button>
+          <Button variant="contained" onClick={save}>{isEdit ? 'Update' : 'Create'}</Button>
         </DialogActions>
       </Dialog>
     </Box>

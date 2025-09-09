@@ -102,33 +102,20 @@ export default function LocationsCarousel() {
   };
 
   const validatePhone = (value) => {
-  // ✅ only digits allowed
-  if (!/^\d*$/.test(value)) {
-    setPhoneError("Only numbers are allowed");
-    return;
-  }
-
-  // ✅ exactly 10 digits required
-  if (value.length !== 10) {
-    setPhoneError("Phone number must be exactly 10 digits");
-    return;
-  }
-
-  // ✅ must start with 6,7,8,9
-  if (!/^[6-9]/.test(value)) {
-    setPhoneError("Invalid number");
-    return;
-  }
-
-  // ❌ block specific invalid pattern (example: 9876xxxxxx)
- if (!/^[6-9]/.test(value)) {
-    setPhoneError("Invalid number pattern");
-    return;
-  }
-
-  // ✅ if all good
-  setPhoneError("");
-};
+    if (!/^\d*$/.test(value)) {
+      setPhoneError("Only numbers are allowed");
+      return;
+    }
+    if (value.length !== 10) {
+      setPhoneError("Phone number must be exactly 10 digits");
+      return;
+    }
+    if (!/^[6-9]/.test(value)) {
+      setPhoneError("Invalid number");
+      return;
+    }
+    setPhoneError("");
+  };
 
   const validateEmail = (value) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -235,7 +222,7 @@ export default function LocationsCarousel() {
           fullWidth
           value={name}
           onChange={(e) => {
-            const val = e.target.value.replace(/[^A-Za-z .]/g, ""); // strip unwanted chars
+            const val = e.target.value.replace(/[^A-Za-z .]/g, "");
             setName(val);
             validateName(val);
           }}
@@ -263,21 +250,20 @@ export default function LocationsCarousel() {
 
         {/* Phone */}
         <TextField
-  label="Phone Number"
-  variant="outlined"
-  fullWidth
-  value={phone}
-  onChange={(e) => {
-    setPhone(e.target.value);
-    validatePhone(e.target.value);
-  }}
-  error={!!phoneError}
-  helperText={phoneError}
-  sx={{ mb: 2, ...inputStyle }}
-  FormHelperTextProps={{ style: { color: "red" } }}
-  inputProps={{ maxLength: 10 }}   // ✅ limit input to 10 digits
-/>
-
+          label="Phone Number"
+          variant="outlined"
+          fullWidth
+          value={phone}
+          onChange={(e) => {
+            setPhone(e.target.value);
+            validatePhone(e.target.value);
+          }}
+          error={!!phoneError}
+          helperText={phoneError}
+          sx={{ mb: 2, ...inputStyle }}
+          FormHelperTextProps={{ style: { color: "red" } }}
+          inputProps={{ maxLength: 10 }}
+        />
 
         {/* Dropdown */}
         <TextField
@@ -335,7 +321,7 @@ export default function LocationsCarousel() {
     </Box>
 
     {/* Carousel */}
-    <Box sx={{ width: "100%", position: "relative" }}>
+    <Box sx={{ width: "100%", position: "relative", mt: 6 }}>
       <Fade in={fade} timeout={400}>
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
           {visible.map(loc => (

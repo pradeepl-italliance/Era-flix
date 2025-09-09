@@ -119,6 +119,8 @@ export default function PublicBookingPage() {
   // Mobile navigation state
   const [showScrollTop, setShowScrollTop] = useState(false)
 
+  const [phoneTouched, setPhoneTouched] = useState(false);
+
   // Booking form state with pre-selected values
   const [bookingForm, setBookingForm] = useState({
     location: preSelectedLocation || '',
@@ -1244,8 +1246,8 @@ export default function PublicBookingPage() {
                         customerInfo: { ...prev.customerInfo, name: e.target.value }
                       }))}
                       required
-                      error={!bookingForm.customerInfo.name && activeStep > 1}
-                      helperText={!bookingForm.customerInfo.name && activeStep > 1 ? 'Please enter your full name' : 'As per government ID'}
+                      // error={!bookingForm.customerInfo.name && activeStep > 1}
+                      // helperText={!bookingForm.customerInfo.name && activeStep > 1 ? 'Please enter your full name' : 'As per government ID'}
                     />
                   </Grid>
 
@@ -1260,33 +1262,36 @@ export default function PublicBookingPage() {
                         customerInfo: { ...prev.customerInfo, email: e.target.value }
                       }))}
                       required
-                      error={!bookingForm.customerInfo.email && activeStep > 1}
-                      helperText={!bookingForm.customerInfo.email && activeStep > 1 ? 'Please enter a valid email' : 'For booking confirmation'}
+                      // error={!bookingForm.customerInfo.email && activeStep > 1}
+                      // helperText={!bookingForm.customerInfo.email && activeStep > 1 ? 'Please enter a valid email' : 'For booking confirmation'}
                     />
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Primary Phone Number"
-                      value={bookingForm.customerInfo.phone}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(/\D/g, '')
-                        setBookingForm(prev => ({
-                          ...prev,
-                          customerInfo: { ...prev.customerInfo, phone: value }
-                        }))
-                      }}
-                      inputProps={{ maxLength: 10 }}
-                      required
-                      error={!/^[6-9]\d{9}$/.test(bookingForm.customerInfo.phone) && activeStep > 1}
-                      helperText={
-                        !/^[6-9]\d{9}$/.test(bookingForm.customerInfo.phone) && activeStep > 1
-                          ? 'Please enter a valid 10-digit mobile number'
-                          : 'Indian mobile number starting with 6-9'
-                      }
-                    />
-                  </Grid>
+  <TextField
+    fullWidth
+    label="Primary Phone Number"
+    value={bookingForm.customerInfo.phone}
+    onChange={(e) => {
+      const value = e.target.value.replace(/\D/g, '');
+      setBookingForm(prev => ({
+        ...prev,
+        customerInfo: { ...prev.customerInfo, phone: value }
+      }));
+    }}
+    onBlur={() => setPhoneTouched(true)} // 👈 mark field as touched
+    inputProps={{ maxLength: 10 }}
+    required
+    error={
+      phoneTouched && !/^[6-9]\d{9}$/.test(bookingForm.customerInfo.phone)
+    }
+    // helperText={
+    //   phoneTouched && !/^[6-9]\d{9}$/.test(bookingForm.customerInfo.phone)
+    //     ? "Please enter a valid 10-digit mobile number"
+    //     : "Indian mobile number starting with 6-9"
+    // }
+  />
+</Grid>
 
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -1301,7 +1306,7 @@ export default function PublicBookingPage() {
                         }))
                       }}
                       inputProps={{ maxLength: 10 }}
-                      helperText="Emergency contact number"
+                      // helperText="Emergency contact number"
                     />
                   </Grid>
                 </Grid>
