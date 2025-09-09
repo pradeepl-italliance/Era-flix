@@ -177,9 +177,9 @@ export default function PublicGalleryPage() {
                 >
                   <Zoom in timeout={300 + index * 50}>
                     <Card sx={{
-                      height: '100%',
-                      width: '100%',
-                      maxWidth: { xs: 320, sm: 350, md: 320, lg: 280 },
+                      height: '100% ',
+                      width: { xs: 280, sm: 300, md: 300, lg: 300 },
+                     // maxWidth: { xs: 320, sm: 350, md: 320, lg: 280 },
                       display: 'flex',
                       flexDirection: 'column',
                       cursor: 'pointer',

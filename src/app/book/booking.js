@@ -1232,7 +1232,7 @@ export default function PublicBookingPage() {
                   Personal Information
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Fields marked with * are required
+                   Note: Fields marked with * are required
                 </Typography>
 
                 <Grid container spacing={3}>
@@ -1521,10 +1521,10 @@ export default function PublicBookingPage() {
                 <Button
                   variant="outlined"
                   size="small"
-                  href="tel:+919945102299"
+                  href="tel:+919964312117"
                   startIcon={<Typography>📞</Typography>}
                 >
-                  Call +91 99451 02299
+                  Call +91 9964312117
                 </Button>
               </CardContent>
             </Card>

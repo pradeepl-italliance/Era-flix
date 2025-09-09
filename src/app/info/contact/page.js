@@ -349,7 +349,7 @@ export default function LocationsCarousel() {
           position: "absolute",
           top: "50%",
           left: 0,
-          transform: "translateY(-50%)",
+          transform: "translateY(-50%)", 
         }}
       >
         <Button onClick={() => step('prev')}>
