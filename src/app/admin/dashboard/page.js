@@ -23,7 +23,7 @@ import {
   LocationOn,
   Event,
   Movie,
-  Dashboard,
+  ContactMail,
   AccessTime,
   Schedule,
   Assessment,
@@ -132,7 +132,14 @@ export default function AdminDashboard() {
       icon: <PhotoLibrary />,
       path: '/admin/gallery',
       color: 'secondary'
-    }  
+    },
+    {
+      label: 'Contact Submissions',
+      icon: <ContactMail />,
+      path: '/admin/contacts',
+      color: 'info',
+      description: 'Manage customer contact submissions'
+    }
   ]
 
   return (

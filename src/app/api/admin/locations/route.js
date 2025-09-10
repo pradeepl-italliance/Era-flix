@@ -34,6 +34,7 @@ export async function GET(request) {
       operatingHours: location.operatingHours,
       facilities: location.facilities,
       googleMapsUrl: location.googleMapsUrl,
+      images: location.images, // ✅ Include images in response
       isActive: location.isActive,
       managedBy: location.managedBy,
       createdBy: location.createdBy,
@@ -68,6 +69,16 @@ export async function POST(request) {
       }, { status: 400 })
     }
 
+    // Ensure only one primary image exists
+    if (locationData.images && locationData.images.length > 0) {
+      const primaryImages = locationData.images.filter(img => img.isPrimary)
+      if (primaryImages.length > 1) {
+        return NextResponse.json({ 
+          error: 'Only one image can be marked as primary' 
+        }, { status: 400 })
+      }
+    }
+
     const location = await Location.create({ 
       ...locationData,
       createdBy: user._id
@@ -81,6 +92,7 @@ export async function POST(request) {
         id: location._id.toString(),
         name: location.name,
         address: location.address,
+        images: location.images, // ✅ Return images in response
         isActive: location.isActive
       }
     })

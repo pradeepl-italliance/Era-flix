@@ -32,7 +32,9 @@ import {
   CardContent,
   Grid,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  CardMedia,
+  Avatar
 } from '@mui/material'
 import {
   Add,
@@ -43,7 +45,11 @@ import {
   LocationOn,
   Phone,
   Email,
-  AccessTime
+  AccessTime,
+  PhotoCamera,
+  Close,
+  Star,
+  StarBorder
 } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
@@ -76,6 +82,11 @@ export default function LocationsManagementPage() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [menuLocation, setMenuLocation] = useState(null)
 
+  // Image upload states
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [selectedImages, setSelectedImages] = useState([])
+  const [imageFiles, setImageFiles] = useState([])
+
   // Form state
   const [form, setForm] = useState({
     name: '',
@@ -106,7 +117,8 @@ export default function LocationsManagementPage() {
     },
     facilities: [],
     googleMapsUrl: '',
-    isActive: true
+    isActive: true,
+    images: []
   })
 
   useEffect(() => {
@@ -155,14 +167,17 @@ export default function LocationsManagementPage() {
         tuesday: { open: '09:00', close: '22:00', isClosed: false },
         wednesday: { open: '09:00', close: '22:00', isClosed: false },
         thursday: { open: '09:00', close: '22:00', isClosed: false },
-        friday: { open: '09:00', close: '22:00', isClosed: false },
+        Friday: { open: '09:00', close: '22:00', isClosed: false },
         saturday: { open: '09:00', close: '22:00', isClosed: false },
         sunday: { open: '09:00', close: '22:00', isClosed: false }
       },
       facilities: [],
       googleMapsUrl: '',
-      isActive: true
+      isActive: true,
+      images: []
     })
+    setSelectedImages([])
+    setImageFiles([])
     setDialogOpen(true)
     clearMessages()
   }
@@ -199,11 +214,127 @@ export default function LocationsManagementPage() {
       },
       facilities: location.facilities || [],
       googleMapsUrl: location.googleMapsUrl || '',
-      isActive: location.isActive !== undefined ? location.isActive : true
+      isActive: location.isActive !== undefined ? location.isActive : true,
+      images: location.images || []
     })
+    setSelectedImages(location.images || [])
+    setImageFiles([])
     setDialogOpen(true)
     handleMenuClose()
     clearMessages()
+  }
+
+  // Image upload handler
+  function handleImageSelect(event) {
+    const files = Array.from(event.target.files)
+    
+    if (files.length === 0) return
+
+    // Validate file types
+    const validFiles = files.filter(file => {
+      const isValid = file.type.startsWith('image/')
+      if (!isValid) {
+        setError(`${file.name} is not a valid image file`)
+      }
+      return isValid
+    })
+
+    if (validFiles.length === 0) return
+
+    // Create preview URLs
+    const newImagePreviews = validFiles.map((file, index) => ({
+      id: `temp_${Date.now()}_${index}`,
+      file,
+      url: URL.createObjectURL(file),
+      alt: file.name,
+      isPrimary: selectedImages.length === 0 && index === 0, // First image is primary if no existing images
+      isNew: true
+    }))
+
+    setImageFiles(prev => [...prev, ...validFiles])
+    setSelectedImages(prev => [...prev, ...newImagePreviews])
+  }
+
+  // Remove image
+  async function removeImage(imageIndex) {
+    const imageToRemove = selectedImages[imageIndex]
+    
+    // If it's an existing image (not newly uploaded), delete from Supabase
+    if (imageToRemove && !imageToRemove.isNew && imageToRemove.path) {
+      try {
+        const response = await fetch('/api/admin/locations/images/delete', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filePath: imageToRemove.path })
+        })
+        
+        if (!response.ok) {
+          console.error('Failed to delete image from Supabase')
+          // Continue with UI removal even if Supabase deletion fails
+        }
+      } catch (error) {
+        console.error('Error deleting image:', error)
+      }
+    }
+
+    setSelectedImages(prev => {
+      const updated = prev.filter((_, index) => index !== imageIndex)
+      // If we removed the primary image, make the first remaining image primary
+      if (updated.length > 0 && !updated.some(img => img.isPrimary)) {
+        updated[0].isPrimary = true
+      }
+      return updated
+    })
+    
+    // Also remove from files if it's a new upload
+    if (imageToRemove?.isNew) {
+      setImageFiles(prev => prev.filter(file => file.name !== imageToRemove.file?.name))
+    }
+  }
+
+  // Set primary image
+  function setPrimaryImage(imageIndex) {
+    setSelectedImages(prev => prev.map((img, index) => ({
+      ...img,
+      isPrimary: index === imageIndex
+    })))
+  }
+
+  // Upload images to server
+  async function uploadImages() {
+    if (imageFiles.length === 0) return []
+
+    setUploadingImage(true)
+    try {
+      const uploadPromises = imageFiles.map(async (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('alt', file.name)
+        
+        const selectedImage = selectedImages.find(img => img.file === file)
+        formData.append('isPrimary', selectedImage?.isPrimary ? 'true' : 'false')
+
+        const response = await fetch('/api/admin/locations/images/upload', {
+          method: 'POST',
+          body: formData
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Failed to upload ${file.name}`)
+        }
+        
+        const data = await response.json()
+        return data.image // This should include url, path, alt, and isPrimary
+      })
+
+      const uploadedImages = await Promise.all(uploadPromises)
+      return uploadedImages
+    } catch (error) {
+      throw new Error(`Image upload failed: ${error.message}`)
+    } finally {
+      setUploadingImage(false)
+    }
   }
 
   async function handleSubmit() {
@@ -234,6 +365,19 @@ export default function LocationsManagementPage() {
     }
 
     try {
+      // Upload new images first
+      let allImages = []
+      
+      // Add existing images (for edit mode)
+      const existingImages = selectedImages.filter(img => !img.isNew)
+      allImages = [...existingImages]
+      
+      // Upload new images
+      if (imageFiles.length > 0) {
+        const uploadedImages = await uploadImages()
+        allImages = [...allImages, ...uploadedImages]
+      }
+
       const url = isEditing ? `/api/admin/locations/${selectedLocation.id}` : '/api/admin/locations'
       const method = isEditing ? 'PUT' : 'POST'
 
@@ -246,7 +390,8 @@ export default function LocationsManagementPage() {
           coordinates: {
             latitude: parseFloat(form.coordinates.latitude) || 0,
             longitude: parseFloat(form.coordinates.longitude) || 0
-          }
+          },
+          images: allImages
         })
       })
 
@@ -434,6 +579,7 @@ export default function LocationsManagementPage() {
                   <TableCell sx={{ fontWeight: 'bold' }}>Address</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Contact</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Facilities</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Images</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
                   <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                 </TableRow>
@@ -441,7 +587,7 @@ export default function LocationsManagementPage() {
               <TableBody>
                 {locations.length === 0 ? (
                   <TableRow key="no-locations">
-                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                       <Typography variant="body1" color="text.secondary">
                         No locations found. Create your first location!
                       </Typography>
@@ -495,6 +641,25 @@ export default function LocationsManagementPage() {
                         </Box>
                       </TableCell>
                       <TableCell>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          {location.images && location.images.length > 0 ? (
+                            <Avatar
+                              src={location.images.find(img => img.isPrimary)?.url || location.images[0]?.url}
+                              alt={location.name}
+                              sx={{ width: 50, height: 50, borderRadius: 1 }}
+                              variant="rounded"
+                            />
+                          ) : (
+                            <Avatar
+                              sx={{ width: 50, height: 50, borderRadius: 1, bgcolor: 'grey.300' }}
+                              variant="rounded"
+                            >
+                              <LocationOn />
+                            </Avatar>
+                          )}
+                        </Box>
+                      </TableCell>
+                      <TableCell>
                         <Chip 
                           label={location.isActive ? 'Active' : 'Inactive'}
                           color={location.isActive ? 'success' : 'default'}
@@ -544,6 +709,95 @@ export default function LocationsManagementPage() {
           {isEditing ? 'Edit Location' : 'Create New Location'}
         </DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
+          {/* Images Section */}
+          <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
+            Location Images
+          </Typography>
+
+          <Box sx={{ mb: 2 }}>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<PhotoCamera />}
+              disabled={uploadingImage}
+              sx={{ mr: 2 }}
+            >
+              {uploadingImage ? 'Uploading...' : 'Add Images'}
+              <input
+                type="file"
+                hidden
+                multiple
+                accept="image/*"
+                onChange={handleImageSelect}
+              />
+            </Button>
+            <Typography variant="caption" color="text.secondary">
+              Upload multiple images. Click the star to set as primary image.
+            </Typography>
+          </Box>
+
+          {selectedImages.length > 0 && (
+            <Grid container spacing={2} sx={{ mb: 3 }}>
+              {selectedImages.map((image, index) => (
+                <Grid item xs={12} sm={6} md={4} key={image.id || index}>
+                  <Card sx={{ position: 'relative' }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={image.url}
+                      alt={image.alt}
+                      sx={{ objectFit: 'cover' }}
+                    />
+                    <Box sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      display: 'flex',
+                      gap: 1
+                    }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => setPrimaryImage(index)}
+                        sx={{
+                          backgroundColor: 'rgba(255,255,255,0.8)',
+                          '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }
+                        }}
+                      >
+                        {image.isPrimary ? (
+                          <Star sx={{ color: 'gold' }} />
+                        ) : (
+                          <StarBorder />
+                        )}
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => removeImage(index)}
+                        sx={{
+                          backgroundColor: 'rgba(255,255,255,0.8)',
+                          '&:hover': { backgroundColor: 'rgba(255,255,255,0.9)' }
+                        }}
+                      >
+                        <Close sx={{ color: 'error.main' }} />
+                      </IconButton>
+                    </Box>
+                    {image.isPrimary && (
+                      <Chip
+                        label="Primary"
+                        size="small"
+                        color="primary"
+                        sx={{
+                          position: 'absolute',
+                          bottom: 8,
+                          left: 8
+                        }}
+                      />
+                    )}
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+
           {/* Basic Information */}
           <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'bold' }}>
             Basic Information
@@ -728,9 +982,9 @@ export default function LocationsManagementPage() {
           <Button 
             onClick={handleSubmit} 
             variant="contained"
-            disabled={loading}
+            disabled={loading || uploadingImage}
           >
-            {isEditing ? 'Update Location' : 'Create Location'}
+            {uploadingImage ? 'Uploading...' : (isEditing ? 'Update Location' : 'Create Location')}
           </Button>
         </DialogActions>
       </Dialog>
