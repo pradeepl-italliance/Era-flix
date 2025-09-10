@@ -20,7 +20,7 @@ import {
 } from '@mui/icons-material'
 import Link from 'next/link'
 import Image from 'next/image'
-import logo1 from '../../assets/logo1.png'
+import logo1 from '../../assets/eralogo.png'
 
 const Footer = () => {
   return (

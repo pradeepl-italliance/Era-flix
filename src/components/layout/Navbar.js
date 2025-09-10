@@ -25,7 +25,7 @@ import {
 } from '@mui/icons-material'
 import Link from 'next/link'
 import Image from 'next/image'
-import logo1 from  '../../assets/logo1.png'
+import logo1 from  '../../assets/eralogo.png'
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -208,7 +208,7 @@ const Navbar = () => {
             </Box>  */}
 
              <Box sx={{ width: '100px', height: '75px', ml: 2 }}>
-  <Image src={logo1} width={100} height={75} alt="logo" />
+  <Image src={logo1} width={100} height={83} alt="logo" />
 </Box>
 
             {/* <Typography
