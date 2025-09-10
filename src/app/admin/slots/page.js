@@ -1,9 +1,10 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   Box, Container, Typography, Button, Paper, Table, TableHead, TableRow,
   TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, IconButton, Menu, MenuItem as MenuOption, Alert, CircularProgress
+  TextField, IconButton, Menu, MenuItem as MenuOption, Alert, CircularProgress,
+  FormControl, InputLabel, Select, MenuItem, Chip
 } from '@mui/material'
 import { Add, MoreVert, Edit, Delete, ArrowBack } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
@@ -11,6 +12,8 @@ import { useRouter } from 'next/navigation'
 export default function SlotsPage() {
   const router = useRouter()
   const [slots, setSlots] = useState([])
+  const [screens, setScreens] = useState([])
+  const [screenId, setScreenId] = useState('') // '' = All screens
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -20,20 +23,50 @@ export default function SlotsPage() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [form, setForm] = useState({ name: '', start: '10:00', end: '12:00' })
 
-  useEffect(() => { load() }, [])
+  // Find the selected screen object
+  const selectedScreen = useMemo(
+    () => screens.find(s => s.id === screenId) || null,
+    [screens, screenId]
+  )
 
-  async function load() {
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch('/api/admin/screens')
+        const d = await r.json()
+        if (!r.ok) throw new Error(d.error || 'Failed to load screens')
+
+        // Only keep screens that have a location
+        const withLocation = (d.screens || []).filter(s => !!s.location)
+        setScreens(withLocation)
+
+        // Load all slots by default (no screen filter)
+        await loadSlots('')
+      } catch (e) {
+        setError(e.message)
+        setLoading(false)
+      }
+    })()
+  }, [])
+
+  async function loadSlots(screen) {
     setLoading(true)
     try {
-      const r = await fetch('/api/admin/slots')
+      const url = screen ? `/api/admin/slots?screen=${encodeURIComponent(screen)}` : '/api/admin/slots'
+      const r = await fetch(url)
       const d = await r.json()
-      if (!r.ok) throw new Error(d.error)
+      if (!r.ok) throw new Error(d.error || 'Failed to load slots')
       setSlots(d.slots)
     } catch (e) {
       setError(e.message)
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleScreenChange(id) {
+    setScreenId(id)
+    loadSlots(id)
   }
 
   function openNew() {
@@ -46,6 +79,8 @@ export default function SlotsPage() {
   function openEdit(slot) {
     setIsEdit(true)
     setSelectedSlot(slot)
+    // Ensure dialog screen reflects the slot’s screen; if slot.screen missing, keep current selection
+    setScreenId(slot.screen || screenId)
     setForm({
       name: slot.name,
       start: slot.startTime,
@@ -55,20 +90,23 @@ export default function SlotsPage() {
     closeMenu()
   }
 
+  function isValidHHMM(s) {
+    return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(s)
+  }
+
   async function save() {
-    if (!form.name) {
-      setError('Name required')
-      return
+    // Require screen for create/edit
+    if (!screenId) { setError('Select a screen'); return }
+    if (!form.name) { setError('Name required'); return }
+    if (!isValidHHMM(form.start) || !isValidHHMM(form.end)) {
+      setError('Times must be HH:MM (24h)'); return
     }
-    const body = { name: form.name, startTime: form.start, endTime: form.end }
+    const body = { screen: screenId, name: form.name.trim(), startTime: form.start, endTime: form.end }
     try {
       let url = '/api/admin/slots'
       let method = 'POST'
       if (isEdit) {
-        if (!selectedSlot || !selectedSlot.id) {
-          setError('No slot selected for editing')
-          return
-        }
+        if (!selectedSlot?.id) { setError('No slot selected for editing'); return }
         url = `/api/admin/slots/${selectedSlot.id}`
         method = 'PUT'
       }
@@ -78,30 +116,25 @@ export default function SlotsPage() {
         body: JSON.stringify(body),
       })
       const d = await r.json()
-      if (!r.ok) throw new Error(d.error)
+      if (!r.ok) throw new Error(d.error || 'Request failed')
       setSuccess(isEdit ? 'Updated' : 'Created')
       setDialogOpen(false)
-      load()
-    } catch (e) {
-      setError(e.message)
-    }
+      setSelectedSlot(null)
+      loadSlots(screenId)
+    } catch (e) { setError(e.message) }
   }
 
   async function del(slot) {
-    if (!slot || !slot.id) {
-      setError('No slot selected for deletion')
-      return
-    }
+    if (!slot?.id) { setError('No slot selected for deletion'); return }
     if (!confirm('Delete slot?')) return
     try {
       const r = await fetch(`/api/admin/slots/${slot.id}`, { method: 'DELETE' })
       const d = await r.json()
-      if (!r.ok) throw new Error(d.error)
+      if (!r.ok) throw new Error(d.error || 'Delete failed')
       setSuccess('Deleted')
-      load()
-    } catch (e) {
-      setError(e.message)
-    }
+      setSelectedSlot(null)
+      loadSlots(screenId)
+    } catch (e) { setError(e.message) }
     closeMenu()
   }
 
@@ -113,14 +146,53 @@ export default function SlotsPage() {
     </Box>
   )
 
+  // Helper to render “Screen — Location, City”
+  function screenLabel(s) {
+    const loc = s.location
+    const parts = []
+    if (loc?.name) parts.push(loc.name)
+    if (loc?.address?.city) parts.push(loc.address.city)
+    const locText = parts.join(', ')
+    return locText ? `${s.name} — ${locText}` : s.name
+  }
+
   return (
     <Box sx={{ bgcolor: 'grey.100', minHeight: '100vh' }}>
       <Box sx={{ bgcolor: 'white', px: 3, py: 2, display: 'flex', alignItems: 'center', gap: 2, boxShadow: 1 }}>
         <IconButton onClick={() => router.back()}><ArrowBack /></IconButton>
         <Typography variant="h5" fontWeight="bold">Time Slots</Typography>
+
+        {/* Show selected location context when a screen is picked */}
+        {selectedScreen?.location && (
+          <Chip
+            size="small"
+            sx={{ ml: 1 }}
+            label={`${selectedScreen.location.name}${selectedScreen.location.address?.city ? `, ${selectedScreen.location.address.city}` : ''}`}
+          />
+        )}
+
+        {/* Screen filter */}
+        <FormControl size="small" sx={{ minWidth: 260, ml: 2 }}>
+          <InputLabel id="screen-label">Screen</InputLabel>
+          <Select
+            labelId="screen-label"
+            label="Screen"
+            value={screenId}
+            onChange={(e) => handleScreenChange(e.target.value)}
+          >
+            <MenuItem value="">All screens</MenuItem>
+            {screens.map(s => (
+              <MenuItem key={s.id} value={s.id}>{screenLabel(s)}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <Box sx={{ flexGrow: 1 }} />
-        <Button variant="contained" startIcon={<Add />} onClick={openNew}>Add Slot</Button>
+        <Button variant="contained" startIcon={<Add />} onClick={openNew}>
+          Add Slot
+        </Button>
       </Box>
+
       <Container maxWidth="md" sx={{ mt: 4 }}>
         {error && <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>{error}</Alert>}
         {success && <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>{success}</Alert>}
@@ -154,6 +226,7 @@ export default function SlotsPage() {
                       anchorEl={anchorEl}
                       open={Boolean(anchorEl) && selectedSlot?.id === slot.id}
                       onClose={closeMenu}
+                      onClick={closeMenu}
                     >
                       <MenuOption onClick={() => openEdit(slot)}>
                         <Edit sx={{ mr: 2 }} />Edit
@@ -173,6 +246,21 @@ export default function SlotsPage() {
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>{isEdit ? 'Edit' : 'New'} Slot</DialogTitle>
         <DialogContent>
+          {/* Screen selector in dialog (only screens with location) */}
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="dialog-screen-label">Screen</InputLabel>
+            <Select
+              labelId="dialog-screen-label"
+              label="Screen"
+              value={screenId}
+              onChange={(e) => setScreenId(e.target.value)}
+            >
+              {screens.map(s => (
+                <MenuItem key={s.id} value={s.id}>{screenLabel(s)}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <TextField
             label="Name"
             fullWidth
@@ -198,7 +286,7 @@ export default function SlotsPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={save}>{isEdit ? 'Update' : 'Create'}</Button>
+          <Button variant="contained" onClick={save} disabled={!screenId}>{isEdit ? 'Update' : 'Create'}</Button>
         </DialogActions>
       </Dialog>
     </Box>

@@ -263,7 +263,7 @@ export default function PublicBookingPage() {
     setLoading(true)
     try {
       const response = await fetch(
-        `/api/public/timeslots?screen=${bookingForm.screen}&date=${bookingForm.date}`
+        `/api/public/timeslots?screen=${bookingForm.screen}`
       )
       if (response.ok) {
         const data = await response.json()
