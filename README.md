@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# 🎬 Private Theater Events Booking Platform
+
+This project is a **private theater booking application** where users can celebrate **birthdays, anniversaries, Netflix nights, and private gatherings**.  
+It allows users to book screens based on **location, available time slots, and screen type**.  
+The platform also has a **gallery section** showcasing event photos, and an **admin panel** to manage locations, events, time slots, bookings, and gallery uploads.
+
+## ✨ Features
+
+- 🎉 Book private theaters for birthdays, anniversaries, and parties
+- 📍 Select location, screen, and available time slot
+- 🖼️ Gallery to view past event pictures
+- 🔑 Admin panel to manage events, locations, time slots, and bookings
+
 ## Getting Started
 
 First, run the development server:

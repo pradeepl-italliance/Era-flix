@@ -477,7 +477,7 @@ export default function PublicBookingPage() {
                     setSelectedScreenInfo(screen)
                   }}
                 >
-                  {/* Screen Image */}
+                  Screen Image
                   <Box sx={{ 
                     position: 'relative', 
                     overflow: 'hidden',

@@ -8,6 +8,7 @@ import {
 import { Add, MoreVert, Edit, Delete, ArrowBack } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
+
 export default function EventsPage() {
   const router = useRouter()
   const [events, setEvents] = useState([])
@@ -92,19 +93,43 @@ export default function EventsPage() {
     } catch(e){ setError(e.message) }
   }
 
-  async function del() {
-    if (!targetEvent?.id) { setError('No event selected'); return }
-    if (!confirm('Delete event?')) return
-    try {
-      const res = await fetch(`/api/admin/events/${targetEvent.id}`, { method:'DELETE' })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Failed')
-      setSuccess('Deleted')
-      setTargetEvent(null)
-      load()
-    } catch (e) { setError(e.message) }
-    handleCloseMenu()
-  }
+  // async function del() {
+  //   if (!targetEvent?.id) { setError('No event selected'); return }
+  //   if (!confirm('Delete event?')) return
+  //   try {
+  //     const res = await fetch(`/api/admin/events/${targetEvent.id}`, { method:'DELETE' })
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.error || 'Failed')
+  //     setSuccess('Deleted')
+  //     setTargetEvent(null)
+  //     load()
+  //   } catch (e) { setError(e.message) }
+  //   handleCloseMenu()
+  // }
+  // Add these states
+const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+// update del function
+async function del() {
+  if (!targetEvent?.id) { setError('No event selected'); return }
+  try {
+    const res = await fetch(`/api/admin/events/${targetEvent.id}`, { method:'DELETE' })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Failed')
+    setSuccess('Deleted')
+    setTargetEvent(null)
+    load()
+  } catch (e) { setError(e.message) }
+  setDeleteDialogOpen(false) // close dialog after action
+  handleCloseMenu()
+}
+
+// instead of confirm, open dialog
+const handleDeleteClick = () => {
+  setDeleteDialogOpen(true)
+  handleCloseMenu()
+}
+
 
   const handleCloseMenu = () => { setAnchorEl(null) } // keep targetEvent
 
@@ -176,12 +201,36 @@ export default function EventsPage() {
         <MenuOption onClick={() => openEdit(targetEvent)}>
           <Edit sx={{mr:2}}/>Edit
         </MenuOption>
-        <MenuOption onClick={del} sx={{color:'error.main'}}>
-          <Delete sx={{mr:2}}/>Delete
-        </MenuOption>
+        <MenuOption onClick={handleDeleteClick} sx={{color:'error.main'}}>
+  <Delete sx={{mr:2}}/>Delete
+</MenuOption>
+
       </Menu>
 
       {/* dialog */}
+<Dialog
+  open={deleteDialogOpen}
+  onClose={() => setDeleteDialogOpen(false)}
+  maxWidth="xs"
+  fullWidth
+>
+  <DialogTitle>Delete Event</DialogTitle>
+  <DialogContent>
+    <Typography>
+      Do you really want to delete this event?
+    </Typography>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+    <Button color="error" variant="contained" onClick={del}>
+      Delete
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
+
+
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{isEdit ? 'Edit' : 'New'} Event</DialogTitle>
         <DialogContent sx={{pt:2}}>

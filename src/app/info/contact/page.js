@@ -401,7 +401,7 @@ export default function LocationsCarousel() {
 
         {/* Right-side fixed image */}
         <Box sx={{ flex:1, position:"relative", display:"flex", justifyContent:"center", alignItems:"center", backgroundColor:"#f5f5f5" }}>
-          <Image src={contactBG} alt="Contact" style={{ width:"100%", height:"100%", objectFit:"contain", borderLeft: "5px solid red" }}/>
+          <Image src={contactBG} alt="Contact" style={{ width:"100%", height:"100%", objectFit:"fit", borderLeft: "5px solid red" }}/>
         </Box>
       </Box>
 
