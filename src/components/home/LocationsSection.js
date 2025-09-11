@@ -168,21 +168,6 @@ export default function LocationsSection() {
                         </Box>
                       )}
                       
-                      {/* Location status chip */}
-                      {/* <Chip
-                        label="Available"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          top: 12,
-                          right: 12,
-                          bgcolor: '#4caf50',
-                          color: 'white',
-                          fontWeight: 600,
-                          '& .MuiChip-label': { px: 1.5 }
-                        }}
-                      /> */}
-                      
                       {/* Gradient overlay for better text readability */}
                       <Box
                         sx={{

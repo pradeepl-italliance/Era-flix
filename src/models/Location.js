@@ -69,6 +69,12 @@ const locationSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  images: [{
+    url: { type: String, required: true },
+    path: { type: String }, // ✅ Add this for Supabase file path
+    alt: { type: String, default: '' },
+    isPrimary: { type: Boolean, default: false }
+  }],
   isActive: {
     type: Boolean,
     default: true

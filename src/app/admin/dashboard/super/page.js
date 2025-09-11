@@ -31,7 +31,8 @@ import {
   Settings,
   Assessment,
   PhotoLibrary,
-  Logout
+  Logout,
+  ContactMail
 } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 
@@ -176,6 +177,13 @@ export default function SuperAdminDashboard() {
       icon: <PhotoLibrary />, // Add this import
       path: '/admin/gallery',
       color: 'secondary'
+    },
+    {
+      label: 'Contact Submissions',
+      icon: <ContactMail />,
+      path: '/admin/contacts',
+      color: 'info',
+      description: 'Manage customer contact submissions'
     }
   ]
 

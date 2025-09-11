@@ -9,7 +9,7 @@ export async function GET(request) {
     console.log('Public locations API called') // Add this for debugging
 
     const locations = await Location.find({ isActive: true })
-      .select('name address contactInfo facilities')
+      .select('name address contactInfo facilities images')
       .sort({ name: 1 })
       .lean()
 
@@ -17,6 +17,7 @@ export async function GET(request) {
       id: location._id.toString(),
       name: location.name,
       address: location.address,
+      images: location.images,
       contactInfo: location.contactInfo,
       facilities: location.facilities,
       fullAddress: location.fullAddress
