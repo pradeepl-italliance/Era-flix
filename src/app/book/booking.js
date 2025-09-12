@@ -419,7 +419,7 @@ export default function PublicBookingPage() {
       {bookingForm.location && availableScreens.length > 0 && (
         <Box>
           {/* Screen Selection Header with Pagination Controls */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3, width: 400,  height: 60,  }}>
             <Typography variant="h6">
               Available Screens ({availableScreens.length})
             </Typography>
@@ -477,7 +477,7 @@ export default function PublicBookingPage() {
                     setSelectedScreenInfo(screen)
                   }}
                 >
-                  Screen Image
+                  {/* Screen Image */}
                   <Box sx={{ 
                     position: 'relative', 
                     overflow: 'hidden',
@@ -2114,7 +2114,7 @@ export default function PublicBookingPage() {
                 </Typography>
               </Alert>
               <Typography variant="body2" color="text.secondary">
-                For any queries, contact us at <strong>+91 99451 02299</strong>
+                For any queries, contact us at <strong>+91 99643 12117</strong>
               </Typography>
             </Box>
           )}
