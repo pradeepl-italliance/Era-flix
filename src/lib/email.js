@@ -357,7 +357,7 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                 
                 <div class="footer">
                     <p>© ${new Date().getFullYear()} EraFlix. All rights reserved.</p>
-                    <p>For support: ${process.env.EMAIL_USER} | +91 99451 02299</p>
+                    <p>For support: ${process.env.EMAIL_USER} | +91 99643121179</p>
                 </div>
             </div>
         </body>
