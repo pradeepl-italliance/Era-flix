@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
         <Paper elevation={10} sx={{ p: 4, borderRadius: 3 }}>
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-              Happy Screens
+              EraFlix
             </Typography>
             <Typography variant="h6" color="text.secondary">
               Admin Portal

@@ -63,7 +63,7 @@ const Navbar = () => {
         
       }}>
         <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
-          Happy Screens
+          EraFlix
         </Typography>
         <IconButton onClick={handleDrawerToggle} sx={{ p: 1 }}>
           <CloseIcon />
@@ -219,7 +219,7 @@ const Navbar = () => {
                 fontSize: { xs: '1.2rem', sm: '1.4rem' }
               }}
             >
-              Happy Screens
+              EraFlix
             </Typography> */}
           </Box>
 

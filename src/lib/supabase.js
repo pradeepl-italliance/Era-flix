@@ -9,7 +9,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Updated upload function for Happy Screens media
+// Updated upload function for EraFlix media
 export const uploadFile = async (file, folder = 'screens') => {
   try {
     const fileName = generateFileName(file.name, folder)

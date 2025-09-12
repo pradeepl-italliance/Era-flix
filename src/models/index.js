@@ -25,7 +25,7 @@ export const collections = {
   // Sample data structure for reference
   export const sampleData = {
     location: {
-      name: "Happy Screens Koramangala",
+      name: "EraFlix Koramangala",
       address: "123 Forum Mall, Koramangala",
       city: "Bangalore",
       phone: "+91 9876543210",

@@ -6,7 +6,7 @@ import {
   Chip
 } from '@mui/material';
 
-export const metadata = { title: 'Refund Policy – Happy Screens' };
+export const metadata = { title: 'Refund Policy – EraFlix' };
 
 export default function RefundPage() {
   return (

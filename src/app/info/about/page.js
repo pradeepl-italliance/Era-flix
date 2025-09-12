@@ -25,7 +25,7 @@ import { Eye } from 'lucide-react';
 
 
 
-// export const metadata = { title: 'About – Happy Screens' };
+// export const metadata = { title: 'About – EraFlix' };
 
 export default function AboutPage() {
 
@@ -92,7 +92,7 @@ const stats = [
 
             }}
           >
-            About Happy Screens
+            About EraFlix
           </Typography>
 
           <Typography 
@@ -171,7 +171,7 @@ const stats = [
             textAlign="left"
             sx={{ lineHeight: 1.6, fontWeight: 400 , fontSize: '16px'}}
           >
-           {"The Happy Screens is Bengaluru's most celebrated private theater destination, offering a unique way to celebrate life's special moments with best-in-class experiences where customers can watch their favorite movies and shows while enjoying birthdays, anniversaries, proposals, or just relaxing movie time, complete with decorations, cakes, snacks, beverages, and full privacy to make every event extraordinary."}
+           {"The EraFlix is Bengaluru's most celebrated private theater destination, offering a unique way to celebrate life's special moments with best-in-class experiences where customers can watch their favorite movies and shows while enjoying birthdays, anniversaries, proposals, or just relaxing movie time, complete with decorations, cakes, snacks, beverages, and full privacy to make every event extraordinary."}
           </Typography>
         </Stack>
       </Box>
@@ -190,7 +190,7 @@ const stats = [
               fontFamily: '"Cormorant", serif', fontWeight:400,
 }}
             >
-              Why Choose Happy Screens?
+              Why Choose EraFlix?
             </Typography>
             <Box
               sx={{

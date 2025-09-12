@@ -13,11 +13,11 @@ export async function sendOTPEmail(email, otp, adminName = 'Admin') {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: '🔐 Happy Screens Admin - Password Reset OTP',
+    subject: '🔐 EraFlix Admin - Password Reset OTP',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(45deg, #A855F7, #60A5FA); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
-          <h1 style="color: white; margin: 0;">Happy Screens</h1>
+          <h1 style="color: white; margin: 0;">EraFlix</h1>
           <p style="color: white; margin: 5px 0;">Admin Portal</p>
         </div>
         
@@ -41,7 +41,7 @@ export async function sendOTPEmail(email, otp, adminName = 'Admin') {
         
         <hr style="margin: 30px 0; border: 1px solid #eee;">
         <p style="color: #666; font-size: 14px; text-align: center;">
-          Happy Screens Admin Panel<br>
+          EraFlix Admin Panel<br>
           This is an automated message, please do not reply.
         </p>
       </div>
@@ -61,11 +61,11 @@ export async function sendWelcomeEmail(email, username, tempPassword) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: '🎉 Welcome to Happy Screens Admin',
+    subject: '🎉 Welcome to EraFlix Admin',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(45deg, #A855F7, #60A5FA); padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
-          <h1 style="color: white; margin: 0;">Happy Screens</h1>
+          <h1 style="color: white; margin: 0;">EraFlix</h1>
           <p style="color: white; margin: 5px 0;">Admin Portal</p>
         </div>
         
@@ -85,7 +85,7 @@ export async function sendWelcomeEmail(email, username, tempPassword) {
         
         <hr style="margin: 30px 0; border: 1px solid #eee;">
         <p style="color: #666; font-size: 14px; text-align: center;">
-          Happy Screens Admin Panel
+          EraFlix Admin Panel
         </p>
       </div>
     `
@@ -106,7 +106,7 @@ export async function sendBookingCancellationEmail(customerInfo, booking, reason
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: customerInfo.email,
-      subject: `🚫 Booking Cancelled - ${booking.bookingId} | Happy Screens`,
+      subject: `🚫 Booking Cancelled - ${booking.bookingId} | EraFlix`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -158,11 +158,11 @@ export async function sendBookingCancellationEmail(customerInfo, booking, reason
                     📞 Phone: +91 99451 02299<br>
                     ✉️ Email: ${process.env.EMAIL_USER}</p>
                     
-                    <p>Thank you for choosing Happy Screens.</p>
+                    <p>Thank you for choosing EraFlix.</p>
                 </div>
                 
                 <div class="footer">
-                    <p>© ${new Date().getFullYear()} Happy Screens. All rights reserved.</p>
+                    <p>© ${new Date().getFullYear()} EraFlix. All rights reserved.</p>
                 </div>
             </div>
         </body>
@@ -185,7 +185,7 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: customerInfo.email,
-      subject: `✅ Booking Updated - ${booking.bookingId} | Happy Screens`,
+      subject: `✅ Booking Updated - ${booking.bookingId} | EraFlix`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -240,11 +240,11 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
                     📞 Phone: +91 99451 02299<br>
                     ✉️ Email: ${process.env.EMAIL_USER}</p>
                     
-                    <p>Thank you for choosing Happy Screens!</p>
+                    <p>Thank you for choosing EraFlix!</p>
                 </div>
                 
                 <div class="footer">
-                    <p>© ${new Date().getFullYear()} Happy Screens. All rights reserved.</p>
+                    <p>© ${new Date().getFullYear()} EraFlix. All rights reserved.</p>
                 </div>
             </div>
         </body>
@@ -266,7 +266,7 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: customerInfo.email,
-      subject: `🎉 Booking Confirmed - ${booking.bookingId} | Happy Screens`,
+      subject: `🎉 Booking Confirmed - ${booking.bookingId} | EraFlix`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -295,14 +295,14 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                     
                     <div class="highlight">
                         <p><strong>🎊 Great news! Your booking has been successfully confirmed.</strong></p>
-                        <p>Get ready for an amazing private theatre experience at Happy Screens!</p>
+                        <p>Get ready for an amazing private theatre experience at EraFlix!</p>
                     </div>
                     
                     <div class="booking-details">
                         <h3>🎬 Your Booking Details:</h3>
                         <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
                         <p><strong>Screen:</strong> ${booking.screen?.name || 'Premium Screen'}</p>
-                        <p><strong>Location:</strong> ${booking.location?.name || 'Happy Screens'}</p>
+                        <p><strong>Location:</strong> ${booking.location?.name || 'EraFlix'}</p>
                         <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString('en-IN', { 
                           weekday: 'long', 
                           year: 'numeric', 
@@ -343,20 +343,20 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                     
                     <div class="booking-details" style="text-align: center;">
                         <h3>🏢 Venue Address:</h3>
-                        <p><strong>${booking.location?.name || 'Happy Screens'}</strong></p>
+                        <p><strong>${booking.location?.name || 'EraFlix'}</strong></p>
                         <p>${booking.location?.address?.street || ''}</p>
                         <p>${booking.location?.address?.area || ''}, ${booking.location?.address?.city || 'Bangalore'}</p>
                         <p>📞 ${booking.location?.contactInfo?.phone || '+91 99451 02299'}</p>
                     </div>
                     
                     <p style="text-align: center; margin-top: 30px;">
-                        <strong>Thank you for choosing Happy Screens!</strong><br>
+                        <strong>Thank you for choosing EraFlix!</strong><br>
                         We look forward to making your celebration memorable! 🎬✨
                     </p>
                 </div>
                 
                 <div class="footer">
-                    <p>© ${new Date().getFullYear()} Happy Screens. All rights reserved.</p>
+                    <p>© ${new Date().getFullYear()} EraFlix. All rights reserved.</p>
                     <p>For support: ${process.env.EMAIL_USER} | +91 99451 02299</p>
                 </div>
             </div>

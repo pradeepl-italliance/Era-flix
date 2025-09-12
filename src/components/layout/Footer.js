@@ -45,7 +45,7 @@ const Footer = () => {
               >
                 <Image
                   src="/hpLogo.png" // from public folder
-                  alt="Happy Screens Logo"
+                  alt="EraFlix Logo"
                   width={60}
                   height={60}
                   style={{ objectFit: 'contain' }}
@@ -332,7 +332,7 @@ const Footer = () => {
               >
                 <Image
                   src={logo1}
-                  alt="Happy Screens Logo"
+                  alt="EraFlix Logo"
                   width={150}
                   height={150}
                   // style={{ objectFit: 'contain' }}

@@ -149,7 +149,7 @@ export default function PublicGalleryPage() {
               Gallery Coming Soon
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400 }}>
-              {"We're adding beautiful photos of our premium theatre experiences. Check back soon to see amazing moments from Happy Screens!"}
+              {"We're adding beautiful photos of our premium theatre experiences. Check back soon to see amazing moments from EraFlix!"}
             </Typography>
           </Box>
         ) : (
@@ -240,7 +240,7 @@ export default function PublicGalleryPage() {
                             fontSize: '1.1rem',
                             color: '#1a1a1a'
                           }}>
-                            {'Happy Screens Experience'}
+                            {'EraFlix Experience'}
                           </Typography>
                           
                           <Typography 
@@ -429,7 +429,7 @@ export default function PublicGalleryPage() {
                   color: "#D50A17",
                   fontSize: { xs: '1.25rem', sm: '1.5rem' }
                 }}>
-                  {selectedImage.title || 'Happy Screens Experience'}
+                  {selectedImage.title || 'EraFlix Experience'}
                 </Typography> */}
                 
                 {/* {selectedImage.alt && (

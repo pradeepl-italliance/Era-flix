@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { CheckCircle2 } from 'lucide-react';
 
-// export const metadata = { title: 'Terms & Conditions – Happy Screens' };
+// export const metadata = { title: 'Terms & Conditions – EraFlix' };
 
 const rules = [
   'Guests must show valid ID proofs during the visit (minimum ID proof for 2 people).',
