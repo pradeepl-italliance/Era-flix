@@ -417,7 +417,7 @@ export default function BookingsManagementPage() {
           </Grid>
         </Grid>
 
-        {/* Filters */}
+        Filters
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
             <FilterList sx={{ mr: 1 }} />
@@ -425,7 +425,7 @@ export default function BookingsManagementPage() {
           </Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ width: 220 }}>
                 <InputLabel>Location</InputLabel>
                 <Select
                   value={selectedLocation}
@@ -442,7 +442,7 @@ export default function BookingsManagementPage() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ width: 220 }}>
                 <InputLabel>Screen</InputLabel>
                 <Select
                   value={selectedScreen}
@@ -460,7 +460,7 @@ export default function BookingsManagementPage() {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ width: 220 }}>
                 <InputLabel>Status</InputLabel>
                 <Select
                   value={selectedStatus}
@@ -478,7 +478,8 @@ export default function BookingsManagementPage() {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
-                fullWidth
+                fullWidth 
+                 sx={{ width: 220 }}
                 label="Start Date"
                 type="date"
                 value={dateRange.startDate}

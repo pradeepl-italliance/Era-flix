@@ -225,8 +225,8 @@ export default function GalleryPage() {
           
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Grid item xs={12} sm={6} md={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Location</InputLabel>
+              <FormControl sx={{ width: 220 }} >
+                <InputLabel >Location</InputLabel>
                 <Select 
                   value={selectedLocation} 
                   onChange={e => {
@@ -245,7 +245,7 @@ export default function GalleryPage() {
             </Grid>
             
             <Grid item xs={12} sm={6} md={4}>
-              <FormControl fullWidth>
+              <FormControl sx={{ width: 220 }}>
                 <InputLabel>Screen (Optional)</InputLabel>
                 <Select 
                   value={selectedScreen} 
