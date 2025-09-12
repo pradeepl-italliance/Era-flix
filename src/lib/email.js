@@ -338,7 +338,7 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                         <p><strong>💳 Payment:</strong> Full payment to be made at the venue</p>
                         <p><strong>💰 Payment Methods:</strong> We accept Cash, UPI, Debit/Credit Cards</p>
                         <p><strong>🆔 ID Proof:</strong> Please bring a valid government ID for verification</p>
-                        <p><strong>📱 Contact:</strong> Call us at +91 99451 02299 for any assistance</p>
+                        <p><strong>📱 Contact:</strong> Call us at +91 9964312117 for any assistance</p>
                     </div>
                     
                     <div class="booking-details" style="text-align: center;">

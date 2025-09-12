@@ -20,7 +20,8 @@ import {
 } from '@mui/icons-material'
 import Link from 'next/link'
 import Image from 'next/image'
-import logo1 from '../../assets/eralogo.png'
+import logo1 from '../../assets/logo1.png'
+
 
 const Footer = () => {
   return (
@@ -530,7 +531,7 @@ const Footer = () => {
             </Box>
 
               <Box sx={{ display: 'flex', gap: 1, mb: 3 }}>
-              <IconButton
+              {/* <IconButton
                 sx={{
                   color: 'white',
                   bgcolor: 'rgba(255,255,255,0.1)',
@@ -543,7 +544,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
               >
                 <FacebookIcon fontSize="small" />
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 sx={{
                   color: 'white',
@@ -566,13 +567,13 @@ const Footer = () => {
                   width: 40,
                   height: 40
                 }}
-                href="https://instagram.com/happyscreens"
+                href="https://www.instagram.com/eraflix.in?igsh=MTMzYnN6MnV6MzRmcw%3D%3D&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <InstagramIcon fontSize="small" />
               </IconButton>
-              <IconButton
+              {/* <IconButton
                 sx={{
                   color: 'white',
                   bgcolor: 'rgba(255,255,255,0.1)',
@@ -585,7 +586,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
               >
                 <TwitterIcon fontSize="small" />
-              </IconButton>
+              </IconButton> */}
             </Box>
           </Box>
 
