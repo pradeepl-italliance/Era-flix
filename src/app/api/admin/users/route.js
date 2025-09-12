@@ -110,7 +110,7 @@ export async function POST(request) {
       role: 'admin',
       assignedLocations: assignedLocations || [],
       isActive: true,
-      createdBy: superAdmin.userId,
+      createdBy: superAdmin._id,
       failedLoginAttempts: 0,
       accountLockedUntil: null,
       lastLogin: null

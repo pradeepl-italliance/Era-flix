@@ -126,7 +126,7 @@ export default function AdminLoginPage() {
             </Box>
             
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-              Happy Screens
+              EraFlix
             </Typography>
             <Typography variant="h6" color="text.secondary">
               Admin Portal
@@ -229,7 +229,7 @@ export default function AdminLoginPage() {
               🔒 Forgot password? Contact Super Admin
             </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-              Secure admin access for Happy Screens management
+              Secure admin access for EraFlix management
             </Typography>
           </Box>
         </Paper>

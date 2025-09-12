@@ -134,7 +134,7 @@ export default function ExclusiveEvents() {
                 fontSize: { xs: "14px", sm: "15px", md: "16px" },
               }}
             >
-              The Happy Screens is a Private Theatre with a unique way of
+              The EraFlix is a Private Theatre with a unique way of
               celebrating any special occasions in Bengaluru.
               <br />
               <br />
