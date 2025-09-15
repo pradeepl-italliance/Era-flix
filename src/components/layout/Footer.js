@@ -553,7 +553,7 @@ const Footer = () => {
                   width: 40,
                   height: 40
                 }}
-                href="https://wa.me/919945102299"
+                href="https://wa.me/9964312117"
                 target="_blank"
                 rel="noopener noreferrer"
               >
