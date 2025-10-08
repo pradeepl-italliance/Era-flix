@@ -318,14 +318,14 @@ const handleDeleteClick = () => {
             value={form.duration}
             onChange={e => setForm({...form, duration: Number(e.target.value)})}
           />
-          <TextField
+          {/* <TextField
             label="Base Price (₹)"
             type="number"
             fullWidth
             margin="normal"
             value={form.basePrice}
             onChange={e => setForm({...form, basePrice: Number(e.target.value)})}
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
