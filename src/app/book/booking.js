@@ -1149,7 +1149,7 @@ export default function PublicBookingPage() {
                          </>
                         )}
                       </Box>
-                    </Grid>
+                    </Grid> 
 
                     {/* Price highlight - desktop only
                     {!isMobile && (
