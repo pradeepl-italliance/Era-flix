@@ -12,7 +12,7 @@ export async function GET(request) {
       .populate('createdBy', 'username')
       .sort({ createdAt: -1 })
       .lean()
-
+  
     return NextResponse.json({
       success: true,
       events: events.map(event => ({
@@ -40,28 +40,35 @@ export async function POST(request) {
   try {
     const user = await requireAuth(request)
     await dbConnect()
-
     const { name, description, category, duration, maxCapacity, pricing } = await request.json()
-
-    if (!name || !category || !duration || !pricing?.basePrice) {
+    
+    if (!name) {
       return NextResponse.json({ 
-        error: 'Name, category, duration, and base price are required' 
+        error: 'Name is required' 
       }, { status: 400 })
     }
-
-    const event = await Event.create({
+    
+    const eventData = {
       name: name.trim(),
       description: description?.trim(),
-      category: category.trim(),
+      category: String(category)?.trim() || '',
       duration: parseInt(duration),
       maxCapacity: parseInt(maxCapacity) || 10,
       pricing: {
-        basePrice: parseFloat(pricing.basePrice),
-        currency: pricing.currency || 'INR'
+        basePrice: 0,
+        currency: 'INR'
       },
       createdBy: user._id
-    })
-
+    }
+    
+    
+    
+    const event = await Event.create(eventData)
+    
+    console.log("event after create:", event)
+    console.log("event.pricing:", event.pricing)
+    console.log("event.toObject():", event.toObject())
+    
     return NextResponse.json({
       success: true,
       event: {
@@ -69,10 +76,10 @@ export async function POST(request) {
         name: event.name,
         category: event.category,
         duration: event.duration,
+        maxCapacity: event.maxCapacity,
         pricing: event.pricing
       }
     })
-
   } catch (error) {
     console.error('Create event error:', error)
     
@@ -81,7 +88,6 @@ export async function POST(request) {
         error: 'An event with this name already exists' 
       }, { status: 409 })
     }
-
     return NextResponse.json({ error: 'Failed to create event' }, { status: 500 })
   }
 }

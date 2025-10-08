@@ -14,12 +14,12 @@ const eventSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
+    // required: true,
     trim: true
   },
   duration: {
     type: Number, // in minutes
-    required: true,
+    // required: true,
     min: [15, 'Event duration must be at least 15 minutes']
   },
   maxCapacity: {
@@ -28,7 +28,7 @@ const eventSchema = new mongoose.Schema({
     min: [1, 'Max capacity must be at least 1']
   },
   pricing: {
-    basePrice: { type: Number, required: true, min: 0 },
+    basePrice: { type: Number, required: true, min: 0, default: 0},
     currency: { type: String, default: 'INR' }
   },
   isActive: {

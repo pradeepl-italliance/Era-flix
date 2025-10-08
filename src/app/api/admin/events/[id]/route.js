@@ -22,9 +22,9 @@ export async function PUT(request, { params }) {
     } = body || {}
 
     // Basic validation similar to POST
-    if (!name || !category || !duration || !pricing?.basePrice) {
+    if (!name ) {
       return NextResponse.json({
-        error: 'Name, category, duration, and base price are required'
+        error: 'Name is required'
       }, { status: 400 })
     }
 
@@ -32,7 +32,7 @@ export async function PUT(request, { params }) {
     const update = {
       name: String(name).trim(),
       description: description?.trim() || '',
-      category: String(category).trim(),
+      category: String(category)?.trim() || '',
       duration: parseInt(duration, 10),
       maxCapacity: maxCapacity != null ? parseInt(maxCapacity, 10) : undefined,
       pricing: {
