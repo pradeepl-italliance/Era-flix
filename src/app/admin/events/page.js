@@ -64,34 +64,69 @@ export default function EventsPage() {
     handleCloseMenu()
   }
 
+  // async function save() {
+  //   if (!form.title || !form.category) { setError('Title & category required'); return }
+
+  //   const payload = {
+  //     name: form.title,
+  //     description: form.description,
+  //     category: form.category,
+  //     duration: Number(form.duration),
+  //     pricing: { basePrice: Number(form.basePrice) }
+  //   }
+
+  //   try {
+  //     const isEditing = isEdit && targetEvent?.id
+  //     const url = isEditing ? `/api/admin/events/${targetEvent.id}` : '/api/admin/events'
+  //     const method = isEditing ? 'PUT' : 'POST'
+  //     const res = await fetch(url, {
+  //       method,
+  //       headers: { 'Content-Type':'application/json' },
+  //       body: JSON.stringify(payload)
+  //     })
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.error || 'Failed')
+  //     setSuccess(isEditing ? 'Updated' : 'Created')
+  //     setDialogOpen(false)
+  //     setTargetEvent(null)
+  //     load()
+  //   } catch(e){ setError(e.message) }
+  // }
   async function save() {
-    if (!form.title || !form.category) { setError('Title & category required'); return }
-
-    const payload = {
-      name: form.title,
-      description: form.description,
-      category: form.category,
-      duration: Number(form.duration),
-      pricing: { basePrice: Number(form.basePrice) }
-    }
-
-    try {
-      const isEditing = isEdit && targetEvent?.id
-      const url = isEditing ? `/api/admin/events/${targetEvent.id}` : '/api/admin/events'
-      const method = isEditing ? 'PUT' : 'POST'
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify(payload)
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Failed')
-      setSuccess(isEditing ? 'Updated' : 'Created')
-      setDialogOpen(false)
-      setTargetEvent(null)
-      load()
-    } catch(e){ setError(e.message) }
+  // Only Title is mandatory now
+  if (!form.title) {
+    setError('Title is required');
+    return;
   }
+
+  const payload = {
+    name: form.title,
+    description: form.description,
+    category: form.category, // optional
+    duration: Number(form.duration),
+    pricing: { basePrice: Number(form.basePrice) }
+  };
+
+  try {
+    const isEditing = isEdit && targetEvent?.id;
+    const url = isEditing ? `/api/admin/events/${targetEvent.id}` : '/api/admin/events';
+    const method = isEditing ? 'PUT' : 'POST';
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    setSuccess(isEditing ? 'Updated' : 'Created');
+    setDialogOpen(false);
+    setTargetEvent(null);
+    load();
+  } catch (e) {
+    setError(e.message);
+  }
+}
+
 
   // async function del() {
   //   if (!targetEvent?.id) { setError('No event selected'); return }
@@ -234,7 +269,7 @@ const handleDeleteClick = () => {
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>{isEdit ? 'Edit' : 'New'} Event</DialogTitle>
         <DialogContent sx={{pt:2}}>
-          <TextField
+          {/* <TextField
             label="Title"
             fullWidth
             margin="normal"
@@ -249,7 +284,23 @@ const handleDeleteClick = () => {
             required
             value={form.category}
             onChange={e => setForm({...form, category: e.target.value})}
-          />
+          /> */}
+          <TextField
+  label="Title"
+  fullWidth
+  margin="normal"
+  required
+  value={form.title}
+  onChange={e => setForm({ ...form, title: e.target.value })}
+/>
+<TextField
+  label="Category"
+  fullWidth
+  margin="normal"
+  value={form.category}
+  onChange={e => setForm({ ...form, category: e.target.value })}
+/>
+
           <TextField
             label="Description"
             fullWidth
@@ -267,14 +318,14 @@ const handleDeleteClick = () => {
             value={form.duration}
             onChange={e => setForm({...form, duration: Number(e.target.value)})}
           />
-          <TextField
+          {/* <TextField
             label="Base Price (₹)"
             type="number"
             fullWidth
             margin="normal"
             value={form.basePrice}
             onChange={e => setForm({...form, basePrice: Number(e.target.value)})}
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>

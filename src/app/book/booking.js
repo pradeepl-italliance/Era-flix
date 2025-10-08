@@ -59,6 +59,8 @@ import {
   KeyboardArrowUp
 } from '@mui/icons-material'
 
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+
 const getSteps = (hasPreSelectedScreen, hasPreSelectedEvent) => {
   if (hasPreSelectedScreen) {
     return ['Select Date & Time', 'Customer Details', 'Confirmation']
@@ -185,6 +187,15 @@ export default function PublicBookingPage() {
       }))
     }
   }, [events])
+
+  function format12Hour(time24) {
+  if (!time24) return ''
+  let [hours, minutes] = time24.split(':').map(Number)
+  const suffix = hours >= 12 ? 'PM' : 'AM'
+  hours = hours % 12 || 12
+  return `${hours}:${minutes.toString().padStart(2,'0')} ${suffix}`
+}
+
 
   // Re-load available screens when location changes
   useEffect(() => {
@@ -626,9 +637,10 @@ export default function PublicBookingPage() {
                             borderColor: 'success.200',
                             '&:hover': { bgcolor: 'success.100', borderColor: 'success.300' }
                           }}>
-                            <AttachMoney fontSize="small" color="success" sx={{ mb: 0.5 }} />
+                            {/* <AttachMoney fontSize="small" color="success" sx={{ mb: 0.5 }} /> */}
+                            <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
                             <Typography variant="body2" fontWeight="bold" color="success.dark">
-                              ₹{screen.pricePerHour?.toLocaleString()}
+                              {screen.pricePerHour?.toLocaleString()}
                             </Typography>
                             <Typography variant="caption" color="success.main">per hour</Typography>
                           </Box>
@@ -834,9 +846,10 @@ export default function PublicBookingPage() {
                               borderColor: 'success.200',
                               textAlign: 'center'
                             }}>
-                              <AttachMoney color="success" sx={{ mb: 0.5 }} />
+                              {/* <AttachMoney color="success" sx={{ mb: 0.5 }} /> */}
+                              <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
                               <Typography variant="body2" fontWeight="bold" color="success.main">
-                                ₹{selectedScreenInfo.pricePerHour?.toLocaleString()}
+                                {selectedScreenInfo.pricePerHour?.toLocaleString()}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
                                 Per Hour
@@ -978,8 +991,9 @@ export default function PublicBookingPage() {
 
                             {/* Time Display - Simplified */}
                             <Typography variant="h6" fontWeight="600" color="text.secondary">
-                              {slot.startTime} - {slot.endTime}
-                            </Typography>
+  {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
+</Typography>
+
                           </CardContent>
                         </Card>
                       </Grid>
@@ -1119,23 +1133,25 @@ export default function PublicBookingPage() {
                                 sx={{ fontSize: '0.75rem' }}
                               />
                             </Grid>
-                            <Grid item xs={6}>
+                            {/* <Grid item xs={6}>
                               <Typography variant="body2" fontWeight="bold" color="success.main">
                                 ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
                               </Typography>
-                            </Grid>
+                            </Grid> */}
                           </Grid>
                         ) : (
                           <>
                             <Chip label={bookingForm.selectedEvent.category} size="small" color="success" />
                             <Chip label={`${bookingForm.selectedEvent.duration} min`} size="small" />
-                            <Chip label={`Max ${bookingForm.selectedEvent.maxCapacity}`} size="small" />
-                          </>
+                            {/* <Chip label={`Max ${bookingForm.selectedEvent.maxCapacity}`} size="small" /> */}
+                            <Chip icon={<People fontSize="small" />}label={`${bookingForm.selectedEvent.maxCapacity} max`} size="small"
+                            />
+                         </>
                         )}
                       </Box>
                     </Grid>
 
-                    {/* Price highlight - desktop only */}
+                    {/* Price highlight - desktop only
                     {!isMobile && (
                       <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
                         <Typography variant="h5" fontWeight="bold" color="success.main">
@@ -1145,7 +1161,7 @@ export default function PublicBookingPage() {
                           Package Price
                         </Typography>
                       </Grid>
-                    )}
+                    )} */}
                   </Grid>
                 </CardContent>
               </Card>
