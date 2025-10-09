@@ -1714,6 +1714,7 @@ export default function PublicBookingPage() {
                   </Grid>
 
                   {/* Event Package */}
+                  
                   <Grid item xs={12}>
                     <Card variant="outlined" sx={{ bgcolor: 'success.50', borderColor: 'success.200' }}>
                       <CardContent>
@@ -1724,29 +1725,34 @@ export default function PublicBookingPage() {
                           </Typography>
                         </Stack>
 
-                        <Grid container spacing={2} alignItems="center">
-                          <Grid item xs={12} sm={8}>
-                            <Typography variant="h6" color="success.main" gutterBottom>
-                              {bookingForm.selectedEvent?.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {bookingForm.selectedEvent?.description}
-                            </Typography>
-                            <Stack direction="row" spacing={1} flexWrap="wrap" mt={1}>
-                              <Chip label={bookingForm.selectedEvent?.category} size="small" color="success" />
-                              <Chip label={`${bookingForm.selectedEvent?.duration} minutes`} size="small" variant="outlined" />
-                              <Chip label={`Max ${bookingForm.selectedEvent?.maxCapacity} people`} size="small" variant="outlined" />
-                            </Stack>
-                          </Grid>
-                          <Grid item xs={12} sm={4} sx={{ textAlign: { sm: 'right' } }}>
-                            <Typography variant="h5" fontWeight="bold" color="success.main">
-                              ₹{bookingForm.selectedEvent?.basePrice.toLocaleString()}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Package Price
-                            </Typography>
-                          </Grid>
-                        </Grid>
+                        {bookingForm.selectedEvent?.description && (
+  <Grid container spacing={2} alignItems="center">
+    <Grid item xs={12} sm={8}>
+      <Typography variant="h6" color="success.main" gutterBottom>
+        {bookingForm.selectedEvent?.name}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" gutterBottom>
+        {bookingForm.selectedEvent?.description}
+      </Typography>
+      <Stack direction="row" spacing={1} flexWrap="wrap" mt={1}>
+        {bookingForm.selectedEvent?.category && (
+          <Chip label={bookingForm.selectedEvent?.category} size="small" color="success" />
+        )}
+        <Chip label={`${bookingForm.selectedEvent?.duration} minutes`} size="small" variant="outlined" />
+        <Chip label={`Max ${bookingForm.selectedEvent?.maxCapacity} people`} size="small" variant="outlined" />
+      </Stack>
+    </Grid>
+    <Grid item xs={12} sm={4} sx={{ textAlign: { sm: 'right' } }}>
+      <Typography variant="h5" fontWeight="bold" color="success.main">
+        ₹{bookingForm.selectedEvent?.basePrice.toLocaleString()}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Package Price
+      </Typography>
+    </Grid>
+  </Grid>
+)}
+
                       </CardContent>
                     </Card>
                   </Grid>
@@ -1844,18 +1850,20 @@ export default function PublicBookingPage() {
                     </Typography>
                   </Box>
 
-                  {/* Event Package */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                    <Box>
-                      <Typography variant="body1" fontWeight="500">Event Package</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {bookingForm.selectedEvent?.name}
-                      </Typography>
-                    </Box>
-                    <Typography variant="h6" fontWeight="bold">
-                      ₹{eventAmount.toLocaleString()}
-                    </Typography>
-                  </Box>
+                 {bookingForm.selectedEvent?.basePrice > 0 && (
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+    <Box>
+      <Typography variant="body1" fontWeight="500">Event Package</Typography>
+      <Typography variant="caption" color="text.secondary">
+        {bookingForm.selectedEvent?.name}
+      </Typography>
+    </Box>
+    <Typography variant="h6" fontWeight="bold">
+      ₹{eventAmount.toLocaleString()}
+    </Typography>
+  </Box>
+)}
+
 
                   {/* Additional Services */}
                   {servicesAmount > 0 && (
@@ -1930,7 +1938,7 @@ export default function PublicBookingPage() {
                       ❌ <strong>Cancellation:</strong> Up to 2 hours before booking
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      📱 <strong>Support:</strong> +91 99451 02299 for assistance
+                      📱 <strong>Support:</strong> +91 9964312117 for assistance
                     </Typography>
                     <Typography variant="body2" gutterBottom>
                       🎬 <strong>Setup:</strong> Screen ready 5 minutes before slot
@@ -2101,14 +2109,17 @@ export default function PublicBookingPage() {
               <Typography variant="body1" gutterBottom>
                 Thank you <strong>{bookingResult.customerInfo.name}</strong>! Your booking has been confirmed.
               </Typography>
-              <Alert severity="info" sx={{ my: 2, textAlign: 'left' }}>
-                <Typography variant="body2" fontWeight="bold" gutterBottom>
-                  📧 Confirmation Email Sent
-                </Typography>
-                <Typography variant="body2">
-                  A detailed confirmation email has been sent to <strong>{bookingResult.customerInfo.email}</strong> with all your booking details.
-                </Typography>
-              </Alert>
+              {bookingForm.selectedEvent?.description && (
+  <Alert severity="info" sx={{ my: 2, textAlign: 'left' }}>
+    <Typography variant="body2" fontWeight="bold" gutterBottom>
+      {bookingForm.selectedEvent?.name}
+    </Typography>
+    <Typography variant="body2">
+      {bookingForm.selectedEvent?.description}
+    </Typography>
+  </Alert>
+)}
+
               <Alert severity="success" sx={{ my: 3, textAlign: 'left' }}>
                 <Typography variant="body2" fontWeight="bold" gutterBottom>
                   {"📋 What's Next?"}
