@@ -197,7 +197,7 @@ const handleDeleteClick = () => {
                 <TableCell>Title</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell>Duration</TableCell>
-                <TableCell>Base ₹</TableCell>
+                {/* <TableCell>Base ₹</TableCell> */}
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -207,7 +207,7 @@ const handleDeleteClick = () => {
                   <TableCell>{ev.name}</TableCell>
                   <TableCell>{ev.category}</TableCell>
                   <TableCell>{ev.duration} min</TableCell>
-                  <TableCell>₹{ev?.pricing?.basePrice ?? 0}</TableCell>
+                  {/* <TableCell>₹{ev?.pricing?.basePrice ?? 0}</TableCell> */}
                   <TableCell>
                     <IconButton
                       size="small"
