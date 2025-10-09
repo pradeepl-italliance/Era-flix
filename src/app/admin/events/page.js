@@ -210,7 +210,7 @@ const handleDeleteClick = () => {
                   {/* <TableCell>₹{ev?.pricing?.basePrice ?? 0}</TableCell> */}
                   <TableCell>
                     <IconButton
-                      size="small"
+                      size="small" 
                       onClick={(e) => {
                         setAnchorEl(e.currentTarget)
                         setTargetEvent(ev)
