@@ -74,7 +74,7 @@ const sections = [
   {
     title: "9. Governing Law & Dispute Resolution",
     content: [
-      "These Terms are governed by the laws of [Your State / Country]. Disputes are subject to the exclusive jurisdiction of courts located in [City, State]."
+      "These Terms are governed by the laws of India . Disputes are subject to the exclusive jurisdiction of courts located in Bangalore, Karnataka."
     ]
   },
   {
