@@ -642,7 +642,7 @@ export default function PublicBookingPage() {
                             <Typography variant="body2" fontWeight="bold" color="success.dark">
                               {screen.pricePerHour?.toLocaleString()}
                             </Typography>
-                            <Typography variant="caption" color="success.main">per hour</Typography>
+                            <Typography variant="caption" color="success.main">per screen</Typography>
                           </Box>
                         </Grid>
                       </Grid>
@@ -852,7 +852,7 @@ export default function PublicBookingPage() {
                                 {selectedScreenInfo.pricePerHour?.toLocaleString()}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
-                                Per Hour
+                                Per screen
                               </Typography>
                             </Box>
                           </Grid>
@@ -1829,12 +1829,16 @@ export default function PublicBookingPage() {
             {/* Pricing Breakdown */}
             <Card elevation={4} sx={{ border: '2px solid', borderColor: 'primary.main' }}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <AttachMoney sx={{ fontSize: 28, color: 'primary.main', mr: 2 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Pricing Breakdown
-                  </Typography>
-                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+  <CurrencyRupeeIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+  {/* <Typography variant="h6" fontWeight="bold">
+    {screenAmount.toLocaleString()}
+  </Typography> */}
+  <Typography variant="h6" fontWeight="bold">
+    Pricing Breakdown
+  </Typography>
+</Box>
+
 
                 <Stack spacing={2}>
                   {/* Screen Rental */}
@@ -1898,21 +1902,21 @@ export default function PublicBookingPage() {
             </Card>
 
             {/* Payment Information */}
-            <Alert severity="info" icon={<AttachMoney />}>
-              <Typography variant="body1" fontWeight="bold" gutterBottom>
-                💳 Payment Information
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">• No advance payment required</Typography>
-                  <Typography variant="body2">• Pay at venue before your session</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">• Cash, UPI, Cards accepted</Typography>
-                  <Typography variant="body2">• GST included in all prices</Typography>
-                </Grid>
-              </Grid>
-            </Alert>
+            <Alert severity="info" icon={<CurrencyRupeeIcon />}>
+  <Typography variant="body1" fontWeight="bold" gutterBottom>
+    💳 Payment Information
+  </Typography>
+  <Grid container spacing={2}>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">• No advance payment required</Typography>
+      <Typography variant="body2">• Pay at venue before your session</Typography>
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">• Cash, UPI, Cards accepted</Typography>
+      <Typography variant="body2">• GST included in all prices</Typography>
+    </Grid>
+  </Grid>
+</Alert>
 
             {/* Important Guidelines */}
             <Card sx={{ bgcolor: 'error.50', border: '1px solid', borderColor: 'error.200' }}>
