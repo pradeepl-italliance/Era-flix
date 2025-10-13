@@ -1,336 +1,169 @@
+"use client";
+
+import { useState } from "react";
 import { 
   Box, 
   Typography, 
   Container, 
   Paper, 
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText
-} from '@mui/material';
-import { CheckCircle2 } from 'lucide-react';
+  Collapse, 
+  IconButton, 
+  Divider 
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import PolicyIcon from "@mui/icons-material/Policy";
 
-// export const metadata = { title: 'Terms & Conditions – EraFlix' };
-
-const rules = [
-  'Guests must show valid ID proofs during the visit (minimum ID proof for 2 people).',
-  'We do NOT provide any movie/OTT accounts. We will set up using your own accounts/phone casting.',
-  'Smoking/Drinking is NOT allowed inside the theater.',
-  'Any damage to the theater—including balloons, lights, décor—must be reimbursed.',
-  'Please maintain cleanliness inside the theater.',
-  'Party poppers, snow sprays, cold fire and similar items are prohibited.',
-  'Couples under 18 cannot book unless it is a group.',
-  'Advance is refundable (-10% convenience fee) only if cancelled ≥72 hours before slot.'
+const sections = [
+  {
+    title: "1. Services & Booking",
+    content: [
+      "EraFlix offers private mini-theatre / screening room services where users may visit, use their own content / streaming credentials or cast from devices, subject to booking rules and guidelines.",
+      "To secure a time slot, you may be required to pay an advance (deposit) or full payment. The advance is refundable (less a 10% convenience fee) only if cancellation is made at least 72 hours in advance. Cancellations within 72 hours are generally non-refundable, except at our discretion.",
+      "Individuals under 18 years may not book a private theatre slot alone; they must be part of a group. Couples under 18 are not permitted unless booked as part of a larger group."
+    ]
+  },
+  {
+    title: "2. Use During Visit / On-site Rules",
+    content: [
+      "You and at least one accompanying person must present valid government-issued ID at the time of your visit.",
+      "We do not provide any movie, OTT, streaming, or login accounts. You must use your own credentials or cast from your own device. Sharing or using pirated / unauthorized content is strictly prohibited.",
+      "Smoking, drinking alcoholic beverages, or drug use is strictly prohibited inside the facility. Party poppers, snow sprays, confetti, firework-type items, cold fire, or similar pyrotechnic devices are prohibited. You must not damage property, décor, equipment, lighting, or any facility. You must keep the space reasonably clean and return it in the condition you found it.",
+      "If any damage or loss is caused during your occupancy, you will be responsible for the cost of repair / replacement."
+    ]
+  },
+  {
+    title: "3. Payment & Refunds",
+    content: [
+      "We accept payment methods as displayed at checkout (credit card, debit card, UPI, etc.). You agree to pay all amounts due as per the booking.",
+      "Refunds (where applicable) will be credited back to the original method of payment, minus any fees (e.g. 10% convenience fee). Processing may take 5-7 days depending on banking / payment processors."
+    ]
+  },
+  {
+    title: "4. Cancellations & Rescheduling",
+    content: [
+      "You may cancel as described in Section 1.2 above. Rescheduling is subject to availability; we may treat it as a cancellation + new booking depending on timing.",
+      "We reserve the right to cancel or reschedule bookings (e.g., maintenance, emergency, force majeure). In such cases, we will attempt to notify you in advance and issue a full refund or offer an alternate slot."
+    ]
+  },
+  {
+    title: "5. Intellectual Property",
+    content: [
+      "All content on this site (text, graphics, logos, images, designs, software) is our property or licensed to us, and is protected by copyright, trademark, and other intellectual property laws.",
+      "You are granted a limited, non-exclusive, non-transferable license to use the site and Services for personal, non-commercial use only."
+    ]
+  },
+  {
+    title: "6. Disclaimers & Limitation of Liability",
+    content: [
+      "The services and site are provided “as is” without warranties of any kind.",
+      "We shall not be liable for any indirect, incidental, or consequential damages. Total liability is limited to the total amount you paid in the six months preceding a claim."
+    ]
+  },
+  {
+    title: "7. Privacy & Personal Data",
+    content: [
+      "Your use of personal data is governed by our Privacy Policy, incorporated into these Terms by reference."
+    ]
+  },
+  {
+    title: "8. Termination",
+    content: [
+      "We may suspend or terminate your access if you breach these Terms. Provisions like liability, IP, and indemnification survive termination."
+    ]
+  },
+  {
+    title: "9. Governing Law & Dispute Resolution",
+    content: [
+      "These Terms are governed by the laws of [Your State / Country]. Disputes are subject to the exclusive jurisdiction of courts located in [City, State]."
+    ]
+  },
+  {
+    title: "10. General Provisions",
+    content: [
+      "We may amend these Terms and post the revised version. Severability, waiver, and the entire agreement clauses apply as described above."
+    ]
+  }
 ];
 
 export default function TermsPage() {
+  // First section expanded by default
+  const [expandedIndex, setExpandedIndex] = useState(0);
+
+  const toggleExpand = (index) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   return (
-    <Box
-      sx={{
-        // background: 'linear-gradient(135deg, #f5f5f5 0%, #e3f2fd 100%)',
-        minHeight: '100vh',
-        py: 4,
-        px: 2,
-      }}
-    >
+    <Box sx={{ minHeight: "100vh", py: 6, px: 2, background: "#f5f5f5" }}>
       <Container maxWidth="lg">
-        
-        {/* Hero Section */}
-        <Box textAlign="center" mb={6}>          
+        {/* Header */}
+        <Box textAlign="center" mb={6}>
           <Typography 
-            variant="h1" 
-            sx={{ 
-               fontSize: { xs: '2rem', md: '3rem', lg:'48px' }, fontStyle :'italic', 
-              fontFamily: '"Cormorant", serif', fontWeight:400,
-              mb: 2,
-              background: 'linear-gradient(45deg, #ff4d00ff 30%, #D50A17 90%)',
-              backgroundClip: 'text',
+            variant="h2"
+            sx={{
+              fontSize: { xs: '2rem', md: '3rem', lg:'4rem' },
+              fontWeight: 700,
+              fontFamily: '"Cormorant", serif',
+              background: 'linear-gradient(45deg, #ff4d00, #D50A17)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
+              mb: 1
             }}
           >
             Terms & Conditions
           </Typography>
-
-          <Typography 
-            variant="h5" 
-            color="text.secondary" 
-            sx={{ maxWidth: 600, mx: 'auto', lineHeight: 1.6 }}
-          >
-            Important guidelines to ensure everyone has an amazing experience
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 700, mx: "auto" }}>
+           {` Please read carefully the rules, guidelines, and policies.`}
           </Typography>
         </Box>
 
-        {/* Main Content Card */}
-        <Paper
-          elevation={3}
-          sx={{
-            background: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: 3,
-            p: { xs: 4, md: 6 },
-            mb: 6,
-            boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-          }}
+        {/* Accordion Paper */}
+        <Paper 
+          elevation={4}
+          sx={{ borderRadius: 3, p: { xs: 3, md: 5 }, overflowY: 'auto', background: "#fff" }}
         >
-          <Box textAlign="center" mb={4}>
-            <Typography 
-              variant="h3" 
-              color="primary" 
-              fontWeight="bold" 
-              gutterBottom
-              sx={{  fontSize: { xs: '2rem', md: '3rem', lg:'48px' }, fontStyle :'italic', 
-              fontFamily: '"Cormorant", serif', fontWeight:400,
- }}
-              
-            >
-              Rules & Guidelines
-            </Typography>
-            <Box
-              sx={{
-                width: 80,
-                height: 4,
-                bgcolor: 'primary.main',
-                mx: 'auto',
-                borderRadius: 2,
-              }}
-            />
-          </Box>
-
-          <Box maxWidth="900px" mx="auto">
-            <List sx={{ p: 0 }}>
-              {rules.map((rule, index) => (
-                <ListItem
-                  key={index}
-                  sx={{
-                    alignItems: 'flex-start',
-                    p: 2,
-                    mb: 1,
-                    borderRadius: 2,
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      bgcolor: 'rgba(25, 118, 210, 0.04)',
-                    },
-                  }}
-                >
-                  <ListItemIcon sx={{ mt: 0.5, minWidth: 40 }}>
-                    <CheckCircle2 
-                      size={24} 
-                      color="#D50A17"
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={rule}
-                    primaryTypographyProps={{
-                      variant: 'body1',
-                      sx: {
-                        lineHeight: 1.7,
-                        fontSize: '1.1rem',
-                        color: 'text.primary',
-                      },
+          {sections.map((section, index) => (
+            <Box key={index} mb={3}>
+              <Box 
+                sx={{
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  cursor: 'pointer', 
+                  py: 1.5,
+                  px: 2,
+                  borderRadius: 2,
+                  background: "#f9f9f9",
+                  '&:hover': { background: "#f0f0f0" }
+                }}
+                onClick={() => toggleExpand(index)}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <PolicyIcon sx={{ color: '#D50A17' }} />
+                  <Typography variant="h6" fontWeight="bold">{section.title}</Typography>
+                </Box>
+                <IconButton>
+                  <ExpandMoreIcon 
+                    sx={{
+                      transform: expandedIndex === index ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.3s'
                     }}
                   />
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Paper>
-
-        {/* Important Highlights */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: { xs: 'column', md: 'row' },
-            gap: 3,
-            mb: 6,
-          }}
-        >
-          {/* ID Requirement */}
-          <Paper
-            elevation={2}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 2,
-              p: 3,
-              flex: 1,
-              textAlign: 'center',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.12)',
-              },
-            }}
-          >
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                bgcolor: 'warning.main',
-                color: 'white',
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mx: 'auto',
-                mb: 2,
-                fontSize: '1.5rem',
-              }}
-            >
-              🆔
+                </IconButton>
+              </Box>
+              <Collapse in={expandedIndex === index}>
+                <Box sx={{ mt: 1.5, pl: 6 }}>
+                  {section.content.map((line, idx) => (
+                    <Typography variant="body1" key={idx} sx={{ mb: 1.2, lineHeight: 1.7 }}>
+                      {line}
+                    </Typography>
+                  ))}
+                </Box>
+              </Collapse>
+              <Divider sx={{ mt: 2 }} />
             </Box>
-            <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom>
-              ID Required
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Valid ID proofs must be shown during your visit
-            </Typography>
-          </Paper>
-
-          {/* No Smoking/Drinking */}
-          <Paper
-            elevation={2}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 2,
-              p: 3,
-              flex: 1,
-              textAlign: 'center',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.12)',
-              },
-            }}
-          >
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                bgcolor: 'error.main',
-                color: 'white',
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mx: 'auto',
-                mb: 2,
-                fontSize: '1.5rem',
-              }}
-            >
-              🚫
-            </Box>
-            <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom>
-              No Smoking/Drinking
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Maintain a family-friendly environment for everyone
-            </Typography>
-          </Paper>
-
-          {/* Age Restriction */}
-          <Paper
-            elevation={2}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 2,
-              p: 3,
-              flex: 1,
-              textAlign: 'center',
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'translateY(-4px)',
-                boxShadow: '0 15px 30px rgba(0,0,0,0.12)',
-              },
-            }}
-          >
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                bgcolor: 'info.main',
-                color: 'white',
-                borderRadius: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mx: 'auto',
-                mb: 2,
-                fontSize: '1.25rem',
-                fontWeight: 'bold',
-              }}
-            >
-              18+
-            </Box>
-            <Typography variant="h6" fontWeight="bold" color="text.primary" gutterBottom>
-              Age Guidelines
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Couples under 18 need to be part of a group booking
-            </Typography>
-          </Paper>
-        </Box>
-
-        <Box sx={{display:'flex', flexDirection:'row', alignContent:'center', justifyContent:'center', gap:'30px',
-           flexWrap: 'wrap', // allows responsive wrapping on smaller screens
-    px: { xs: 2, md: 4 },
-    py: { xs: 4, md: 6 },
-        }}>
-
-        {/* Damage Policy */}
-        <Paper
-          elevation={2}
-          sx={{
-            // background: 'linear-gradient(45deg, #d32f2f 30%, #f57c00 90%)',
-            background:'#000',
-            borderRadius: 3,
-            p: 4,
-            color: 'white',
-            textAlign: 'center',
-            mb: 4,
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold" gutterBottom  sx={{  fontSize: { xs: '2rem', md: '3rem', lg:'48px' }, fontStyle :'italic', 
-              fontFamily: '"Cormorant", serif', fontWeight:400, color:'#D50A17'
-            }}
- >
-            Damage & Cleanliness Policy
-          </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.95 }}>
-            Any damage to theater equipment, decorations, or facilities must be reimbursed. 
-            Please help us maintain cleanliness for the next guests. Party poppers, snow sprays, 
-            and similar items are strictly prohibited.
-          </Typography>
+          ))}
         </Paper>
-
-        {/* Your Accounts Note */}
-        <Paper
-          elevation={2}
-          sx={{
-             background: 'linear-gradient(45deg, #d32f2f 30%, #D50A17 90%)',
-            borderRadius: 3,
-            p: 4,
-            color: 'white',
-            textAlign: 'center',
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold" gutterBottom  sx={{  fontSize: { xs: '2rem', md: '3rem', lg:'48px' }, fontStyle :'italic', 
-              fontFamily: '"Cormorant", serif', fontWeight:400, color:'#000'
-            }}
->
-            Streaming Accounts
-          </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.95 }}>
-            We do not provide movie or OTT accounts. Please bring your own login credentials 
-            or use phone casting to enjoy your favorite content during your visit.
-          </Typography>
-        </Paper>
-
-        </Box>
-
       </Container>
     </Box>
   );
