@@ -24,8 +24,8 @@ export async function GET(request) {
       category: event.category,
       duration: event.duration, // in minutes
       maxCapacity: event.maxCapacity,
-      basePrice: event.pricing.basePrice,
-      currency: event.pricing.currency
+      basePrice: event?.pricing?.basePrice ?? 0,
+      currency: event?.pricing?.currency || 'INR'
     }))
 
     return NextResponse.json({

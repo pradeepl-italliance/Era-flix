@@ -21,7 +21,7 @@ export default function SlotsPage() {
   const [isEdit, setIsEdit] = useState(false)
   const [selectedSlot, setSelectedSlot] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null)
-  const [form, setForm] = useState({ name: '', start: '10:00', end: '12:00' })
+  const [form, setForm] = useState({ name: '', start: '10:00 AM', end: '12:00 PM' })
 
   // Find the selected screen object
   const selectedScreen = useMemo(
@@ -56,7 +56,9 @@ export default function SlotsPage() {
       const r = await fetch(url)
       const d = await r.json()
       if (!r.ok) throw new Error(d.error || 'Failed to load slots')
-      setSlots(d.slots)
+      // Sort slots by startTime in 24-hour format to show chronologically
+      const sortedSlots = (d.slots || []).sort((a,b) => a.startTime.localeCompare(b.startTime))
+      setSlots(sortedSlots)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -71,7 +73,7 @@ export default function SlotsPage() {
 
   function openNew() {
     setIsEdit(false)
-    setForm({ name: '', start: '10:00', end: '12:00' })
+    setForm({ name: '', start: '10:00 AM', end: '12:00 PM' })
     setDialogOpen(true)
     setSelectedSlot(null)
   }
@@ -83,15 +85,33 @@ export default function SlotsPage() {
     setScreenId(slot.screen || screenId)
     setForm({
       name: slot.name,
-      start: slot.startTime,
-      end: slot.endTime,
+      start: format12Hour(slot.startTime),
+      end: format12Hour(slot.endTime),
     })
     setDialogOpen(true)
     closeMenu()
   }
 
+  // 12-hour validation
   function isValidHHMM(s) {
-    return /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(s)
+    return /^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i.test(s)
+  }
+
+  // Convert 12-hour input to 24-hour string
+  function convertTo24Hour(time12h) {
+    const [time, modifier] = time12h.split(' ')
+    let [hours, minutes] = time.split(':').map(Number)
+    if (modifier.toUpperCase() === 'PM' && hours !== 12) hours += 12
+    if (modifier.toUpperCase() === 'AM' && hours === 12) hours = 0
+    return `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}`
+  }
+
+  // Convert 24-hour string to 12-hour format
+  function format12Hour(time24) {
+    let [hours, minutes] = time24.split(':').map(Number)
+    const suffix = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12 || 12
+    return `${hours}:${minutes.toString().padStart(2,'0')} ${suffix}`
   }
 
   async function save() {
@@ -99,9 +119,14 @@ export default function SlotsPage() {
     if (!screenId) { setError('Select a screen'); return }
     if (!form.name) { setError('Name required'); return }
     if (!isValidHHMM(form.start) || !isValidHHMM(form.end)) {
-      setError('Times must be HH:MM (24h)'); return
+      setError('Times must be HH:MM AM/PM'); return
     }
-    const body = { screen: screenId, name: form.name.trim(), startTime: form.start, endTime: form.end }
+    const body = { 
+      screen: screenId, 
+      name: form.name.trim(), 
+      startTime: convertTo24Hour(form.start), 
+      endTime: convertTo24Hour(form.end) 
+    }
     try {
       let url = '/api/admin/slots'
       let method = 'POST'
@@ -146,7 +171,6 @@ export default function SlotsPage() {
     </Box>
   )
 
-  // Helper to render “Screen — Location, City”
   function screenLabel(s) {
     const loc = s.location
     const parts = []
@@ -162,7 +186,6 @@ export default function SlotsPage() {
         <IconButton onClick={() => router.back()}><ArrowBack /></IconButton>
         <Typography variant="h5" fontWeight="bold">Time Slots</Typography>
 
-        {/* Show selected location context when a screen is picked */}
         {selectedScreen?.location && (
           <Chip
             size="small"
@@ -171,7 +194,6 @@ export default function SlotsPage() {
           />
         )}
 
-        {/* Screen filter */}
         <FormControl size="small" sx={{ minWidth: 260, ml: 2 }}>
           <InputLabel id="screen-label">Screen</InputLabel>
           <Select
@@ -210,8 +232,8 @@ export default function SlotsPage() {
               {slots.map(slot => (
                 <TableRow key={slot.id} hover>
                   <TableCell>{slot.name}</TableCell>
-                  <TableCell>{slot.startTime}</TableCell>
-                  <TableCell>{slot.endTime}</TableCell>
+                  <TableCell>{format12Hour(slot.startTime)}</TableCell>
+                  <TableCell>{format12Hour(slot.endTime)}</TableCell>
                   <TableCell>
                     <IconButton
                       size="small"
@@ -246,7 +268,6 @@ export default function SlotsPage() {
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
         <DialogTitle>{isEdit ? 'Edit' : 'New'} Slot</DialogTitle>
         <DialogContent>
-          {/* Screen selector in dialog (only screens with location) */}
           <FormControl fullWidth margin="normal">
             <InputLabel id="dialog-screen-label">Screen</InputLabel>
             <Select
@@ -270,14 +291,14 @@ export default function SlotsPage() {
             onChange={e => setForm({ ...form, name: e.target.value })}
           />
           <TextField
-            label="Start (HH:MM)"
+            label="Start (HH:MM AM/PM)"
             fullWidth
             margin="normal"
             value={form.start}
             onChange={e => setForm({ ...form, start: e.target.value })}
           />
           <TextField
-            label="End (HH:MM)"
+            label="End (HH:MM AM/PM)"
             fullWidth
             margin="normal"
             value={form.end}
@@ -286,7 +307,7 @@ export default function SlotsPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={save} disabled={!screenId}>{isEdit ? 'Update' : 'Create'}</Button>
+          <Button variant="contained" onClick={save}>{isEdit ? 'Update' : 'Create'}</Button>
         </DialogActions>
       </Dialog>
     </Box>

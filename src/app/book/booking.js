@@ -59,6 +59,8 @@ import {
   KeyboardArrowUp
 } from '@mui/icons-material'
 
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+
 const getSteps = (hasPreSelectedScreen, hasPreSelectedEvent) => {
   if (hasPreSelectedScreen) {
     return ['Select Date & Time', 'Customer Details', 'Confirmation']
@@ -185,6 +187,15 @@ export default function PublicBookingPage() {
       }))
     }
   }, [events])
+
+  function format12Hour(time24) {
+  if (!time24) return ''
+  let [hours, minutes] = time24.split(':').map(Number)
+  const suffix = hours >= 12 ? 'PM' : 'AM'
+  hours = hours % 12 || 12
+  return `${hours}:${minutes.toString().padStart(2,'0')} ${suffix}`
+}
+
 
   // Re-load available screens when location changes
   useEffect(() => {
@@ -333,6 +344,12 @@ export default function PublicBookingPage() {
   //     scrollToTop() // Scroll to top when moving to next step
   //   }
   // }
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // smooth scroll animation
+  });
+}
 
   function handleBack() {
     setActiveStep(prev => prev - 1)
@@ -626,11 +643,12 @@ export default function PublicBookingPage() {
                             borderColor: 'success.200',
                             '&:hover': { bgcolor: 'success.100', borderColor: 'success.300' }
                           }}>
-                            <AttachMoney fontSize="small" color="success" sx={{ mb: 0.5 }} />
+                            {/* <AttachMoney fontSize="small" color="success" sx={{ mb: 0.5 }} /> */}
+                            <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
                             <Typography variant="body2" fontWeight="bold" color="success.dark">
-                              ₹{screen.pricePerHour?.toLocaleString()}
+                              {screen.pricePerHour?.toLocaleString()}
                             </Typography>
-                            <Typography variant="caption" color="success.main">per hour</Typography>
+                            <Typography variant="caption" color="success.main">per screen</Typography>
                           </Box>
                         </Grid>
                       </Grid>
@@ -834,12 +852,13 @@ export default function PublicBookingPage() {
                               borderColor: 'success.200',
                               textAlign: 'center'
                             }}>
-                              <AttachMoney color="success" sx={{ mb: 0.5 }} />
+                              {/* <AttachMoney color="success" sx={{ mb: 0.5 }} /> */}
+                              <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
                               <Typography variant="body2" fontWeight="bold" color="success.main">
-                                ₹{selectedScreenInfo.pricePerHour?.toLocaleString()}
+                                {selectedScreenInfo.pricePerHour?.toLocaleString()}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
-                                Per Hour
+                                Per screen
                               </Typography>
                             </Box>
                           </Grid>
@@ -978,8 +997,9 @@ export default function PublicBookingPage() {
 
                             {/* Time Display - Simplified */}
                             <Typography variant="h6" fontWeight="600" color="text.secondary">
-                              {slot.startTime} - {slot.endTime}
-                            </Typography>
+  {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
+</Typography>
+
                           </CardContent>
                         </Card>
                       </Grid>
@@ -1119,23 +1139,25 @@ export default function PublicBookingPage() {
                                 sx={{ fontSize: '0.75rem' }}
                               />
                             </Grid>
-                            <Grid item xs={6}>
+                            {/* <Grid item xs={6}>
                               <Typography variant="body2" fontWeight="bold" color="success.main">
                                 ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
                               </Typography>
-                            </Grid>
+                            </Grid> */}
                           </Grid>
                         ) : (
                           <>
                             <Chip label={bookingForm.selectedEvent.category} size="small" color="success" />
                             <Chip label={`${bookingForm.selectedEvent.duration} min`} size="small" />
-                            <Chip label={`Max ${bookingForm.selectedEvent.maxCapacity}`} size="small" />
-                          </>
+                            {/* <Chip label={`Max ${bookingForm.selectedEvent.maxCapacity}`} size="small" /> */}
+                            <Chip icon={<People fontSize="small" />}label={`${bookingForm.selectedEvent.maxCapacity} max`} size="small"
+                            />
+                         </>
                         )}
                       </Box>
-                    </Grid>
+                    </Grid> 
 
-                    {/* Price highlight - desktop only */}
+                    {/* Price highlight - desktop only
                     {!isMobile && (
                       <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
                         <Typography variant="h5" fontWeight="bold" color="success.main">
@@ -1145,7 +1167,7 @@ export default function PublicBookingPage() {
                           Package Price
                         </Typography>
                       </Grid>
-                    )}
+                    )} */}
                   </Grid>
                 </CardContent>
               </Card>
@@ -1698,6 +1720,7 @@ export default function PublicBookingPage() {
                   </Grid>
 
                   {/* Event Package */}
+                  
                   <Grid item xs={12}>
                     <Card variant="outlined" sx={{ bgcolor: 'success.50', borderColor: 'success.200' }}>
                       <CardContent>
@@ -1708,29 +1731,34 @@ export default function PublicBookingPage() {
                           </Typography>
                         </Stack>
 
-                        <Grid container spacing={2} alignItems="center">
-                          <Grid item xs={12} sm={8}>
-                            <Typography variant="h6" color="success.main" gutterBottom>
-                              {bookingForm.selectedEvent?.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {bookingForm.selectedEvent?.description}
-                            </Typography>
-                            <Stack direction="row" spacing={1} flexWrap="wrap" mt={1}>
-                              <Chip label={bookingForm.selectedEvent?.category} size="small" color="success" />
-                              <Chip label={`${bookingForm.selectedEvent?.duration} minutes`} size="small" variant="outlined" />
-                              <Chip label={`Max ${bookingForm.selectedEvent?.maxCapacity} people`} size="small" variant="outlined" />
-                            </Stack>
-                          </Grid>
-                          <Grid item xs={12} sm={4} sx={{ textAlign: { sm: 'right' } }}>
-                            <Typography variant="h5" fontWeight="bold" color="success.main">
-                              ₹{bookingForm.selectedEvent?.basePrice.toLocaleString()}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              Package Price
-                            </Typography>
-                          </Grid>
-                        </Grid>
+                        {bookingForm.selectedEvent?.description && (
+  <Grid container spacing={2} alignItems="center">
+    <Grid item xs={12} sm={8}>
+      <Typography variant="h6" color="success.main" gutterBottom>
+        {bookingForm.selectedEvent?.name}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" gutterBottom>
+        {bookingForm.selectedEvent?.description}
+      </Typography>
+      <Stack direction="row" spacing={1} flexWrap="wrap" mt={1}>
+        {bookingForm.selectedEvent?.category && (
+          <Chip label={bookingForm.selectedEvent?.category} size="small" color="success" />
+        )}
+        <Chip label={`${bookingForm.selectedEvent?.duration} minutes`} size="small" variant="outlined" />
+        <Chip label={`Max ${bookingForm.selectedEvent?.maxCapacity} people`} size="small" variant="outlined" />
+      </Stack>
+    </Grid>
+    <Grid item xs={12} sm={4} sx={{ textAlign: { sm: 'right' } }}>
+      <Typography variant="h5" fontWeight="bold" color="success.main">
+        ₹{bookingForm.selectedEvent?.basePrice.toLocaleString()}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Package Price
+      </Typography>
+    </Grid>
+  </Grid>
+)}
+
                       </CardContent>
                     </Card>
                   </Grid>
@@ -1807,12 +1835,16 @@ export default function PublicBookingPage() {
             {/* Pricing Breakdown */}
             <Card elevation={4} sx={{ border: '2px solid', borderColor: 'primary.main' }}>
               <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <AttachMoney sx={{ fontSize: 28, color: 'primary.main', mr: 2 }} />
-                  <Typography variant="h6" fontWeight="bold">
-                    Pricing Breakdown
-                  </Typography>
-                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+  <CurrencyRupeeIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+  {/* <Typography variant="h6" fontWeight="bold">
+    {screenAmount.toLocaleString()}
+  </Typography> */}
+  <Typography variant="h6" fontWeight="bold">
+    Pricing Breakdown
+  </Typography>
+</Box>
+
 
                 <Stack spacing={2}>
                   {/* Screen Rental */}
@@ -1828,18 +1860,20 @@ export default function PublicBookingPage() {
                     </Typography>
                   </Box>
 
-                  {/* Event Package */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
-                    <Box>
-                      <Typography variant="body1" fontWeight="500">Event Package</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {bookingForm.selectedEvent?.name}
-                      </Typography>
-                    </Box>
-                    <Typography variant="h6" fontWeight="bold">
-                      ₹{eventAmount.toLocaleString()}
-                    </Typography>
-                  </Box>
+                 {bookingForm.selectedEvent?.basePrice > 0 && (
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1 }}>
+    <Box>
+      <Typography variant="body1" fontWeight="500">Event Package</Typography>
+      <Typography variant="caption" color="text.secondary">
+        {bookingForm.selectedEvent?.name}
+      </Typography>
+    </Box>
+    <Typography variant="h6" fontWeight="bold">
+      ₹{eventAmount.toLocaleString()}
+    </Typography>
+  </Box>
+)}
+
 
                   {/* Additional Services */}
                   {servicesAmount > 0 && (
@@ -1874,21 +1908,21 @@ export default function PublicBookingPage() {
             </Card>
 
             {/* Payment Information */}
-            <Alert severity="info" icon={<AttachMoney />}>
-              <Typography variant="body1" fontWeight="bold" gutterBottom>
-                💳 Payment Information
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">• No advance payment required</Typography>
-                  <Typography variant="body2">• Pay at venue before your session</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">• Cash, UPI, Cards accepted</Typography>
-                  <Typography variant="body2">• GST included in all prices</Typography>
-                </Grid>
-              </Grid>
-            </Alert>
+            <Alert severity="info" icon={<CurrencyRupeeIcon />}>
+  <Typography variant="body1" fontWeight="bold" gutterBottom>
+    💳 Payment Information
+  </Typography>
+  <Grid container spacing={2}>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">• No advance payment required</Typography>
+      <Typography variant="body2">• Pay at venue before your session</Typography>
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">• Cash, UPI, Cards accepted</Typography>
+      <Typography variant="body2">• GST included in all prices</Typography>
+    </Grid>
+  </Grid>
+</Alert>
 
             {/* Important Guidelines */}
             <Card sx={{ bgcolor: 'error.50', border: '1px solid', borderColor: 'error.200' }}>
@@ -1914,7 +1948,7 @@ export default function PublicBookingPage() {
                       ❌ <strong>Cancellation:</strong> Up to 2 hours before booking
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      📱 <strong>Support:</strong> +91 99451 02299 for assistance
+                      📱 <strong>Support:</strong> +91 9964312117 for assistance
                     </Typography>
                     <Typography variant="body2" gutterBottom>
                       🎬 <strong>Setup:</strong> Screen ready 5 minutes before slot
@@ -2085,14 +2119,17 @@ export default function PublicBookingPage() {
               <Typography variant="body1" gutterBottom>
                 Thank you <strong>{bookingResult.customerInfo.name}</strong>! Your booking has been confirmed.
               </Typography>
-              <Alert severity="info" sx={{ my: 2, textAlign: 'left' }}>
-                <Typography variant="body2" fontWeight="bold" gutterBottom>
-                  📧 Confirmation Email Sent
-                </Typography>
-                <Typography variant="body2">
-                  A detailed confirmation email has been sent to <strong>{bookingResult.customerInfo.email}</strong> with all your booking details.
-                </Typography>
-              </Alert>
+              {bookingForm.selectedEvent?.description && (
+  <Alert severity="info" sx={{ my: 2, textAlign: 'left' }}>
+    <Typography variant="body2" fontWeight="bold" gutterBottom>
+      {bookingForm.selectedEvent?.name}
+    </Typography>
+    <Typography variant="body2">
+      {bookingForm.selectedEvent?.description}
+    </Typography>
+  </Alert>
+)}
+
               <Alert severity="success" sx={{ my: 3, textAlign: 'left' }}>
                 <Typography variant="body2" fontWeight="bold" gutterBottom>
                   {"📋 What's Next?"}

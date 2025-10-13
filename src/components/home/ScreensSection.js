@@ -366,7 +366,7 @@ export default function ScreensSection() {
                                 fontSize: { xs: '0.925rem', sm: '1rem' },
                               }}
                             >
-                              ₹{screen.pricePerHour}/hour
+                              ₹{screen.pricePerHour}/screen
                             </Box>
                           </Typography>
                         </Box>
