@@ -344,6 +344,12 @@ export default function PublicBookingPage() {
   //     scrollToTop() // Scroll to top when moving to next step
   //   }
   // }
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // smooth scroll animation
+  });
+}
 
   function handleBack() {
     setActiveStep(prev => prev - 1)
