@@ -440,6 +440,7 @@ const HeroSection = () => {
                               display: 'flex',
                               flexDirection: 'column',
                               alignItems: 'center',
+                              
                               justifyContent: 'center',
                               height: '100%',
                               py: { xs: '8px !important', sm: '12px !important', md: '16px !important' },

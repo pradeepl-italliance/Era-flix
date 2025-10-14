@@ -84,6 +84,22 @@ const getAmenityIcon = (amenity) => {
   if (amenityLower.includes('screen') || amenityLower.includes('display') || amenityLower.includes('tv')) return <Tv fontSize="small" />
   return <Star fontSize="small" />
 }
+const today = new Date().toISOString().split('T')[0]; // e.g., '2025-10-14'
+const selectedDate = today; // default to today
+
+
+const getAvailableSlots = (screen, date) => {
+  // total slots from admin
+  const total = screen.totalSlots || 0;
+  // booked slots for the selected date
+  const booked = screen.bookingsByDate?.[date] || 0;
+  // remaining slots
+  return total - booked;
+};
+
+const [openVideo, setOpenVideo] = useState(false);
+const [videoLink, setVideoLink] = useState('');
+
 
 export default function PublicBookingPage() {
   const theme = useTheme()
@@ -862,6 +878,65 @@ function scrollToTop() {
                               </Typography>
                             </Box>
                           </Grid>
+                         <Grid container spacing={2} alignItems="center">
+  {/* Available Slots */}
+  <Grid item xs={6} sm={3}>
+    <Box sx={{
+      textAlign: 'center',
+      p: 1.5,
+      bgcolor: 'info.50',
+      borderRadius: 2,
+      border: '1px solid',
+      borderColor: 'info.200'
+    }}>
+      <Typography variant="caption" fontWeight="bold" sx={{ mb: 0.5, display: 'block' }}>
+        Available Slots
+      </Typography>
+      <Typography variant="body2" fontWeight="bold">
+        {getAvailableSlots(selectedScreenInfo, selectedDate || new Date().toISOString().split('T')[0])}
+      </Typography>
+    </Box>
+  </Grid>
+
+  {/* YouTube Button */}
+  <Grid item xs={6} sm={3}>
+    {selectedScreenInfo.youtubeLink && (
+      <Button
+        variant="contained"
+        color="error"
+        fullWidth
+        size="small"
+        onClick={() => {
+          setVideoLink(selectedScreenInfo.youtubeLink);
+          setOpenVideo(true);
+        }}
+      >
+        YouTube
+      </Button>
+    )}
+  </Grid>
+</Grid>
+
+{/* Modal for YouTube */}
+<Modal open={openVideo} onClose={() => setOpenVideo(false)}>
+  <Box sx={{
+    position: 'absolute', top: '50%', left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: { xs: '90%', sm: 600 },
+    bgcolor: 'background.paper', p: 2, borderRadius: 2
+  }}>
+    <iframe
+      width="100%"
+      height="315"
+      src={videoLink}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    ></iframe>
+  </Box>
+</Modal>
+
                         </Grid>
 
                         {/* Amenities - Enhanced Design */}
