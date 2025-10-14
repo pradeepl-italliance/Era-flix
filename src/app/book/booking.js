@@ -84,21 +84,21 @@ const getAmenityIcon = (amenity) => {
   if (amenityLower.includes('screen') || amenityLower.includes('display') || amenityLower.includes('tv')) return <Tv fontSize="small" />
   return <Star fontSize="small" />
 }
-const today = new Date().toISOString().split('T')[0]; // e.g., '2025-10-14'
-const selectedDate = today; // default to today
+// const today = new Date().toISOString().split('T')[0]; // e.g., '2025-10-14'
+// const selectedDate = today; // default to today
 
 
-const getAvailableSlots = (screen, date) => {
-  // total slots from admin
-  const total = screen.totalSlots || 0;
-  // booked slots for the selected date
-  const booked = screen.bookingsByDate?.[date] || 0;
-  // remaining slots
-  return total - booked;
-};
+// const getAvailableSlots = (screen, date) => {
+//   // total slots from admin
+//   const total = screen.totalSlots || 0;
+//   // booked slots for the selected date
+//   const booked = screen.bookingsByDate?.[date] || 0;
+//   // remaining slots
+//   return total - booked;
+// };
 
-const [openVideo, setOpenVideo] = useState(false);
-const [videoLink, setVideoLink] = useState('');
+// const [openVideo, setOpenVideo] = useState(false);
+// const [videoLink, setVideoLink] = useState('');
 
 
 export default function PublicBookingPage() {
@@ -880,7 +880,7 @@ function scrollToTop() {
                           </Grid>
                          <Grid container spacing={2} alignItems="center">
   {/* Available Slots */}
-  <Grid item xs={6} sm={3}>
+  {/* <Grid item xs={6} sm={3}>
     <Box sx={{
       textAlign: 'center',
       p: 1.5,
@@ -896,10 +896,10 @@ function scrollToTop() {
         {getAvailableSlots(selectedScreenInfo, selectedDate || new Date().toISOString().split('T')[0])}
       </Typography>
     </Box>
-  </Grid>
+  </Grid> */}
 
   {/* YouTube Button */}
-  <Grid item xs={6} sm={3}>
+  {/* <Grid item xs={6} sm={3}>
     {selectedScreenInfo.youtubeLink && (
       <Button
         variant="contained"
@@ -914,11 +914,11 @@ function scrollToTop() {
         YouTube
       </Button>
     )}
-  </Grid>
+  </Grid> */}
 </Grid>
 
 {/* Modal for YouTube */}
-<Modal open={openVideo} onClose={() => setOpenVideo(false)}>
+{/* <Modal open={openVideo} onClose={() => setOpenVideo(false)}>
   <Box sx={{
     position: 'absolute', top: '50%', left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -935,7 +935,7 @@ function scrollToTop() {
       allowFullScreen
     ></iframe>
   </Box>
-</Modal>
+</Modal> */}
 
                         </Grid>
 
