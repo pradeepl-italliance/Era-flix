@@ -410,7 +410,8 @@ const HeroSection = () => {
                 </Stack>
 
                 {/* Stats */}
-                <Grid container spacing={{ xs: 1, sm: 2 }}>
+                
+                <Grid container spacing={{ xs: 1, sm: 2 }} justifyContent={{ xs: 'center', sm: 'flex-start' }}>
                   {stats.map((stat, index) => (
                     <Grid item xs={6} sm={6} md={3} key={index}>
                       <Slide direction="up" in timeout={1000 + index * 200}>

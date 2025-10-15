@@ -59,7 +59,12 @@ import {
   KeyboardArrowUp
 } from '@mui/icons-material'
 
+import YouTube from '@mui/icons-material/YouTube';
+import {  Modal } from "@mui/material"; 
+
 import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
+
+
 
 const getSteps = (hasPreSelectedScreen, hasPreSelectedEvent) => {
   if (hasPreSelectedScreen) {
@@ -84,6 +89,8 @@ const getAmenityIcon = (amenity) => {
   if (amenityLower.includes('screen') || amenityLower.includes('display') || amenityLower.includes('tv')) return <Tv fontSize="small" />
   return <Star fontSize="small" />
 }
+
+
 // const today = new Date().toISOString().split('T')[0]; // e.g., '2025-10-14'
 // const selectedDate = today; // default to today
 
@@ -138,6 +145,9 @@ export default function PublicBookingPage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
 
   const [phoneTouched, setPhoneTouched] = useState(false);
+
+  const [openVideo, setOpenVideo] = useState(false); // ✅ Modal open state
+  const [videoLink, setVideoLink] = useState("https://www.youtube.com/watch?v=ePb9m58EUWo&list=RDePb9m58EUWo&start_radio=1");   // ✅ Video URL state
 
   // Booking form state with pre-selected values
   const [bookingForm, setBookingForm] = useState({
@@ -879,64 +889,75 @@ function scrollToTop() {
                             </Box>
                           </Grid>
                          <Grid container spacing={2} alignItems="center">
-  {/* Available Slots */}
-  {/* <Grid item xs={6} sm={3}>
-    <Box sx={{
-      textAlign: 'center',
-      p: 1.5,
-      bgcolor: 'info.50',
-      borderRadius: 2,
-      border: '1px solid',
-      borderColor: 'info.200'
-    }}>
-      <Typography variant="caption" fontWeight="bold" sx={{ mb: 0.5, display: 'block' }}>
-        Available Slots
-      </Typography>
-      <Typography variant="body2" fontWeight="bold">
-        {getAvailableSlots(selectedScreenInfo, selectedDate || new Date().toISOString().split('T')[0])}
-      </Typography>
-    </Box>
-  </Grid> */}
-
-  {/* YouTube Button */}
-  {/* <Grid item xs={6} sm={3}>
-    {selectedScreenInfo.youtubeLink && (
-      <Button
-        variant="contained"
-        color="error"
-        fullWidth
-        size="small"
-        onClick={() => {
-          setVideoLink(selectedScreenInfo.youtubeLink);
-          setOpenVideo(true);
-        }}
-      >
-        YouTube
-      </Button>
-    )}
-  </Grid> */}
+ <Grid item xs={6}>
+  <Box sx={{
+    p: 1.5,
+    bgcolor: 'info.50',
+    borderRadius: 2,
+    border: '1px solid',
+    borderColor: 'info.200',
+    textAlign: 'center'
+  }}>
+    <AccessTime color="info" sx={{ mb: 0.5 }} />
+    <Typography variant="body2" fontWeight="bold" color="info.main">
+      {selectedScreenInfo.timeSlots 
+         ? selectedScreenInfo.timeSlots.filter(slot => !slot.booked).length 
+         : 0}
+    </Typography>
+    <Typography variant="caption" color="text.secondary">
+      Available Slots
+    </Typography>
+  </Box>
 </Grid>
 
-{/* Modal for YouTube */}
-{/* <Modal open={openVideo} onClose={() => setOpenVideo(false)}>
+
+<Grid item xs={6}>
+  <Box
+    onClick={() => setOpenVideo(true)}
+    sx={{
+      p: 1.5,
+      bgcolor: 'error.50',
+      borderRadius: 2,
+      border: '1px solid',
+      borderColor: 'error.200',
+      textAlign: 'center',
+      cursor: 'pointer',
+      '&:hover': { bgcolor: 'error.100' }
+    }}
+  >
+    <YouTube sx={{ color: '#FF0000', mb: 0.5 }} />
+    <Typography variant="body2" fontWeight="bold" color="error.main">
+      Watch Video
+    </Typography>
+    <Typography variant="caption" color="text.secondary">
+      Check out for more ideas
+    </Typography>
+  </Box>
+</Grid>
+
+<Modal open={openVideo} onClose={() => setOpenVideo(false)}>
   <Box sx={{
-    position: 'absolute', top: '50%', left: '50%',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
     transform: 'translate(-50%, -50%)',
     width: { xs: '90%', sm: 600 },
-    bgcolor: 'background.paper', p: 2, borderRadius: 2
+    bgcolor: 'background.paper',
+    p: 2,
+    borderRadius: 2
   }}>
     <iframe
-      width="100%"
-      height="315"
-      src={videoLink}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    ></iframe>
+  width="100%"
+  height="315"
+  src="https://www.youtube.com/watch?v=ePb9m58EUWo&list=RDePb9m58EUWo&start_radio=1"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+></iframe>
   </Box>
-</Modal> */}
-
+</Modal>
+</Grid>
                         </Grid>
 
                         {/* Amenities - Enhanced Design */}
