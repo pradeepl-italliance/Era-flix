@@ -170,9 +170,9 @@ export default function PublicBookingPage() {
   const [numberOfTimeSlots, setNumberOfTimeSlots] = useState(0);
 
   const [openVideo, setOpenVideo] = useState(false); // ✅ Modal open state
-  const [videoLink, setVideoLink] = useState(
-    "https://www.youtube.com/watch?v=ePb9m58EUWo&list=RDePb9m58EUWo&start_radio=1"
-  ); // ✅ Video URL state
+  // const [videoLink, setVideoLink] = useState(
+  //   "https://www.youtube.com/watch?v=ePb9m58EUWo&list=RDePb9m58EUWo&start_radio=1"
+  // ); // ✅ Video URL state
 
   // Booking form state with pre-selected values
   const [bookingForm, setBookingForm] = useState({
@@ -1178,7 +1178,7 @@ export default function PublicBookingPage() {
                                 <iframe
                                   width="100%"
                                   height="315"
-                                  src={"https://www.youtube.com/watch?v=ePb9m58EUWo&list=RDePb9m58EUWo&start_radio=1"}
+                                  src={"https://www.youtube.com/embed/ePb9m58EUWo?autoplay=1&loop=1&playlist=ePb9m58EUWo"}
                                   title="YouTube video player"
                                   frameBorder="0"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
