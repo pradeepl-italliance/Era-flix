@@ -122,7 +122,8 @@ export default function ExclusiveEvents() {
                 lineHeight: 1.2,
               }}
             >
-              We help <br /> you Succeed
+             Celebrate with a<br /> Cinematic Touch.
+
             </Typography>
 
             <Typography
@@ -134,23 +135,20 @@ export default function ExclusiveEvents() {
                 fontSize: { xs: "14px", sm: "15px", md: "16px" },
               }}
             >
-              The EraFlix is a Private Theatre with a unique way of
-              celebrating any special occasions in Bengaluru.
+              EraFlix is a private theatre in Bengaluru designed for those who love to celebrate differently.
               <br />
               <br />
-              We provide the best-in-class Theatre experience for our Customers
-              to watch their favorite movies and shows along with celebrating
-              their special occasions to create priceless Memories.
+             Here, every occasion becomes a memory on the big screen — wrapped in privacy, comfort, and cinematic charm.
+
               <br />
               <br />
-              Whether it is a Birthday/ Anniversary / Proposal, surprise your
-              loved ones on any special occasion / just a relaxing movie time...
-              you name it.
+              Whether it’s a Birthday, Anniversary, Proposal, Bride-to-Be Party, or a relaxed Movie Night with friends, we turn your moments into timeless experiences.
               <br />
               <br />
-              We have a perfect arrangement for all the events to make it feel
-              special with full privacy including decorations, Cakes, Snacks,
-              Beverages etc.
+              Enjoy a personalized ambience, curated décor, and exclusive use of the theatre — all crafted to make your day unforgettable.
+<br />
+<br />
+ Because at Era Flix, your story deserves the spotlight.
             </Typography>
 
             <Box sx={{ 

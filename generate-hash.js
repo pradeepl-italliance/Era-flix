@@ -12,6 +12,7 @@ async function generateHash() {
     console.log('\n=== COPY THIS HASH TO MONGODB ===')
     console.log(hash)
     
+    
     // Test the hash
     const isValid = await bcrypt.compare(password, hash)
     console.log('\n=== VERIFICATION ===')

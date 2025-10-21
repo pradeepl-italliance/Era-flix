@@ -336,7 +336,7 @@ export default function SuperAdminDashboard() {
                       <TableCell>
                         {new Date(booking.date || booking.bookingDate).toLocaleDateString()}
                       </TableCell>
-                      <TableCell>₹{booking.totalAmount || 0}</TableCell>
+                      <TableCell>₹{booking.pricing.totalAmount || 0}</TableCell>
                       <TableCell>
                         <Chip
                           label={booking.bookingStatus || 'confirmed'}
