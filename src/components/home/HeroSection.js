@@ -371,9 +371,9 @@ const HeroSection = () => {
             color: 'white'
           }}
         >
-          Create Magical{' '}
+          Your Celebration{' '}
           <Box component="span" sx={{ background: 'linear-gradient(45deg, #ff0505ff, #ff0000ff)', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Memories
+            with a Cinematic Touch
           </Box>
         </Typography>
 
@@ -386,8 +386,9 @@ const HeroSection = () => {
                   variant="h6"
                   sx={{ mb: { xs: 3, sm: 4, lg: 7 }, color: 'rgba(255,255,255,0.9)', lineHeight: 1.6, fontWeight: 300, fontSize: { xs: '1rem', sm: '1.25rem' }, maxWidth: { xs: '100%', lg: '600px' }, mx: { xs: 'auto', lg: 0 } }}
                 >
-                  Premium private theatres across Bangalore for birthdays, anniversaries,
-                  date nights & celebrations. Experience cinema like never before with your loved ones.
+                 {`Welcome to Era Flix, Bengaluru’s private theatre experience where every celebration becomes a story worth watching.
+                 From birthdays and anniversaries to proposals and chill nights with friends — your moments take the spotlight here.`}
+
                 </Typography>
 
                 {/* CTA */}
@@ -400,7 +401,7 @@ const HeroSection = () => {
                     endIcon={<ArrowForwardIcon />}
                     sx={{ borderRadius: 50, py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.1rem' }, fontWeight: 'bold', background: 'linear-gradient(45deg, #e60a0aff, #ff0101ff)', boxShadow: '0 8px 32px rgba(255,107,107,0.4)', minWidth: { xs: 200, sm: 'auto' }, '&:hover': { background: 'linear-gradient(45deg, #FF5252, #f30101ff)', transform: 'translateY(-3px)', boxShadow: '0 12px 40px rgba(255,107,107,0.6)' }, transition: 'all 0.3s ease' }}
                   >
-                    Book Now
+                    Book Your Experience
                   </Button>
                   <Button variant="outlined" size="large" startIcon={<PhoneIcon />} href="tel:+919964312117
 " sx={{ borderRadius: 50, py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.1rem' }, fontWeight: 'bold', borderColor: 'white', color: 'white', borderWidth: 2, minWidth: { xs: 200, sm: 'auto' }, '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)', transform: 'translateY(-3px)', borderWidth: 2 }, transition: 'all 0.3s ease' }}>
