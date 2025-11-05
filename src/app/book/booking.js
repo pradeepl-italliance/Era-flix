@@ -61,8 +61,17 @@ import {
 
 import YouTube from "@mui/icons-material/YouTube";
 import { Modal } from "@mui/material";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+
+import decorationsImg from "../../../public/images/decoration.png";
+import cakeImg from "../../../public/images/cake.png";
+import photographyImg from "../../../public/images/camera.png";
+import teddyImg from "../../../public/images/teddy.png";
+import bouquetImg from "../../../public/images/boq.png";
+import chocolateImg from "../../../public/images/choco.png";
+
 
 const getSteps = (hasPreSelectedScreen, hasPreSelectedEvent) => {
   if (hasPreSelectedScreen) {
@@ -1036,158 +1045,164 @@ export default function PublicBookingPage() {
                         </Box>
 
                         {/* Quick Stats Grid */}
-                        <Grid container spacing={2}>
-                          <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                p: 1.5,
-                                bgcolor: "white",
-                                borderRadius: 2,
-                                border: "1px solid",
-                                borderColor: "primary.100",
-                                textAlign: "center",
-                              }}
-                            >
-                              <People color="primary" sx={{ mb: 0.5 }} />
-                              <Typography variant="body2" fontWeight="bold">
-                                {selectedScreenInfo.capacity} People
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                color="text.secondary"
-                              >
-                                Capacity
-                              </Typography>
-                            </Box>
-                          </Grid>
+                        
+                        <Grid
+  container
+  spacing={2}
+  justifyContent={{ xs: "center", sm: "flex-start" }} // center on mobile, left on desktop
+>
+  {/* Capacity */}
+  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      sx={{
+        width: 150,
+        height: 130,
+        p: 1.5,
+        bgcolor: "white",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "primary.100",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <People color="primary" sx={{ mb: 0.5 }} />
+      <Typography variant="body2" fontWeight="bold">
+        {selectedScreenInfo.capacity} People
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Capacity
+      </Typography>
+    </Box>
+  </Grid>
 
-                          <Grid item xs={6}>
-                            <Box
-                              sx={{
-                                p: 1.5,
-                                bgcolor: "success.50",
-                                borderRadius: 2,
-                                border: "1px solid",
-                                borderColor: "success.200",
-                                textAlign: "center",
-                              }}
-                            >
-                              {/* <AttachMoney color="success" sx={{ mb: 0.5 }} /> */}
-                              <CurrencyRupeeIcon
-                                fontSize="small"
-                                color="success"
-                                sx={{ mb: 0.5 }}
-                              />
-                              <Typography
-                                variant="body2"
-                                fontWeight="bold"
-                                color="success.main"
-                              >
-                                {selectedScreenInfo.pricePerHour?.toLocaleString()}
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                color="text.secondary"
-                              >
-                                Per screen
-                              </Typography>
-                            </Box>
-                          </Grid>
-                          <Grid container spacing={2} alignItems="center">
-                            <Grid item xs={6}>
-                              <Box
-                                sx={{
-                                  p: 1.5,
-                                  bgcolor: "info.50",
-                                  borderRadius: 2,
-                                  border: "1px solid",
-                                  borderColor: "info.200",
-                                  textAlign: "center",
-                                }}
-                              >
-                                <AccessTime color="info" sx={{ mb: 0.5 }} />
-                                <Typography
-                                  variant="body2"
-                                  fontWeight="bold"
-                                  color="info.main"
-                                >
-                                  {/* {selectedScreenInfo.timeSlots
-                                    ? selectedScreenInfo.timeSlots.filter(
-                                        (slot) => !slot.booked
-                                      ).length
-                                    : 0} */}
+  {/* Price per screen */}
+  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      sx={{
+        width: 150,
+        height: 130,
+        p: 1.5,
+        bgcolor: "success.50",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "success.200",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
+      <Typography variant="body2" fontWeight="bold" color="success.main">
+        {selectedScreenInfo.pricePerHour?.toLocaleString()}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Per Screen
+      </Typography>
+    </Box>
+  </Grid>
 
-                                    {numberOfTimeSlots}
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  Available Slots
-                                </Typography>
-                              </Box>
-                            </Grid>
+  {/* Available Slots */}
+  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      sx={{
+        width: 150,
+        height: 130,
+        p: 1.5,
+        bgcolor: "info.50",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "info.200",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <AccessTime color="info" sx={{ mb: 0.5 }} />
+      <Typography variant="body2" fontWeight="bold" color="info.main">
+        {numberOfTimeSlots}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Available Slots
+      </Typography>
+    </Box>
+  </Grid>
 
-                            <Grid item xs={6}>
-                              <Box
-                                onClick={() => setOpenVideo(true)}
-                                sx={{
-                                  p: 1.5,
-                                  bgcolor: "error.50",
-                                  borderRadius: 2,
-                                  border: "1px solid",
-                                  borderColor: "error.200",
-                                  textAlign: "center",
-                                  cursor: "pointer",
-                                  "&:hover": { bgcolor: "error.100" },
-                                }}
-                              >
-                                <YouTube sx={{ color: "#FF0000", mb: 0.5 }} />
-                                <Typography
-                                  variant="body2"
-                                  fontWeight="bold"
-                                  color="error.main"
-                                >
-                                  Watch Video
-                                </Typography>
-                                <Typography
-                                  variant="caption"
-                                  color="text.secondary"
-                                >
-                                  Check out for more ideas
-                                </Typography>
-                              </Box>
-                            </Grid>
+  {/* Watch Video */}
+  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      onClick={() => setOpenVideo(true)}
+      sx={{
+        width: 150,
+        height: 130,
+        p: 1.5,
+        bgcolor: "error.50",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "error.200",
+        textAlign: "center",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "background 0.3s ease",
+        "&:hover": { bgcolor: "error.100" },
+      }}
+    >
+      <YouTube sx={{ color: "#FF0000", mb: 0.5 }} />
+      <Typography variant="body2" fontWeight="bold" color="error.main">
+        Watch Video
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        Check out for more ideas
+      </Typography>
+    </Box>
+  </Grid>
 
-                            <Modal
-                              open={openVideo}
-                              onClose={() => setOpenVideo(false)}
-                            >
-                              <Box
-                                sx={{
-                                  position: "absolute",
-                                  top: "50%",
-                                  left: "50%",
-                                  transform: "translate(-50%, -50%)",
-                                  width: { xs: "90%", sm: 600 },
-                                  bgcolor: "background.paper",
-                                  p: 2,
-                                  borderRadius: 2,
-                                }}
-                              >
-                                <iframe
-                                  width="100%"
-                                  height="315"
-                                  src={"https://www.youtube.com/embed/ePb9m58EUWo?autoplay=1&loop=1&playlist=ePb9m58EUWo"}
-                                  title="YouTube video player"
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                ></iframe>
-                              </Box>
-                            </Modal>
-                          </Grid>
-                        </Grid>
+  {/* Food Menu */}
+  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      onClick={() =>
+        window.open("/food-menu.pdf", "_blank", "noopener,noreferrer")
+      }
+      sx={{
+        width: 150,
+        height: 130,
+        p: 1.5,
+        bgcolor: "warning.50",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "warning.200",
+        textAlign: "center",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "background 0.3s ease",
+        "&:hover": { bgcolor: "warning.100" },
+      }}
+    >
+      <RestaurantMenuIcon color="warning" sx={{ mb: 0.5 }} />
+      <Typography variant="body2" fontWeight="bold" color="warning.main">
+        Food Menu
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
+        View our food & beverage options
+      </Typography>
+    </Box>
+  </Grid>
+</Grid>
+
+
 
                         {/* Amenities - Enhanced Design */}
                         {selectedScreenInfo.amenities &&
@@ -1276,128 +1291,132 @@ export default function PublicBookingPage() {
             {/* IMPROVED TIME SLOTS */}
             {/* IMPROVED TIME SLOTS */}
             {bookingForm.date && (
-              <Box>
-                <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
-                  Available Time Slots
-                </Typography>
-                {loading ? (
-                  <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-                    <CircularProgress size={40} />
-                  </Box>
-                ) : timeSlots.length > 0 ? (
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{ justifyContent: "flex-start" }}
+  <Box>
+    <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
+      Available Time Slots
+    </Typography>
+
+    {loading ? (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+        <CircularProgress size={40} />
+      </Box>
+    ) : timeSlots.length > 0 ? (
+      <Grid container spacing={2} sx={{ justifyContent: "flex-start" }}>
+        {timeSlots
+          .slice() // create a copy to avoid mutating the original
+          .sort((a, b) => {
+            const aTime = `${format12Hour(a.startTime)} - ${format12Hour(a.endTime)}`;
+            const bTime = `${format12Hour(b.startTime)} - ${format12Hour(b.endTime)}`;
+
+            if (aTime === "12:00 AM - 2:00 AM") return 1; // move 'a' to end
+            if (bTime === "12:00 AM - 2:00 AM") return -1; // move 'b' to end
+            return 0; // keep others in original order
+          })
+          .map((slot, idx) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
+              <Card
+                sx={{
+                  cursor: "pointer",
+                  border: bookingForm.timeSlot?.id === slot.id ? 2 : 1,
+                  borderColor:
+                    bookingForm.timeSlot?.id === slot.id
+                      ? "primary.main"
+                      : "grey.300",
+                  bgcolor:
+                    bookingForm.timeSlot?.id === slot.id ? "primary.50" : "white",
+                  transition: "all 0.3s ease",
+                  height: 120,
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "relative",
+                  "&:hover": {
+                    transform:
+                      bookingForm.timeSlot?.id !== slot.id
+                        ? "translateY(-4px)"
+                        : "none",
+                    boxShadow:
+                      bookingForm.timeSlot?.id !== slot.id ? 4 : 6,
+                    borderColor:
+                      bookingForm.timeSlot?.id !== slot.id
+                        ? "primary.light"
+                        : "primary.main",
+                  },
+                }}
+                onClick={() =>
+                  setBookingForm((prev) => ({
+                    ...prev,
+                    timeSlot: slot,
+                  }))
+                }
+              >
+                {/* Selection Indicator */}
+                {bookingForm.timeSlot?.id === slot.id && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      zIndex: 1,
+                    }}
                   >
-                    {timeSlots.map((slot, idx) => (
-                      <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
-                        <Card
-                          sx={{
-                            cursor: "pointer",
-                            border:
-                              bookingForm.timeSlot?.id === slot.id ? 2 : 1,
-                            borderColor:
-                              bookingForm.timeSlot?.id === slot.id
-                                ? "primary.main"
-                                : "grey.300",
-                            bgcolor:
-                              bookingForm.timeSlot?.id === slot.id
-                                ? "primary.50"
-                                : "white",
-                            transition: "all 0.3s ease",
-                            height: 120, // Reduced and fixed height for consistency
-                            display: "flex",
-                            flexDirection: "column",
-                            position: "relative",
-                            "&:hover": {
-                              transform:
-                                bookingForm.timeSlot?.id !== slot.id
-                                  ? "translateY(-4px)"
-                                  : "none",
-                              boxShadow:
-                                bookingForm.timeSlot?.id !== slot.id ? 4 : 6,
-                              borderColor:
-                                bookingForm.timeSlot?.id !== slot.id
-                                  ? "primary.light"
-                                  : "primary.main",
-                            },
-                          }}
-                          onClick={() =>
-                            setBookingForm((prev) => ({
-                              ...prev,
-                              timeSlot: slot,
-                            }))
-                          }
-                        >
-                          {/* Selection Indicator */}
-                          {bookingForm.timeSlot?.id === slot.id && (
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: 8,
-                                right: 8,
-                                zIndex: 1,
-                              }}
-                            >
-                              <CheckCircle color="primary" fontSize="small" />
-                            </Box>
-                          )}
-
-                          <CardContent
-                            sx={{
-                              textAlign: "center",
-                              py: 2,
-                              px: 1.5,
-                              flexGrow: 1,
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center", // Center content vertically
-                              alignItems: "center", // Center content horizontally
-                            }}
-                          >
-                            {/* Slot Name */}
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="bold"
-                              color={
-                                bookingForm.timeSlot?.id === slot.id
-                                  ? "primary.main"
-                                  : "text.primary"
-                              }
-                              sx={{ mb: 1.5, lineHeight: 1.2 }}
-                            >
-                              {slot.name}
-                            </Typography>
-
-                            {/* Time Display - Simplified */}
-                            <Typography
-                              variant="h6"
-                              fontWeight="600"
-                              color="text.secondary"
-                            >
-                              {format12Hour(slot.startTime)} -{" "}
-                              {format12Hour(slot.endTime)}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Alert severity="info" sx={{ py: 3 }}>
-                    <Typography variant="body1" fontWeight="500">
-                      No time slots available for the selected date
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Please choose a different date to see available slots
-                    </Typography>
-                  </Alert>
+                    <CheckCircle color="primary" fontSize="small" />
+                  </Box>
                 )}
-              </Box>
-            )}
 
-            {/* EVENTS DROPDOWN */}
+                <CardContent
+                  sx={{
+                    textAlign: "center",
+                    py: 2,
+                    px: 1.5,
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* Slot Name */}
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    color={
+                      bookingForm.timeSlot?.id === slot.id
+                        ? "primary.main"
+                        : "text.primary"
+                    }
+                    sx={{ mb: 1.5, lineHeight: 1.2 }}
+                  >
+                    {slot.name}
+                  </Typography>
+
+                  {/* Time Display */}
+                  <Typography
+                    variant="h6"
+                    fontWeight="600"
+                    color="text.secondary"
+                  >
+                    {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+      </Grid>
+    ) : (
+      <Alert severity="info" sx={{ py: 3 }}>
+        <Typography variant="body1" fontWeight="500">
+          No time slots available for the selected date
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Please choose a different date to see available slots
+        </Typography>
+      </Alert>
+    )}
+  </Box>
+)}
+
+
+            
             {/* EVENTS DROPDOWN - Mobile Optimized with Text Truncation */}
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel>Event Package</InputLabel>
@@ -1449,7 +1468,7 @@ export default function PublicBookingPage() {
             </FormControl>
 
             {/* Selected Event Display - Simplified */}
-            {bookingForm.selectedEvent && (
+            {/* {bookingForm.selectedEvent && (
               <Alert severity="success" sx={{ mt: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Star color="success" fontSize="small" />
@@ -1458,134 +1477,130 @@ export default function PublicBookingPage() {
                   </Typography>
                 </Box>
               </Alert>
-            )}
+            )} */}
 
             {/* Selected Event Display - Enhanced */}
-            {bookingForm.selectedEvent && (
-              <Card
-                variant="outlined"
-                sx={{
-                  mt: 2,
-                  bgcolor: "success.50",
-                  borderColor: "success.200",
-                  border: "2px solid",
-                }}
-              >
-                <CardContent sx={{ p: isMobile ? 2 : 2.5 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={8}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          mb: 1,
-                        }}
-                      >
-                        <Star color="success" fontSize="small" />
-                        <Typography
-                          variant="h6"
-                          fontWeight="bold"
-                          color="success.main"
-                        >
-                          {bookingForm.selectedEvent.name}
-                        </Typography>
-                      </Box>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1.5 }}
-                      >
-                        {bookingForm.selectedEvent.description}
-                      </Typography>
+            {/* Selected Event Card */}
+{bookingForm.selectedEvent && (
+  <Card
+    variant="outlined"
+    sx={{
+      mt: 2,
+      bgcolor: "success.50",
+      borderColor: "success.200",
+      border: "2px solid",
+    }}
+  >
+    <CardContent sx={{ p: isMobile ? 2 : 2.5 }}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={8}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              mb: 1,
+            }}
+          >
+            <Star color="success" fontSize="small" />
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              color="success.main"
+            >
+              {bookingForm.selectedEvent.name}
+            </Typography>
+          </Box>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mb: 1.5 }}
+          >
+            {bookingForm.selectedEvent.description}
+          </Typography>
 
-                      {/* Selected event details - mobile optimized */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: isMobile ? "column" : "row",
-                          gap: isMobile ? 0.5 : 1,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {isMobile ? (
-                          <Grid container spacing={1}>
-                            <Grid item xs={6}>
-                              <Chip
-                                label={bookingForm.selectedEvent.category}
-                                size="small"
-                                color="success"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Chip
-                                label={`${bookingForm.selectedEvent.duration} min`}
-                                size="small"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Chip
-                                label={`Max ${bookingForm.selectedEvent.maxCapacity}`}
-                                size="small"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Grid>
-                            {/* <Grid item xs={6}>
-                              <Typography variant="body2" fontWeight="bold" color="success.main">
-                                ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
-                              </Typography>
-                            </Grid> */}
-                          </Grid>
-                        ) : (
-                          <>
-                            <Chip
-                              label={bookingForm.selectedEvent.category}
-                              size="small"
-                              color="success"
-                            />
-                            <Chip
-                              label={`${bookingForm.selectedEvent.duration} min`}
-                              size="small"
-                            />
-                            {/* <Chip label={`Max ${bookingForm.selectedEvent.maxCapacity}`} size="small" /> */}
-                            <Chip
-                              icon={<People fontSize="small" />}
-                              label={`${bookingForm.selectedEvent.maxCapacity} max`}
-                              size="small"
-                            />
-                          </>
-                        )}
-                      </Box>
-                    </Grid>
-
-                    {/* Price highlight - desktop only
-                    {!isMobile && (
-                      <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
-                        <Typography variant="h5" fontWeight="bold" color="success.main">
-                          ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Package Price
-                        </Typography>
-                      </Grid>
-                    )} */}
-                  </Grid>
-                </CardContent>
-              </Card>
+          {/* Selected event details - mobile optimized */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              gap: isMobile ? 0.5 : 1,
+              flexWrap: "wrap",
+            }}
+          >
+            {isMobile ? (
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <Chip
+                    label={bookingForm.selectedEvent.category}
+                    size="small"
+                    color="success"
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Chip
+                    label={`${bookingForm.selectedEvent.duration} min`}
+                    size="small"
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                </Grid>
+                {/* <Grid item xs={6}>
+                  <Chip
+                    label={`Max ${bookingForm.selectedEvent.maxCapacity}`}
+                    size="small"
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                </Grid> */}
+              </Grid>
+            ) : (
+              <>
+                <Chip
+                  label={bookingForm.selectedEvent.category}
+                  size="small"
+                  color="success"
+                />
+                <Chip
+                  label={`${bookingForm.selectedEvent.duration} min`}
+                  size="small"
+                />
+                {/* <Chip
+                  icon={<People fontSize="small" />}
+                  label={`${bookingForm.selectedEvent.maxCapacity} max`}
+                  size="small"
+                /> */}
+              </>
             )}
+          </Box>
+        </Grid>
 
-            {bookingForm.selectedEvent && (
-              <Alert severity="info" sx={{ mt: 2 }}>
-                <Typography variant="body2" fontWeight="bold">
-                  {bookingForm.selectedEvent.name}
-                </Typography>
-                <Typography variant="body2">
-                  {bookingForm.selectedEvent.description}
-                </Typography>
-              </Alert>
-            )}
+        {/* Price highlight - desktop only
+        {!isMobile && (
+          <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
+            <Typography variant="h5" fontWeight="bold" color="success.main">
+              ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              Package Price
+            </Typography>
+          </Grid>
+        )} */}
+      </Grid>
+    </CardContent>
+  </Card>
+)}
+
+{bookingForm.selectedEvent && (
+  <Alert severity="info" sx={{ mt: 2 }}>
+    <Typography variant="body2" fontWeight="bold">
+      {bookingForm.selectedEvent.name}
+    </Typography>
+    <Typography variant="body2">
+      {bookingForm.selectedEvent.description}
+    </Typography>
+  </Alert>
+)}
+
           </Stack>
         );
       }
@@ -1788,223 +1803,150 @@ export default function PublicBookingPage() {
                 </Typography>
 
                 <Grid container spacing={3}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      label="Number of Guests"
-                      value={bookingForm.numberOfGuests}
-                      onChange={(e) => {
-                        const value = Math.max(
-                          1,
-                          Math.min(maxGuests, parseInt(e.target.value) || 1)
-                        );
-                        setBookingForm((prev) => ({
-                          ...prev,
-                          numberOfGuests: value,
-                        }));
-                      }}
-                      inputProps={{ min: 1, max: maxGuests }}
-                      required
-                      error={bookingForm.numberOfGuests < 1 && activeStep > 1}
-                      helperText={`Maximum ${maxGuests} guests allowed`}
-                    />
-                  </Grid>
+  {/* Number of Guests Input */}
+  <Grid item xs={12} sm={6}>
+    <TextField
+      fullWidth
+      type="number"
+      label="Number of Guests"
+      value={bookingForm.numberOfGuests}
+      onChange={(e) => {
+        const value = Math.max(
+          1,
+          Math.min(maxGuests, parseInt(e.target.value) || 1)
+        );
+        setBookingForm((prev) => ({
+          ...prev,
+          numberOfGuests: value,
+        }));
+      }}
+      inputProps={{ min: 1, max: maxGuests }}
+      required
+      error={bookingForm.numberOfGuests < 1 && activeStep > 1}
+      helperText={`Maximum ${maxGuests} guests allowed`}
+    />
+  </Grid>
+</Grid>
 
-                  <Grid item xs={12} sm={6}>
-                    <Alert severity="info" sx={{ height: "fit-content" }}>
-                      <Typography
-                        variant="body2"
-                        fontWeight="bold"
-                        gutterBottom
-                      >
-                        Capacity Details
-                      </Typography>
-                      <Typography variant="caption">
-                        Screen: {selectedScreenInfo?.capacity} people
-                        <br />
-                        Event: {bookingForm.selectedEvent?.maxCapacity} people
-                        <br />
-                        <strong>Maximum: {maxGuests} guests</strong>
-                      </Typography>
-                    </Alert>
-                  </Grid>
-                </Grid>
               </CardContent>
             </Card>
 
             {/* Special Requests Section */}
-            <Card>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  gutterBottom
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
-                  <Star color="primary" />
-                  Special Requests
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 3 }}
-                >
-                  Enhance your experience with our additional services
-                </Typography>
+<Card>
+  <CardContent>
+    <Typography
+  variant="h6"
+  gutterBottom
+  sx={{ display: "flex", alignItems: "center", gap: 1, justifyContent: "center" }}
+>
+  Special Requests
+</Typography>
 
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Card
-                      variant="outlined"
-                      sx={{
-                        p: 2,
-                        cursor: "pointer",
-                        bgcolor: bookingForm.specialRequests.decorations
-                          ? "primary.50"
-                          : "transparent",
-                        border: bookingForm.specialRequests.decorations
-                          ? "2px solid"
-                          : "1px solid",
-                        borderColor: bookingForm.specialRequests.decorations
-                          ? "primary.main"
-                          : "grey.300",
-                      }}
-                      onClick={() =>
-                        setBookingForm((prev) => ({
-                          ...prev,
-                          specialRequests: {
-                            ...prev.specialRequests,
-                            decorations: !prev.specialRequests.decorations,
-                          },
-                        }))
-                      }
-                    >
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Checkbox
-                          checked={bookingForm.specialRequests.decorations}
-                          color="primary"
-                        />
-                        <Box>
-                          <Typography variant="body1" fontWeight="bold">
-                            🎈 Decorations
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Balloons, banners & theme setup
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </Card>
-                  </Grid>
+<Typography
+  variant="body2"
+  color="text.secondary"
+  sx={{ mb: 3, textAlign: "center" }}
+>
+  Enhance your experience with our additional services
+</Typography>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Card
-                      variant="outlined"
-                      sx={{
-                        p: 2,
-                        cursor: "pointer",
-                        bgcolor: bookingForm.specialRequests.cake
-                          ? "primary.50"
-                          : "transparent",
-                        border: bookingForm.specialRequests.cake
-                          ? "2px solid"
-                          : "1px solid",
-                        borderColor: bookingForm.specialRequests.cake
-                          ? "primary.main"
-                          : "grey.300",
-                      }}
-                      onClick={() =>
-                        setBookingForm((prev) => ({
-                          ...prev,
-                          specialRequests: {
-                            ...prev.specialRequests,
-                            cake: !prev.specialRequests.cake,
-                          },
-                        }))
-                      }
-                    >
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Checkbox
-                          checked={bookingForm.specialRequests.cake}
-                          color="primary"
-                        />
-                        <Box>
-                          <Typography variant="body1" fontWeight="bold">
-                            🎂 Cake Arrangement
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Custom cake with celebration setup
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </Card>
-                  </Grid>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Card
-                      variant="outlined"
-                      sx={{
-                        p: 2,
-                        cursor: "pointer",
-                        bgcolor: bookingForm.specialRequests.photography
-                          ? "primary.50"
-                          : "transparent",
-                        border: bookingForm.specialRequests.photography
-                          ? "2px solid"
-                          : "1px solid",
-                        borderColor: bookingForm.specialRequests.photography
-                          ? "primary.main"
-                          : "grey.300",
-                      }}
-                      onClick={() =>
-                        setBookingForm((prev) => ({
-                          ...prev,
-                          specialRequests: {
-                            ...prev.specialRequests,
-                            photography: !prev.specialRequests.photography,
-                          },
-                        }))
-                      }
-                    >
-                      <Stack direction="row" alignItems="center" spacing={2}>
-                        <Checkbox
-                          checked={bookingForm.specialRequests.photography}
-                          color="primary"
-                        />
-                        <Box>
-                          <Typography variant="body1" fontWeight="bold">
-                            📸 Photography
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Professional photos of your event
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </Card>
-                  </Grid>
-                </Grid>
+    <Box
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 2, // space between cards
+  }}
+>
+  {[
+    { key: "decorations", title: "Decorations", desc: "Balloons, banners & theme setup", img: decorationsImg.src },
+    { key: "cake", title: "Cake Arrangement", desc: "Custom cake with celebration setup", img: cakeImg.src },
+    { key: "photography", title: "Photography", desc: "Professional photos of your event", img: photographyImg.src },
+    { key: "teddy", title: "Teddy", desc: "Cute soft toy gift for a special touch", img: teddyImg.src },
+    { key: "chocolate", title: "Chocolate Box", desc: "Delicious assorted chocolates to surprise", img: chocolateImg.src },
+    { key: "bouquet", title: "Bouquet", desc: "Fresh flowers to make your day brighter", img: bouquetImg.src },
+  ].map((item) => (
+    <Card
+      key={item.key}
+      variant="outlined"
+      sx={{
+        width: 250, // fixed width for all cards
+        height: 250, // fixed height
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        p: 2,
+        cursor: "pointer",
+        textAlign: "center",
+        bgcolor: bookingForm.specialRequests[item.key] ? "primary.50" : "transparent",
+        border: bookingForm.specialRequests[item.key] ? "2px solid" : "1px solid",
+        borderColor: bookingForm.specialRequests[item.key] ? "primary.main" : "grey.300",
+      }}
+      onClick={() =>
+        setBookingForm((prev) => ({
+          ...prev,
+          specialRequests: {
+            ...prev.specialRequests,
+            [item.key]: !prev.specialRequests[item.key],
+          },
+        }))
+      }
+    >
+      <Box
+        sx={{
+          width: "100%",
+          height: 140,
+          mb: 1,
+          borderRadius: 2,
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
+        <img
+          src={item.img}
+          alt={item.title}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </Box>
 
-                <Box sx={{ mt: 3 }}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    label="Special Instructions"
-                    value={bookingForm.specialRequests.customMessage}
-                    onChange={(e) =>
-                      setBookingForm((prev) => ({
-                        ...prev,
-                        specialRequests: {
-                          ...prev.specialRequests,
-                          customMessage: e.target.value,
-                        },
-                      }))
-                    }
-                    placeholder="Any special requests, dietary requirements, accessibility needs, or celebration details..."
-                    helperText="Let us know how we can make your experience special"
-                  />
-                </Box>
-              </CardContent>
-            </Card>
+      <Box>
+        <Typography variant="body1" fontWeight="bold">
+          {item.title}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          {item.desc}
+        </Typography>
+      </Box>
+    </Card>
+  ))}
+</Box>
+
+
+    {/* Custom message box */}
+    <Box sx={{ mt: 3 }}>
+      <TextField
+        fullWidth
+        multiline
+        rows={4}
+        label="Special Instructions"
+        value={bookingForm.specialRequests.customMessage}
+        onChange={(e) =>
+          setBookingForm((prev) => ({
+            ...prev,
+            specialRequests: {
+              ...prev.specialRequests,
+              customMessage: e.target.value,
+            },
+          }))
+        }
+        placeholder="Any special requests, dietary requirements, accessibility needs, or celebration details..."
+        helperText="Let us know how we can make your experience special"
+      />
+    </Box>
+  </CardContent>
+</Card>
+
 
             {/* Important Information */}
             <Alert severity="info" icon={<CheckCircle />}>
@@ -2059,13 +2001,13 @@ export default function PublicBookingPage() {
         const totalAmount = screenAmount + eventAmount;
 
         // Calculate additional service charges (if any special requests)
-        const decorationCharge = bookingForm.specialRequests.decorations
-          ? 500
-          : 0;
-        const cakeCharge = bookingForm.specialRequests.cake ? 800 : 0;
-        const photographyCharge = bookingForm.specialRequests.photography
-          ? 1500
-          : 0;
+        const decorationCharge = bookingForm.specialRequests.decorations ? 500 : 0;
+const cakeCharge = bookingForm.specialRequests.cake ? 800 : 0;
+const photographyCharge = bookingForm.specialRequests.photography ? 1500 : 0;
+const teddyCharge = bookingForm.specialRequests.teddy ? 700 : 0;
+const chocolateCharge = bookingForm.specialRequests.chocolate ? 600 : 0;
+const bouquetCharge = bookingForm.specialRequests.bouquet ? 900 : 0;
+
         const servicesAmount =
           decorationCharge + cakeCharge + photographyCharge;
         const finalTotal = totalAmount + servicesAmount;
@@ -2431,99 +2373,257 @@ export default function PublicBookingPage() {
 
             {/* Special Services */}
             {(bookingForm.specialRequests.decorations ||
-              bookingForm.specialRequests.cake ||
-              bookingForm.specialRequests.photography ||
-              bookingForm.specialRequests.customMessage) && (
-              <Card elevation={3}>
-                <CardContent>
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                    <Star sx={{ fontSize: 28, color: "warning.main", mr: 2 }} />
-                    <Typography variant="h6" fontWeight="bold">
-                      Special Services
-                    </Typography>
-                  </Box>
+  bookingForm.specialRequests.cake ||
+  bookingForm.specialRequests.photography ||
+  bookingForm.specialRequests.teddy ||
+  bookingForm.specialRequests.bouquet ||
+  bookingForm.specialRequests.chocolate ||
+  bookingForm.specialRequests.customMessage) && (
+<Card elevation={3}>
+  <CardContent>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 3, justifyContent: "center" }}>
+      <Star sx={{ fontSize: 28, color: "warning.main", mr: 2 }} />
+      <Typography variant="h6" fontWeight="bold">
+        Special Services
+      </Typography>
+    </Box>
 
-                  <Grid container spacing={2}>
-                    {bookingForm.specialRequests.decorations && (
-                      <Grid item xs={12} sm={4}>
-                        <Card variant="outlined" sx={{ bgcolor: "warning.50" }}>
-                          <CardContent sx={{ textAlign: "center", py: 2 }}>
-                            <Typography variant="h4" sx={{ mb: 1 }}>
-                              🎈
-                            </Typography>
-                            <Typography variant="body1" fontWeight="bold">
-                              Decorations
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              ₹{decorationCharge}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    )}
+    <Grid container spacing={2} justifyContent="center">
+      {/* Decorations */}
+      {bookingForm.specialRequests.decorations && (
+        <Grid item>
+          <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+            <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 140,
+                  mb: 1.5,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={decorationsImg.src}
+                  alt="Decorations"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" fontWeight="bold">
+                Decorations
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ₹{decorationCharge}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
 
-                    {bookingForm.specialRequests.cake && (
-                      <Grid item xs={12} sm={4}>
-                        <Card variant="outlined" sx={{ bgcolor: "warning.50" }}>
-                          <CardContent sx={{ textAlign: "center", py: 2 }}>
-                            <Typography variant="h4" sx={{ mb: 1 }}>
-                              🎂
-                            </Typography>
-                            <Typography variant="body1" fontWeight="bold">
-                              Cake Arrangement
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              ₹{cakeCharge}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    )}
+      {/* Cake */}
+      {bookingForm.specialRequests.cake && (
+        <Grid item>
+          <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+            <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 140,
+                  mb: 1.5,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={cakeImg.src}
+                  alt="Cake Arrangement"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" fontWeight="bold">
+                Cake Arrangement
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ₹{cakeCharge}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
 
-                    {bookingForm.specialRequests.photography && (
-                      <Grid item xs={12} sm={4}>
-                        <Card variant="outlined" sx={{ bgcolor: "warning.50" }}>
-                          <CardContent sx={{ textAlign: "center", py: 2 }}>
-                            <Typography variant="h4" sx={{ mb: 1 }}>
-                              📸
-                            </Typography>
-                            <Typography variant="body1" fontWeight="bold">
-                              Photography
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              ₹{photographyCharge}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    )}
-                  </Grid>
+      {/* Photography */}
+      {bookingForm.specialRequests.photography && (
+        <Grid item>
+          <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+            <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 140,
+                  mb: 1.5,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={photographyImg.src}
+                  alt="Photography"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" fontWeight="bold">
+                Photography
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ₹{photographyCharge}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
 
-                  {bookingForm.specialRequests.customMessage && (
-                    <Box
-                      sx={{
-                        mt: 3,
-                        p: 2,
-                        bgcolor: "grey.50",
-                        borderRadius: 2,
-                        borderLeft: "4px solid",
-                        borderColor: "primary.main",
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight="bold"
-                        gutterBottom
-                      >
-                        💬 Special Instructions:
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontStyle: "italic" }}>
-                        {bookingForm.specialRequests.customMessage}
-                      </Typography>
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
+      {/* Teddy */}
+      {bookingForm.specialRequests.teddy && (
+        <Grid item>
+          <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+            <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 140,
+                  mb: 1.5,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={teddyImg.src}
+                  alt="Teddy Bear"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" fontWeight="bold">
+                Teddy Bear
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ₹{teddyCharge}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
+
+      {/* Bouquet */}
+      {bookingForm.specialRequests.bouquet && (
+        <Grid item>
+          <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+            <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: 140,
+                  mb: 1.5,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  src={bouquetImg.src}
+                  alt="Flower Bouquet"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Typography variant="body1" fontWeight="bold">
+                Flower Bouquet
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                ₹{bouquetCharge}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
+      {/* Chocolate */}
+{bookingForm.specialRequests.chocolate && (
+  <Grid item>
+    <Card variant="outlined" sx={{ bgcolor: "warning.50", width: 220, height: 250 }}>
+      <CardContent sx={{ textAlign: "center", py: 2, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            width: "100%",
+            height: 140,
+            mb: 1.5,
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          <img
+            src={chocolateImg.src}
+            alt="Chocolate Box"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
+        <Typography variant="body1" fontWeight="bold">
+          Chocolate Box
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          ₹{chocolateCharge}
+        </Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+)}
+
+    </Grid>
+
+    {/* Special Instructions */}
+    {bookingForm.specialRequests.customMessage && (
+      <Box
+        sx={{
+          mt: 3,
+          p: 2,
+          bgcolor: "grey.50",
+          borderRadius: 2,
+          borderLeft: "4px solid",
+          borderColor: "primary.main",
+        }}
+      >
+        <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+          💬 Special Instructions:
+        </Typography>
+        <Typography variant="body2" sx={{ fontStyle: "italic" }}>
+          {bookingForm.specialRequests.customMessage}
+        </Typography>
+      </Box>
+    )}
+  </CardContent>
+</Card>
+
+
             )}
 
             {/* Pricing Breakdown */}
