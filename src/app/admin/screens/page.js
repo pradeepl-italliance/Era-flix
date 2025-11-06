@@ -502,129 +502,138 @@ async function removeImage(imageIndex) {
                 )}
 
                 {/* Screens Table */}
-                <Paper sx={{ overflow: 'hidden' }}>
-                    <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-                        <Typography variant="h6" fontWeight="bold">
-                            All Screens ({screens.length})
-                        </Typography>
-                    </Box>
+                <Paper sx={{ overflow: "hidden" }}>
+  <Box
+    sx={{ p: 3, borderBottom: "1px solid", borderColor: "divider" }}
+  >
+    <Typography variant="h6" fontWeight="bold">
+      All Screens ({screens.length})
+    </Typography>
+  </Box>
 
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow sx={{ bgcolor: 'grey.50' }}>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Screen</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Location</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Capacity</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Price/Hour</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Amenities</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {screens.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-                                            <Typography variant="body1" color="text.secondary">
-                                                No screens found. Create your first screen!
-                                            </Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    screens.map((screen) => (
-                                        <TableRow key={screen.id} hover>
-                                            <TableCell>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                                    {/* Screen Image */}
-                                                    {screen.images && screen.images.length > 0 ? (
-                                                        <Avatar
-                                                            src={screen.images.find(img => img.isPrimary)?.url || screen.images[0]?.url}
-                                                            alt={screen.name}
-                                                            sx={{ width: 60, height: 60, borderRadius: 2 }}
-                                                            variant="rounded"
-                                                        />
-                                                    ) : (
-                                                        <Avatar
-                                                            sx={{ width: 60, height: 60, borderRadius: 2, bgcolor: 'grey.300' }}
-                                                            variant="rounded"
-                                                        >
-                                                            <Movie />
-                                                        </Avatar>
-                                                    )}
-                                                    <Box>
-                                                        <Typography variant="body2" fontWeight="bold">
-                                                            {screen.name}
-                                                        </Typography>
-                                                        {screen.description && (
-                                                            <Typography variant="caption" color="text.secondary">
-                                                                {screen.description}
-                                                            </Typography>
-                                                        )}
-                                                        {screen.images && screen.images.length > 0 && (
-                                                            <Typography variant="caption" color="primary">
-                                                                {screen.images.length} image(s)
-                                                            </Typography>
-                                                        )}
-                                                    </Box>
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography variant="body2">
-                                                    {screen.location?.name || 'Unknown Location'}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography variant="body2">
-                                                    {screen.capacity} people
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Typography variant="body2">
-                                                    ₹{screen.pricePerHour}/hr
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', maxWidth: 200 }}>
-                                                    {screen.amenities?.slice(0, 3).map((amenity) => (
-                                                        <Chip
-                                                            key={amenity}
-                                                            label={amenity}
-                                                            size="small"
-                                                            variant="outlined"
-                                                        />
-                                                    ))}
-                                                    {screen.amenities?.length > 3 && (
-                                                        <Chip
-                                                            label={`+${screen.amenities.length - 3} more`}
-                                                            size="small"
-                                                            color="primary"
-                                                        />
-                                                    )}
-                                                </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Chip
-                                                    label={screen.isActive ? 'Active' : 'Inactive'}
-                                                    color={screen.isActive ? 'success' : 'default'}
-                                                    size="small"
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                <IconButton
-                                                    onClick={(e) => handleMenuClick(e, screen)}
-                                                    size="small"
-                                                >
-                                                    <MoreVert />
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Paper>
+  <TableContainer>
+    <Table>
+      <TableHead>
+        <TableRow sx={{ bgcolor: "grey.50" }}>
+          <TableCell sx={{ fontWeight: "bold" }}>Screen</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Location</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Capacity</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Price/Hour</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Combo Price</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
+        </TableRow>
+      </TableHead>
+
+      <TableBody>
+        {screens.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+              <Typography variant="body1" color="text.secondary">
+                No screens found. Create your first screen!
+              </Typography>
+            </TableCell>
+          </TableRow>
+        ) : (
+          screens.map((screen) => (
+            <TableRow key={screen.id} hover>
+              {/* Screen Info */}
+              <TableCell>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  {screen.images && screen.images.length > 0 ? (
+                    <Avatar
+                      src={
+                        screen.images.find((img) => img.isPrimary)?.url ||
+                        screen.images[0]?.url
+                      }
+                      alt={screen.name}
+                      sx={{ width: 60, height: 60, borderRadius: 2 }}
+                      variant="rounded"
+                    />
+                  ) : (
+                    <Avatar
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 2,
+                        bgcolor: "grey.300",
+                      }}
+                      variant="rounded"
+                    >
+                      <Movie />
+                    </Avatar>
+                  )}
+                  <Box>
+                    <Typography variant="body2" fontWeight="bold">
+                      {screen.name}
+                    </Typography>
+                    {screen.description && (
+                      <Typography variant="caption" color="text.secondary">
+                        {screen.description}
+                      </Typography>
+                    )}
+                    {screen.images && screen.images.length > 0 && (
+                      <Typography variant="caption" color="primary">
+                        {screen.images.length} image(s)
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              </TableCell>
+
+              {/* Location */}
+              <TableCell>
+                <Typography variant="body2">
+                  {screen.location?.name || "Unknown Location"}
+                </Typography>
+              </TableCell>
+
+              {/* Capacity */}
+              <TableCell>
+                <Typography variant="body2">
+                  {screen.capacity} people
+                </Typography>
+              </TableCell>
+
+              {/* Price per Hour */}
+              <TableCell>
+                <Typography variant="body2">
+                  ₹{screen.pricePerHour?.toLocaleString()}/hr
+                </Typography>
+              </TableCell>
+
+              {/* Combo Price */}
+              <TableCell>
+                <Typography variant="body2" color="primary.main" fontWeight="500">
+                  {screen.comboPrice
+                    ? `₹${screen.comboPrice.toLocaleString()}`
+                    : "—"}
+                </Typography>
+              </TableCell>
+
+              {/* Status */}
+              <TableCell>
+                <Chip
+                  label={screen.isActive ? "Active" : "Inactive"}
+                  color={screen.isActive ? "success" : "default"}
+                  size="small"
+                />
+              </TableCell>
+
+              {/* Actions */}
+              <TableCell>
+                <IconButton onClick={(e) => handleMenuClick(e, screen)} size="small">
+                  <MoreVert />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          ))
+        )}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Paper>
+
             </Container>
 
             {/* Actions Menu */}
@@ -826,18 +835,43 @@ async function removeImage(imageIndex) {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                type="number"
-                                label="Price per Hour (₹) *"
-                                fullWidth
-                                value={form.pricePerHour}
-                                onChange={(e) => setForm(prev => ({ ...prev, pricePerHour: parseFloat(e.target.value) || 0 }))}
-                                inputProps={{ min: 0, step: 50 }}
-                                helperText="Hourly rental price"
-                                required
-                                error={form.pricePerHour === undefined || form.pricePerHour < 0}
-                            />
-                        </Grid>
+  <TextField
+    type="number"
+    label="Price per Hour (₹) *"
+    fullWidth
+    value={form.pricePerHour}
+    onChange={(e) =>
+      setForm((prev) => ({
+        ...prev,
+        pricePerHour: parseFloat(e.target.value) || 0,
+      }))
+    }
+    inputProps={{ min: 0, step: 50 }}
+    helperText="Hourly rental price"
+    required
+    error={form.pricePerHour === undefined || form.pricePerHour < 0}
+  />
+</Grid>
+
+{/* Combo Price Field (Flat Rate) */}
+<Grid item xs={12} sm={6}>
+  <TextField
+    type="number"
+    label="Combo Price (₹)"
+    fullWidth
+    value={form.comboPrice}
+    onChange={(e) =>
+      setForm((prev) => ({
+        ...prev,
+        comboPrice: parseFloat(e.target.value) || 0,
+      }))
+    }
+    inputProps={{ min: 0, step: 100 }}
+    helperText="Flat combo price (not per hour)"
+    error={form.comboPrice < 0}
+  />
+</Grid>
+
                     </Grid>
 
                     {/* Amenities Section */}
