@@ -433,7 +433,7 @@ export default function PublicBookingPage() {
     const currentStepName = steps[activeStep];
     switch (currentStepName) {
       case "Select Location & Screen":
-        return bookingForm.location && bookingForm.screen;
+        return bookingForm.location && bookingForm.screen &&  bookingForm.priceType;
       case "Select Date & Time":
         return (
           bookingForm.date && bookingForm.timeSlot && bookingForm.selectedEvent
@@ -755,80 +755,145 @@ export default function PublicBookingPage() {
 
                           {/* Stats */}
                           <Box>
-                            <Grid container spacing={1.5}>
-                              <Grid item xs={6}>
-                                <Box
-                                  sx={{
-                                    textAlign: "center",
-                                    p: 1.5,
-                                    bgcolor: "grey.50",
-                                    borderRadius: 1.5,
-                                    border: "1px solid",
-                                    borderColor: "grey.200",
-                                    "&:hover": {
-                                      bgcolor: "primary.50",
-                                      borderColor: "primary.200",
-                                    },
-                                  }}
-                                >
-                                  <People
-                                    fontSize="small"
-                                    color="primary"
-                                    sx={{ mb: 0.5 }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    fontWeight="bold"
-                                    color="text.primary"
-                                  >
-                                    {screen.capacity}
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    People
-                                  </Typography>
-                                </Box>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <Box
-                                  sx={{
-                                    textAlign: "center",
-                                    p: 1.5,
-                                    bgcolor: "success.50",
-                                    borderRadius: 1.5,
-                                    border: "1px solid",
-                                    borderColor: "success.200",
-                                    "&:hover": {
-                                      bgcolor: "success.100",
-                                      borderColor: "success.300",
-                                    },
-                                  }}
-                                >
-                                  {/* <AttachMoney fontSize="small" color="success" sx={{ mb: 0.5 }} /> */}
-                                  <CurrencyRupeeIcon
-                                    fontSize="small"
-                                    color="success"
-                                    sx={{ mb: 0.5 }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    fontWeight="bold"
-                                    color="success.dark"
-                                  >
-                                    {screen.pricePerHour?.toLocaleString()}
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="success.main"
-                                  >
-                                    per screen
-                                  </Typography>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </Box>
+  <Grid container spacing={1.5}>
+    {/* Capacity */}
+    <Grid item xs={4}>
+      <Box
+        sx={{
+          textAlign: "center",
+          p: 1.5,
+          bgcolor: "grey.50",
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor: "grey.200",
+          "&:hover": {
+            bgcolor: "primary.50",
+            borderColor: "primary.200",
+          },
+        }}
+      >
+        <People fontSize="small" color="primary" sx={{ mb: 0.5 }} />
+        <Typography variant="body2" fontWeight="bold" color="text.primary">
+          {screen.capacity}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          People
+        </Typography>
+      </Box>
+    </Grid>
+
+    {/* Per Screen Price */}
+    <Grid item xs={4}>
+      <Box
+        onClick={() =>
+  setBookingForm((prev) => ({
+    ...prev,
+    priceType: "perScreen",
+    selectedPrice: screen.pricePerHour,
+    screen: screen.id,
+  }))
+}
+
+        sx={{
+          textAlign: "center",
+          p: 1.5,
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor:
+            bookingForm.priceType === "perScreen" &&
+            bookingForm.screen === screen.id
+              ? "primary.main"
+              : "grey.200",
+          bgcolor:
+            bookingForm.priceType === "perScreen" &&
+            bookingForm.screen === screen.id
+              ? "primary.50"
+              : "grey.50",
+          cursor: "pointer",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-3px)",
+            boxShadow: 2,
+            borderColor: "primary.light",
+          },
+        }}
+      >
+        <CurrencyRupeeIcon fontSize="small" color="primary" sx={{ mb: 0.5 }} />
+        <Typography variant="body2" fontWeight="bold" color="text.primary">
+          {screen.pricePerHour?.toLocaleString()}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          per screen
+        </Typography>
+      </Box>
+    </Grid>
+
+    {/* Combo Price */}
+    <Grid item xs={4}>
+      <Box
+        onClick={() =>
+  setBookingForm((prev) => ({
+    ...prev,
+    priceType: "combo",
+    selectedPrice: screen.comboPrice,
+    screen: screen.id,
+  }))
+}
+        sx={{
+          textAlign: "center",
+          p: 1.5,
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor:
+            bookingForm.priceType === "combo" &&
+            bookingForm.screen === screen.id
+              ? "primary.main"
+              : "grey.200",
+          bgcolor:
+            bookingForm.priceType === "combo" &&
+            bookingForm.screen === screen.id
+              ? "primary.50"
+              : "grey.50",
+          cursor: "pointer",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-3px)",
+            boxShadow: 2,
+            borderColor: "primary.light",
+          },
+        }}
+      >
+        <CurrencyRupeeIcon fontSize="small" color="primary" sx={{ mb: 0.5 }} />
+        <Typography variant="body2" fontWeight="bold" color="text.primary">
+          {screen.comboPrice?.toLocaleString() || "—"}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          combo
+        </Typography>
+      </Box>
+    </Grid>
+     {bookingForm.screen === screen.id && !bookingForm.priceType && (
+    <Grid item xs={12}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          textAlign: "center",
+          mt: 1,
+          bgcolor: "grey.50",
+          borderRadius: 1,
+          py: 0.5,
+          border: "1px dashed",
+          borderColor: "grey.300",
+        }}
+      >
+        Please select a pricing option — Basic or Combo.
+      </Typography>
+    </Grid>
+  )}
+  </Grid>
+</Box>
+
 
                           {/* Amenities */}
                           {screen.amenities && screen.amenities.length > 0 && (
@@ -1098,12 +1163,12 @@ export default function PublicBookingPage() {
       }}
     >
       <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
-      <Typography variant="body2" fontWeight="bold" color="success.main">
-        {selectedScreenInfo.pricePerHour?.toLocaleString()}
-      </Typography>
-      <Typography variant="caption" color="text.secondary">
-        Per Screen
-      </Typography>
+      <Typography variant="h6" fontWeight="bold">
+  {bookingForm.selectedPrice?.toLocaleString()}
+</Typography>
+<Typography variant="body2" color="text.secondary">
+  {bookingForm.priceType === "combo" ? "Combo Price" : "Per Screen Price"}
+</Typography>
     </Box>
   </Grid>
 
@@ -1301,7 +1366,16 @@ export default function PublicBookingPage() {
         <CircularProgress size={40} />
       </Box>
     ) : timeSlots.length > 0 ? (
-      <Grid container spacing={2} sx={{ justifyContent: "flex-start" }}>
+      <Grid
+  container
+  spacing={2}
+  justifyContent={{ xs: "center", sm: "flex-start" }}
+  sx={{
+    mx: { xs: "auto", sm: 0 }, // center container itself on mobile
+    textAlign: { xs: "center", sm: "left" }, // optional for better visual balance
+  }}
+>
+
         {timeSlots
           .slice() // create a copy to avoid mutating the original
           .sort((a, b) => {

@@ -411,54 +411,12 @@ const HeroSection = () => {
                 </Stack>
 
                 {/* Stats */}
-                
-                <Grid container spacing={2} justifyContent="center">
-  {stats.map((stat, index) => (
-    <Grid item xs={6} sm={6} md={3} key={index}>
-      <Slide direction="up" in timeout={1000 + index * 200}>
-        <Card
-          sx={{
-            textAlign: 'center',
-            bgcolor: 'rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: 2,
-            transition: 'all 0.3s ease',
-            height: 140, // uniform height
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            minWidth:"120px",
-            maxWidth:"120px",
-            '&:hover': {
-              transform: 'translateY(-5px)',
-              bgcolor: 'rgba(255,255,255,0.15)',
-
-            },
-          }}
-        >
-          <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', py: 2 }}>
-            <Avatar sx={{ bgcolor: stat.color, mb: 1, width: 36, height: 36 }}>
-              {stat.icon}
-            </Avatar>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5, color: 'white', fontSize: '1rem' }}>
-              {stat.number}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, fontSize: '0.75rem' }}>
-              {stat.label}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Slide>
-    </Grid>
-  ))}
-</Grid>
 
               </Box>
             </Grid>
 
             {/* Right - desktop */}
-            <Grid item xs={12} lg={6} sx={{ display: { xs: 'none', lg: 'block' } }}>
+            {/* <Grid item xs={12} lg={6} sx={{ display: { xs: 'none', lg: 'block' } }}>
               <Fade in timeout={1200}>
                 <Box sx={{ position: 'relative' }}>
                   <Box sx={{ mb: 3 }}>
@@ -559,10 +517,10 @@ const HeroSection = () => {
                   </Grid>
                 </Box>
               </Fade>
-            </Grid>
+            </Grid> */}
 
             {/* Mobile content */}
-            <Grid item xs={12} sx={{ display: { xs: 'block', lg: 'none' } }}>
+            {/* <Grid item xs={12} sx={{ display: { xs: 'block', lg: 'none' } }}>
               <Box sx={{ mt: 2 }}>
                 {loading ? (
                   <Skeleton 
@@ -577,7 +535,98 @@ const HeroSection = () => {
                   </Box>
                 )}
               </Box>
-            </Grid>
+            </Grid> */}
+            {/* Right side (Stats grid) */}
+<Grid
+  item
+  xs={12}
+  lg={6}
+  sx={{
+    display: "flex",
+    justifyContent: { xs: "center", lg: "flex-end" },
+    alignItems: "center",
+    pr: { lg: 4 }, // pushes a little more to the right on desktop
+  }}
+>
+  <Box
+    sx={{
+      display: "grid",
+      gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(2, 1fr)" },
+      gap: { xs: 2.5, sm: 3 },
+      maxWidth: 400, // increased width for larger boxes
+      justifyItems: "center",
+    }}
+  >
+    {stats.map((stat, index) => (
+      <Slide direction="up" in timeout={1000 + index * 200} key={index}>
+        <Card
+          sx={{
+            textAlign: "center",
+            bgcolor: "rgba(255,255,255,0.1)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            borderRadius: 3,
+            transition: "all 0.3s ease",
+            height: 160, // slightly bigger
+            width: 160,  // slightly bigger
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            "&:hover": {
+              transform: "translateY(-6px)",
+              bgcolor: "rgba(255,255,255,0.15)",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+            },
+          }}
+        >
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+              py: 2.5,
+            }}
+          >
+            <Avatar
+              sx={{
+                bgcolor: stat.color,
+                mb: 1.5,
+                width: 42,
+                height: 42,
+              }}
+            >
+              {stat.icon}
+            </Avatar>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                mb: 0.5,
+                color: "white",
+                fontSize: "1.1rem",
+              }}
+            >
+              {stat.number}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "rgba(255,255,255,0.85)",
+                fontWeight: 500,
+                fontSize: "0.8rem",
+              }}
+            >
+              {stat.label}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Slide>
+    ))}
+  </Box>
+</Grid>
+
           </Grid>
         </Container>
       </Container>
