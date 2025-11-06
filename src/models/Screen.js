@@ -36,6 +36,11 @@ const screenSchema = new mongoose.Schema({
     required: [true, 'Price per hour is required'],
     min: [0, 'Price cannot be negative']
   },
+  comboPrice: {
+    type: Number,
+    required: [true, 'combo price is required'],
+    min: [0, 'Price cannot be negative']
+  },
   images: [{
     url: { type: String, required: true },
     path: { type: String }, // ✅ Add this for Supabase file path
