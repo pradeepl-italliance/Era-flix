@@ -40,24 +40,23 @@ export default function PlanEventSection() {
               mb: 2,
             }}
           >
-            Let us Plan Your Event
+            Let Us Plan Your Celebration
           </Typography>
           <Typography
             variant="body1"
             sx={{ mb: 3, fontWeight: 300, color: "rgba(255,255,255,0.85)", fontSize: { xs: '12px', sm: "14px", md: '16px', lg: '17px' } }}
           >
-            We understand that every detail is important, and we are here to ensure
-            that your event is a success from start to finish.
+            {`Every moment deserves the perfect setting — and at Era Flix, we make sure your celebration feels cinematic from start to finish.`}
           </Typography>
 
           {/* Bullet points */}
           <Box component="ul" sx={{ pl: 2, mb: 4, }} >
             {[
-              "Planning and goal setting for the event.",
-              "Project management and coordination with external suppliers.",
-              "Creation of a drink menu that fits the evening’s theme.",
-              "Assembly and disassembly of all equipment.",
-              "Provision of professional staff and necessary materials.",
+              "Personalized event planning to match your occasion and theme.",
+              "Concept styling & décor setup to bring your celebration vision to life.",
+              "Complete ambience creation — lighting, sound, and seating designed for comfort and mood.",
+              "Technical coordination to ensure smooth playback for videos, music, or slideshows.",
+              "Professional on-site assistance to manage everything seamlessly during your event.",
             ].map((item, i) => (
               <Typography
                 component="li"
