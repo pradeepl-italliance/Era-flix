@@ -974,99 +974,112 @@ export default function PublicBookingPage() {
               >
                 <Grid container>
                   {/* Screen Image - Fixed sizing and white space issue */}
-                  <Grid item xs={12} md={5}>
-                    <Box
-                      sx={{
-                        position: "relative",
-                        width: "100%",
-                        height: {
-                          xs: 250, // Mobile: smaller height
-                          sm: 280, // Tablet: medium height
-                          md: 300, // Desktop: larger height
-                        },
-                        overflow: "hidden",
-                        display: "flex", // Add flex display
-                        alignItems: "center", // Center content vertically
-                        justifyContent: "center", // Center content horizontally
-                        bgcolor: "grey.100", // Add background color for better visual
-                      }}
-                    >
-                      {selectedScreenInfo.images &&
-                      selectedScreenInfo.images.length > 0 ? (
-                        <Box
-                          component="img"
-                          src={selectedScreenInfo.images[0].url}
-                          alt={selectedScreenInfo.name}
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover", // This ensures the image fills the container properly
-                            objectPosition: "center", // Center the image
-                          }}
-                        />
-                      ) : (
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            bgcolor: "grey.200",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                          }}
-                        >
-                          <Movie
-                            sx={{ fontSize: 60, color: "grey.400", mb: 1 }}
-                          />
-                          <Typography variant="caption" color="text.secondary">
-                            Screen Preview
-                          </Typography>
-                        </Box>
-                      )}
+                  <Grid item xs={12} md={8} sx={{ mx: "auto" }}> {/* wider on desktop */}
+  <Box
+    sx={{
+      position: "relative",
+      width: {
+        xs: "100%",   // Full width on mobile
+        md: "95%",    // Wider on desktop
+        lg: "90%",    // Slightly narrower on very large screens
+      },
+      height: {
+        xs: 250,      // Mobile height
+        sm: 300,      // Tablet
+        md: 420,      // Desktop height increased
+        lg: 480,      // Large desktop
+      },
+      overflow: "hidden",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      bgcolor: "grey.100",
+      borderRadius: 2.5,
+      boxShadow: 3,
+      mx: "auto", // centers horizontally
+    }}
+  >
+    {selectedScreenInfo.images && selectedScreenInfo.images.length > 0 ? (
+      <Box
+        component="img"
+        src={selectedScreenInfo.images[0].url}
+        alt={selectedScreenInfo.name}
+        sx={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+        }}
+      />
+    ) : (
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          bgcolor: "grey.200",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <Movie sx={{ fontSize: 60, color: "grey.400", mb: 1 }} />
+        <Typography variant="caption" color="text.secondary">
+          Screen Preview
+        </Typography>
+      </Box>
+    )}
 
-                      {/* Premium Badge */}
-                      <Chip
-                        icon={<Star />}
-                        label="Premium"
-                        size="small"
-                        sx={{
-                          position: "absolute",
-                          top: 8,
-                          right: 8,
-                          bgcolor: "#FFD700",
-                          color: "black",
-                          fontWeight: "bold",
-                          zIndex: 2, // Ensure it appears above the image
-                        }}
-                      />
-                    </Box>
-                  </Grid>
+    {/* Premium Badge */}
+    <Chip
+      icon={<Star />}
+      label="Premium"
+      size="small"
+      sx={{
+        position: "absolute",
+        top: 10,
+        right: 10,
+        bgcolor: "#FFD700",
+        color: "black",
+        fontWeight: "bold",
+        zIndex: 2,
+      }}
+    />
+  </Box>
+</Grid>
+
+
 
                   {/* Screen Details - Better organized */}
                   <Grid item xs={12} md={7}>
                     <CardContent sx={{ p: { xs: 2, md: 3 }, height: "100%" }}>
                       <Stack spacing={3} sx={{ height: "100%" }}>
                         {/* Title and Description */}
-                        <Box>
-                          <Typography
-                            variant={isMobile ? "h6" : "h5"}
-                            fontWeight="bold"
-                            color="primary.main"
-                            gutterBottom
-                          >
-                            {selectedScreenInfo.name}
-                          </Typography>
-                          {selectedScreenInfo.description && (
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ mb: 2 }}
-                            >
-                              {selectedScreenInfo.description}
-                            </Typography>
-                          )}
-                        </Box>
+                        <Box
+  sx={{
+    textAlign: { xs: "left", md: "center" }, // center on desktop only
+  }}
+>
+  <Typography
+    variant={isMobile ? "h6" : "h5"}
+    fontWeight="bold"
+    color="primary.main"
+    gutterBottom
+  >
+    {selectedScreenInfo.name}
+  </Typography>
+
+  {selectedScreenInfo.description && (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{ mb: 2 }}
+    >
+      {selectedScreenInfo.description}
+    </Typography>
+  )}
+</Box>
+
 
                         {/* Location Info - Enhanced Design */}
                         <Box
