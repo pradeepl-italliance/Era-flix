@@ -96,7 +96,7 @@ export default function ScreensManagementPage() {
         capacity: 10,
         location: '',
         amenities: [],
-        pricePerHour: 0,
+        pricePerHour: 0,    
         isActive: true,
         images: []
     })
@@ -249,7 +249,7 @@ async function removeImage(imageIndex) {
 
     // In your Screen Management component, update the uploadImages function:
 
-async function uploadImages() {
+     async function uploadImages() {
     if (imageFiles.length === 0) return []
   
     setUploadingImage(true)
