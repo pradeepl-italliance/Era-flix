@@ -1182,7 +1182,7 @@ export default function PublicBookingPage() {
         border: "1px solid",
         borderColor: "warning.200",
         textAlign: "center",
-        cursor: "pointer",
+        cursor: "pointer", 
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
