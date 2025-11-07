@@ -9,7 +9,7 @@ export async function PUT(request, { params }) {
     const user = await requireSuperAdmin(request)
     await dbConnect()
 
-    const { name, description, capacity, location, amenities, pricePerHour, images, isActive } = await request.json()
+    const { name, description, capacity, location, amenities, pricePerHour, comboPrice, images, isActive } = await request.json()
 
     if (!name || !location || !capacity || pricePerHour === undefined) {
       return NextResponse.json({ 
@@ -26,6 +26,7 @@ export async function PUT(request, { params }) {
         location,
         amenities: amenities || [],
         pricePerHour: parseFloat(pricePerHour),
+        comboPrice: comboPrice,
         images: images || [],
         isActive: isActive !== undefined ? isActive : true,
         updatedAt: new Date()
@@ -44,7 +45,8 @@ export async function PUT(request, { params }) {
         name: screen.name,
         location: screen.location,
         capacity: screen.capacity,
-        pricePerHour: screen.pricePerHour
+        pricePerHour: screen.pricePerHour,
+        comboPrice: comboPrice,
       }
     })
 
