@@ -123,7 +123,8 @@ export async function POST(request) {
         name: screen.name,
         location: screen.location,
         capacity: screen.capacity,
-        pricePerHour: screen.pricePerHour
+        pricePerHour: screen.pricePerHour,
+        comboPrice: screen.comboPrice
       }
     })
 

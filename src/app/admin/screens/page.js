@@ -159,6 +159,7 @@ export default function ScreensManagementPage() {
             location: locationId,
             amenities: screen.amenities || [],
             pricePerHour: screen.pricePerHour || 0,
+            comboPrice: screen.comboPrice || 0,
             isActive: screen.isActive !== undefined ? screen.isActive : true,
             images: screen.images || []
         })
@@ -328,9 +329,11 @@ async function removeImage(imageIndex) {
                     ...form,
                     name: form.name.trim(),
                     description: form.description?.trim() || '',
-                    images: allImages
+                    images: allImages,
+                    comboPrice: form.comboPrice || 0 
                 })
             })
+            console.log('Response:', form)
 
             const data = await response.json()
 
@@ -518,7 +521,7 @@ async function removeImage(imageIndex) {
           <TableCell sx={{ fontWeight: "bold" }}>Screen</TableCell>
           <TableCell sx={{ fontWeight: "bold" }}>Location</TableCell>
           <TableCell sx={{ fontWeight: "bold" }}>Capacity</TableCell>
-          <TableCell sx={{ fontWeight: "bold" }}>Price/Hour</TableCell>
+          <TableCell sx={{ fontWeight: "bold" }}>Base Price (₹)</TableCell>
           <TableCell sx={{ fontWeight: "bold" }}>Combo Price</TableCell>
           <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
           <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
@@ -596,11 +599,11 @@ async function removeImage(imageIndex) {
               </TableCell>
 
               {/* Price per Hour */}
-              <TableCell>
-                <Typography variant="body2">
-                  ₹{screen.pricePerHour?.toLocaleString()}/hr
-                </Typography>
-              </TableCell>
+             <TableCell>
+  <Typography variant="body2">
+    ₹{screen.pricePerHour?.toLocaleString()}
+  </Typography>
+</TableCell>
 
               {/* Combo Price */}
               <TableCell>
@@ -836,21 +839,21 @@ async function removeImage(imageIndex) {
                         </Grid>
                         <Grid item xs={12} sm={6}>
   <TextField
-    type="number"
-    label="Price per Hour (₹) *"
-    fullWidth
-    value={form.pricePerHour}
-    onChange={(e) =>
-      setForm((prev) => ({
-        ...prev,
-        pricePerHour: parseFloat(e.target.value) || 0,
-      }))
-    }
-    inputProps={{ min: 0, step: 50 }}
-    helperText="Hourly rental price"
-    required
-    error={form.pricePerHour === undefined || form.pricePerHour < 0}
-  />
+  type="number"
+  label="Base Price (₹) *"
+  fullWidth
+  value={form.pricePerHour}
+  onChange={(e) =>
+    setForm((prev) => ({
+      ...prev,
+      pricePerHour: parseFloat(e.target.value) || 0,
+    }))
+  }
+  inputProps={{ min: 0, step: 50 }}
+  helperText="Default or basic price for the screen"
+  required
+  error={form.pricePerHour === undefined || form.pricePerHour < 0}
+/>
 </Grid>
 
 {/* Combo Price Field (Flat Rate) */}
