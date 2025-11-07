@@ -62,6 +62,8 @@ import {
 import YouTube from "@mui/icons-material/YouTube";
 import { Modal } from "@mui/material";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import StarIcon from "@mui/icons-material/Star"; // for base price
 
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
@@ -430,34 +432,41 @@ export default function PublicBookingPage() {
 
   // VALIDATOR
   function isStepValid() {
-    const currentStepName = steps[activeStep];
-    switch (currentStepName) {
-      case "Select Location & Screen":
-        return bookingForm.location && bookingForm.screen &&  bookingForm.priceType;
-      case "Select Date & Time":
-        return (
-          bookingForm.date && bookingForm.timeSlot && bookingForm.selectedEvent
-        );
-      case "Customer Details": {
-        const phoneRegex = /^[6-9]\d{9}$/;
-        return (
-          bookingForm.customerInfo.name &&
-          bookingForm.customerInfo.email &&
-          phoneRegex.test(bookingForm.customerInfo.phone) &&
-          bookingForm.numberOfGuests > 0 &&
-          bookingForm.numberOfGuests <=
-            Math.min(
-              selectedScreenInfo?.capacity || 50,
-              bookingForm.selectedEvent?.maxCapacity || 50
-            )
-        );
-      }
-      case "Confirmation":
-        return true;
-      default:
-        return false;
+  const currentStepName = steps[activeStep];
+  switch (currentStepName) {
+    case "Select Location & Screen":
+      return bookingForm.location && bookingForm.screen;
+
+    case "Select Date & Time":
+      return (
+        bookingForm.date &&
+        bookingForm.timeSlot &&
+        bookingForm.selectedEvent
+      );
+
+    case "Customer Details": {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      return (
+        bookingForm.customerInfo.name &&
+        bookingForm.customerInfo.email &&
+        phoneRegex.test(bookingForm.customerInfo.phone) &&
+        bookingForm.numberOfGuests > 0 &&
+        bookingForm.numberOfGuests <=
+          Math.min(
+            selectedScreenInfo?.capacity || 50,
+            bookingForm.selectedEvent?.maxCapacity || 50
+          )
+      );
     }
+
+    case "Confirmation":
+      return true;
+
+    default:
+      return false;
   }
+}
+
 
   // Screen pagination functions
   const totalPages = Math.ceil(availableScreens.length / screensPerPage);
@@ -754,10 +763,10 @@ export default function PublicBookingPage() {
                           )}
 
                           {/* Stats */}
-                          <Box>
+ <Box>
   <Grid container spacing={1.5}>
     {/* Capacity */}
-    <Grid item xs={4}>
+    <Grid item xs={6}>
       <Box
         sx={{
           textAlign: "center",
@@ -782,39 +791,19 @@ export default function PublicBookingPage() {
       </Box>
     </Grid>
 
-    {/* Per Screen Price */}
-    <Grid item xs={4}>
+    {/* Base Price */}
+    <Grid item xs={6}>
       <Box
-        onClick={() =>
-  setBookingForm((prev) => ({
-    ...prev,
-    priceType: "perScreen",
-    selectedPrice: screen.pricePerHour,
-    screen: screen.id,
-  }))
-}
-
         sx={{
           textAlign: "center",
           p: 1.5,
+          bgcolor: "grey.50",
           borderRadius: 1.5,
           border: "1px solid",
-          borderColor:
-            bookingForm.priceType === "perScreen" &&
-            bookingForm.screen === screen.id
-              ? "primary.main"
-              : "grey.200",
-          bgcolor:
-            bookingForm.priceType === "perScreen" &&
-            bookingForm.screen === screen.id
-              ? "primary.50"
-              : "grey.50",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
+          borderColor: "grey.200",
           "&:hover": {
-            transform: "translateY(-3px)",
-            boxShadow: 2,
-            borderColor: "primary.light",
+            bgcolor: "primary.50",
+            borderColor: "primary.200",
           },
         }}
       >
@@ -823,78 +812,12 @@ export default function PublicBookingPage() {
           {screen.pricePerHour?.toLocaleString()}
         </Typography>
         <Typography variant="caption" color="text.secondary">
-          per screen
+          Base Price
         </Typography>
       </Box>
     </Grid>
-
-    {/* Combo Price */}
-    <Grid item xs={4}>
-      <Box
-        onClick={() =>
-  setBookingForm((prev) => ({
-    ...prev,
-    priceType: "combo",
-    selectedPrice: screen.comboPrice,
-    screen: screen.id,
-  }))
-}
-        sx={{
-          textAlign: "center",
-          p: 1.5,
-          borderRadius: 1.5,
-          border: "1px solid",
-          borderColor:
-            bookingForm.priceType === "combo" &&
-            bookingForm.screen === screen.id
-              ? "primary.main"
-              : "grey.200",
-          bgcolor:
-            bookingForm.priceType === "combo" &&
-            bookingForm.screen === screen.id
-              ? "primary.50"
-              : "grey.50",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-          "&:hover": {
-            transform: "translateY(-3px)",
-            boxShadow: 2,
-            borderColor: "primary.light",
-          },
-        }}
-      >
-        <CurrencyRupeeIcon fontSize="small" color="primary" sx={{ mb: 0.5 }} />
-        <Typography variant="body2" fontWeight="bold" color="text.primary">
-          {screen.comboPrice?.toLocaleString() || "—"}
-        </Typography>
-        <Typography variant="caption" color="text.secondary">
-          combo
-        </Typography>
-      </Box>
-    </Grid>
-     {bookingForm.screen === screen.id && !bookingForm.priceType && (
-    <Grid item xs={12}>
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{
-          textAlign: "center",
-          mt: 1,
-          bgcolor: "grey.50",
-          borderRadius: 1,
-          py: 0.5,
-          border: "1px dashed",
-          borderColor: "grey.300",
-        }}
-      >
-        Please select a pricing option — Basic or Combo.
-      </Typography>
-    </Grid>
-  )}
   </Grid>
 </Box>
-
-
                           {/* Amenities */}
                           {screen.amenities && screen.amenities.length > 0 && (
                             <Box sx={{ mt: "auto", pt: 1 }}>
@@ -1124,7 +1047,8 @@ export default function PublicBookingPage() {
 
                         {/* Quick Stats Grid */}
                         
-                        <Grid
+                       {/* Quick Stats Grid */}
+<Grid
   container
   spacing={2}
   justifyContent={{ xs: "center", sm: "flex-start" }} // center on mobile, left on desktop
@@ -1157,33 +1081,48 @@ export default function PublicBookingPage() {
     </Box>
   </Grid>
 
-  {/* Price per screen */}
-  <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
-    <Box
-      sx={{
-        width: 150,
-        height: 130,
-        p: 1.5,
-        bgcolor: "success.50",
-        borderRadius: 2,
-        border: "1px solid",
-        borderColor: "success.200",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
-      <Typography variant="h6" fontWeight="bold">
-  {bookingForm.selectedPrice?.toLocaleString()}
-</Typography>
-<Typography variant="body2" color="text.secondary">
-  {bookingForm.priceType === "combo" ? "Combo Price" : "Per Screen Price"}
-</Typography>
-    </Box>
-  </Grid>
+  {/* Base Price */}
+ <Grid
+  item
+  xs={6}
+  sm={6}
+  md={4}
+  sx={{ display: "flex", justifyContent: "center" }}
+>
+  <Box
+    sx={{
+      width: 150,
+      height: 130,
+      p: 1.5,
+      bgcolor: "success.50",
+      borderRadius: 2,
+      border: "1px solid",
+      borderColor: "success.200",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "all 0.3s ease",
+    }}
+  >
+    <CurrencyRupeeIcon fontSize="small" color="success" sx={{ mb: 0.5 }} />
+
+    {/* This value updates dynamically based on selected price */}
+    <Typography variant="h6" fontWeight="bold">
+      {bookingForm.selectedPrice?.toLocaleString() ||
+        selectedScreenInfo.pricePerHour?.toLocaleString() ||
+        "—"}
+    </Typography>
+
+    {/* This label updates automatically */}
+    <Typography variant="body2" color="text.secondary">
+      {bookingForm.priceType === "combo"
+        ? "Combo Price"
+        : "Base Price"}
+    </Typography>
+  </Box>
+</Grid>
 
   {/* Available Slots */}
   <Grid item xs={6} sm={6} md={4} sx={{ display: "flex", justifyContent: "center" }}>
@@ -1260,7 +1199,7 @@ export default function PublicBookingPage() {
         border: "1px solid",
         borderColor: "warning.200",
         textAlign: "center",
-        cursor: "pointer", 
+        cursor: "pointer",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -1279,6 +1218,7 @@ export default function PublicBookingPage() {
     </Box>
   </Grid>
 </Grid>
+
 
 
 
@@ -1344,6 +1284,138 @@ export default function PublicBookingPage() {
                 </Grid>
               </Card>
             )}
+{/* Pricing Selection Section */}
+<Box
+  sx={{
+    mb: 2,
+    p: 2,
+    bgcolor: "grey.50",
+    borderRadius: 2,
+    border: "1px solid",
+    borderColor: "grey.200",
+  }}
+>
+  <Typography
+    variant="subtitle1"
+    fontWeight="bold"
+    color="primary.main"
+    gutterBottom
+  >
+    Select Pricing Option
+  </Typography>
+
+  <Box sx={{ display: "flex", gap: 2 }}>
+    {/* Base Price Option */}
+    <Box
+      onClick={() =>
+        setBookingForm((prev) => ({
+          ...prev,
+          priceType: "base",
+          selectedPrice: selectedScreenInfo?.pricePerHour || 0,
+        }))
+      }
+      sx={{
+        flex: 1,
+        p: 1.5,
+        textAlign: "center",
+        borderRadius: 2,
+        border: "2px solid",
+        borderColor:
+          bookingForm.priceType === "base"
+            ? "primary.main"
+            : "grey.300",
+        bgcolor:
+          bookingForm.priceType === "base" ? "primary.50" : "white",
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: "primary.light",
+          boxShadow: 2,
+        },
+      }}
+    >
+      <Typography variant="h4" fontWeight="bold" color="success.main">
+        ₹{selectedScreenInfo?.pricePerHour?.toLocaleString() || "—"}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: 0.5,
+        }}
+      >
+        <StarIcon fontSize="small" color="primary" sx={{ mr: 0.5 }} />
+        <Typography variant="body2" fontWeight="medium">
+          Base Price
+        </Typography>
+      </Box>
+    </Box>
+
+    {/* Combo Price Option */}
+    <Box
+      onClick={() =>
+        setBookingForm((prev) => ({
+          ...prev,
+          priceType: "combo",
+          selectedPrice: selectedScreenInfo?.comboPrice || 0,
+        }))
+      }
+      sx={{
+        flex: 1,
+        p: 1.5,
+        textAlign: "center",
+        borderRadius: 2,
+        border: "2px solid",
+        borderColor:
+          bookingForm.priceType === "combo"
+            ? "primary.main"
+            : "grey.300",
+        bgcolor:
+          bookingForm.priceType === "combo" ? "primary.50" : "white",
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: "primary.light",
+          boxShadow: 2,
+        },
+      }}
+    >
+      <Typography variant="h4" fontWeight="bold" color="warning.main">
+        ₹{selectedScreenInfo?.comboPrice?.toLocaleString() || "—"}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: 0.5,
+        }}
+      >
+        <WorkspacePremiumIcon
+          fontSize="small"
+          color="warning"
+          sx={{ mr: 0.5 }}
+        />
+        <Typography variant="body2" fontWeight="medium">
+          Combo Price
+        </Typography>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Info Line */}
+  <Typography
+    variant="caption"
+    color="text.secondary"
+    sx={{ display: "block", textAlign: "center", mt: 1 }}
+  >
+    Please select one pricing option to continue.
+  </Typography>
+</Box>
+
+
+
 
             {/* DATE */}
             <TextField
@@ -1368,7 +1440,7 @@ export default function PublicBookingPage() {
 
             {/* IMPROVED TIME SLOTS */}
             {/* IMPROVED TIME SLOTS */}
-            {bookingForm.date && (
+         {bookingForm.date && (
   <Box>
     <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
       Available Time Slots
@@ -1380,26 +1452,25 @@ export default function PublicBookingPage() {
       </Box>
     ) : timeSlots.length > 0 ? (
       <Grid
-  container
-  spacing={2}
-  justifyContent={{ xs: "center", sm: "flex-start" }}
-  sx={{
-    mx: { xs: "auto", sm: 0 }, // center container itself on mobile
-    textAlign: { xs: "center", sm: "left" }, // optional for better visual balance
-  }}
->
-
+        container
+        spacing={2}
+        justifyContent={{ xs: "center", sm: "flex-start" }}
+        sx={{
+          mx: { xs: "auto", sm: 0 },
+          textAlign: { xs: "center", sm: "left" },
+        }}
+      >
         {timeSlots
-          .slice() // create a copy to avoid mutating the original
+          .filter((slot) => !slot.isBooked) // ✅ hide booked slots
+          .slice()
           .sort((a, b) => {
             const aTime = `${format12Hour(a.startTime)} - ${format12Hour(a.endTime)}`;
             const bTime = `${format12Hour(b.startTime)} - ${format12Hour(b.endTime)}`;
-
-            if (aTime === "12:00 AM - 2:00 AM") return 1; // move 'a' to end
-            if (bTime === "12:00 AM - 2:00 AM") return -1; // move 'b' to end
-            return 0; // keep others in original order
+            if (aTime === "12:00 AM - 2:00 AM") return 1;
+            if (bTime === "12:00 AM - 2:00 AM") return -1;
+            return 0;
           })
-          .map((slot, idx) => (
+          .map((slot) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
               <Card
                 sx={{
@@ -1436,7 +1507,6 @@ export default function PublicBookingPage() {
                   }))
                 }
               >
-                {/* Selection Indicator */}
                 {bookingForm.timeSlot?.id === slot.id && (
                   <Box
                     sx={{
@@ -1462,7 +1532,6 @@ export default function PublicBookingPage() {
                     alignItems: "center",
                   }}
                 >
-                  {/* Slot Name */}
                   <Typography
                     variant="subtitle1"
                     fontWeight="bold"
@@ -1476,12 +1545,7 @@ export default function PublicBookingPage() {
                     {slot.name}
                   </Typography>
 
-                  {/* Time Display */}
-                  <Typography
-                    variant="h6"
-                    fontWeight="600"
-                    color="text.secondary"
-                  >
+                  <Typography variant="h6" fontWeight="600" color="text.secondary">
                     {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
                   </Typography>
                 </CardContent>
@@ -1501,6 +1565,7 @@ export default function PublicBookingPage() {
     )}
   </Box>
 )}
+
 
 
             
@@ -2715,129 +2780,134 @@ const bouquetCharge = bookingForm.specialRequests.bouquet ? 900 : 0;
 
             {/* Pricing Breakdown */}
             <Card
-              elevation={4}
-              sx={{ border: "2px solid", borderColor: "primary.main" }}
-            >
-              <CardContent>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                  <CurrencyRupeeIcon
-                    sx={{ fontSize: 20, color: "primary.main" }}
-                  />
-                  {/* <Typography variant="h6" fontWeight="bold">
-    {screenAmount.toLocaleString()}
-  </Typography> */}
-                  <Typography variant="h6" fontWeight="bold">
-                    Pricing Breakdown
-                  </Typography>
-                </Box>
+  elevation={4}
+  sx={{ border: "2px solid", borderColor: "primary.main" }}
+>
+  <CardContent>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+      <Typography variant="h6" fontWeight="bold">
+        Pricing Breakdown
+      </Typography>
+    </Box>
 
-                <Stack spacing={2}>
-                  {/* Screen Rental */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      py: 1,
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="body1" fontWeight="500">
-                        Screen Rental
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {bookingForm.timeSlot?.duration} hours × ₹
-                        {selectedScreenInfo?.pricePerHour.toLocaleString()}/hour
-                      </Typography>
-                    </Box>
-                    <Typography variant="h6" fontWeight="bold">
-                      ₹{screenAmount.toLocaleString()}
-                    </Typography>
-                  </Box>
+    <Stack spacing={2}>
+      {/* Screen Pricing */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          py: 1,
+        }}
+      >
+        <Box>
+          <Typography variant="body1" fontWeight="500">
+            {bookingForm.priceType === "combo"
+              ? "Combo Package"
+              : "Screen Rental"}
+          </Typography>
 
-                  {bookingForm.selectedEvent?.basePrice > 0 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        py: 1,
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="body1" fontWeight="500">
-                          Event Package
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {bookingForm.selectedEvent?.name}
-                        </Typography>
-                      </Box>
-                      <Typography variant="h6" fontWeight="bold">
-                        ₹{eventAmount.toLocaleString()}
-                      </Typography>
-                    </Box>
-                  )}
+          <Typography variant="caption" color="text.secondary">
+            {bookingForm.priceType === "combo"
+              ? "Includes screen + add-ons"
+              : `Base rate ₹${selectedScreenInfo?.pricePerHour?.toLocaleString()}`}
+          </Typography>
+        </Box>
 
-                  {/* Additional Services */}
-                  {servicesAmount > 0 && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        py: 1,
-                      }}
-                    >
-                      <Box>
-                        <Typography variant="body1" fontWeight="500">
-                          Additional Services
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {bookingForm.specialRequests.decorations &&
-                            "Decorations "}
-                          {bookingForm.specialRequests.cake && "Cake "}
-                          {bookingForm.specialRequests.photography &&
-                            "Photography"}
-                        </Typography>
-                      </Box>
-                      <Typography variant="h6" fontWeight="bold">
-                        ₹{servicesAmount.toLocaleString()}
-                      </Typography>
-                    </Box>
-                  )}
+        <Typography variant="h6" fontWeight="bold">
+          ₹
+          {bookingForm.priceType === "combo"
+            ? selectedScreenInfo?.comboPrice?.toLocaleString()
+            : selectedScreenInfo?.pricePerHour?.toLocaleString()}
+        </Typography>
+      </Box>
 
-                  <Divider />
+      {/* Event Package (if applicable) */}
+      {bookingForm.selectedEvent?.basePrice > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            py: 1,
+          }}
+        >
+          <Box>
+            <Typography variant="body1" fontWeight="500">
+              Event Package
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {bookingForm.selectedEvent?.name}
+            </Typography>
+          </Box>
+          <Typography variant="h6" fontWeight="bold">
+            ₹{eventAmount.toLocaleString()}
+          </Typography>
+        </Box>
+      )}
 
-                  {/* Total */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      py: 2,
-                      bgcolor: "primary.50",
-                      px: 2,
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Typography
-                      variant="h5"
-                      fontWeight="bold"
-                      color="primary.main"
-                    >
-                      Total Amount
-                    </Typography>
-                    <Typography
-                      variant="h4"
-                      fontWeight="bold"
-                      color="primary.main"
-                    >
-                      ₹{finalTotal.toLocaleString()}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </Card>
+      {/* Additional Services */}
+      {servicesAmount > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            py: 1,
+          }}
+        >
+          <Box>
+            <Typography variant="body1" fontWeight="500">
+              Additional Services
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {bookingForm.specialRequests.decorations && "Decorations "}
+              {bookingForm.specialRequests.cake && "Cake "}
+              {bookingForm.specialRequests.photography && "Photography"}
+            </Typography>
+          </Box>
+          <Typography variant="h6" fontWeight="bold">
+            ₹{servicesAmount.toLocaleString()}
+          </Typography>
+        </Box>
+      )}
+
+      <Divider />
+
+      {/* Total */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          py: 2,
+          bgcolor: "primary.50",
+          px: 2,
+          borderRadius: 2,
+        }}
+      >
+        <Typography variant="h5" fontWeight="bold" color="primary.main">
+          Total Amount
+        </Typography>
+        <Typography variant="h4" fontWeight="bold" color="primary.main">
+          ₹
+          {bookingForm.priceType === "combo"
+            ? (
+                (selectedScreenInfo?.comboPrice || 0) +
+                eventAmount +
+                servicesAmount
+              ).toLocaleString()
+            : (
+                (selectedScreenInfo?.pricePerHour || 0) +
+                eventAmount +
+                servicesAmount
+              ).toLocaleString()}
+        </Typography>
+      </Box>
+    </Stack>
+  </CardContent>
+</Card>
+
 
             {/* Payment Information */}
             <Alert severity="info" icon={<CurrencyRupeeIcon />}>
