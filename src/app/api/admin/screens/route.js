@@ -66,6 +66,7 @@ export async function GET(request) {
       location: screen.location,
       amenities: screen.amenities,
       pricePerHour: screen.pricePerHour,
+      comboPrice: screen.comboPrice,
       images: screen.images,
       isActive: screen.isActive,
       createdBy: screen.createdBy,
@@ -92,9 +93,9 @@ export async function POST(request) {
     const user = await requireSuperAdmin(request)
     await dbConnect()
 
-    const { name, description, capacity, location, amenities, pricePerHour, images, isActive } = await request.json()
+    const { name, description, capacity, location, amenities, pricePerHour,comboPrice, images, isActive } = await request.json()
 
-    if (!name || !location || !capacity || pricePerHour === undefined) {
+    if (!name || !location || !capacity || pricePerHour  === undefined ||comboPrice === undefined ) {
       return NextResponse.json({ 
         error: 'Name, location, capacity, and price are required' 
       }, { status: 400 })
@@ -107,6 +108,7 @@ export async function POST(request) {
       location,
       amenities: amenities || [],
       pricePerHour: parseFloat(pricePerHour),
+      comboPrice: parseFloat(comboPrice),
       images: images || [],
       isActive: isActive !== undefined ? isActive : true,
       createdBy: user._id

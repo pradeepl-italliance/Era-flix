@@ -31,6 +31,7 @@ export async function GET(request) {
       location: screen.location || null,
       amenities: screen.amenities || [],
       pricePerHour: screen.pricePerHour,
+      comboPrice: screen.comboPrice ||0,
       images: screen.images || []
     }))
 
