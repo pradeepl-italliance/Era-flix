@@ -70,7 +70,7 @@ export async function POST(request) {
     const screenRental = screenPricePerHour * slotDuration
     const basePrice = eventBasePrice
     const eventPackage = eventBasePrice
-    const totalAmount = screenRental + eventPackage
+    const totalAmount = screenRental + eventPackage 
 
     // ✅ Debug logging to identify NaN issues
     console.log('Pricing calculation:', {

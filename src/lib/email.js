@@ -261,8 +261,157 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
   }
 }
 
+// export async function sendBookingConfirmationEmail(customerInfo, booking) {
+//   try {
+//     const mailOptions = {
+//       from: process.env.EMAIL_USER,
+//       to: customerInfo.email,
+//       subject: `🎉 Booking Confirmed - ${booking.bookingId} | EraFlix`,
+//       html: `
+//         <!DOCTYPE html>
+//         <html>
+//         <head>
+//             <style>
+//                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+//                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+//                 .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+//                 .content { background: #f9f9f9; padding: 20px; border-radius: 0 0 8px 8px; }
+//                 .booking-details { background: white; padding: 15px; border-radius: 5px; margin: 15px 0; }
+//                 .status-confirmed { color: #2e7d32; font-weight: bold; }
+//                 .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+//                 .highlight { background: #e8f5e8; padding: 10px; border-left: 4px solid #4caf50; margin: 15px 0; }
+//                 .important { background: #fff3e0; padding: 15px; border-radius: 5px; border-left: 4px solid #ff9800; }
+//             </style>
+//         </head>
+//         <body>
+//             <div class="container">
+//                 <div class="header">
+//                     <h1>🎉 Booking Confirmed!</h1>
+//                     <p>Your private theatre experience awaits</p>
+//                 </div>
+                
+//                 <div class="content">
+//                     <p>Dear <strong>${customerInfo.name}</strong>,</p>
+                    
+//                     <div class="highlight">
+//                         <p><strong>🎊 Great news! Your booking has been successfully confirmed.</strong></p>
+//                         <p>Get ready for an amazing private theatre experience at EraFlix!</p>
+//                     </div>
+                    
+//                     <div class="booking-details">
+//                         <h3>🎬 Your Booking Details:</h3>
+//                         <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+//                         <p><strong>Screen:</strong> ${booking.screen?.name || 'Premium Screen'}</p>
+//                         <p><strong>Location:</strong> ${booking.location?.name || 'EraFlix'}</p>
+//                         <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString('en-IN', { 
+//                           weekday: 'long', 
+//                           year: 'numeric', 
+//                           month: 'long', 
+//                           day: 'numeric' 
+//                         })}</p>
+//                         <p><strong>Time:</strong> ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime} (${booking.timeSlot.duration} hours)</p>
+//                         <p><strong>Event:</strong> ${booking.eventType}</p>
+//                         <p><strong>Guests:</strong> ${booking.numberOfGuests} people</p>
+//                         <p class="status-confirmed"><strong>Status:</strong> CONFIRMED ✅</p>
+//                     </div>
+                    
+//                     <div class="booking-details">
+//                         <h3>💰 Payment Summary:</h3>
+//                         <p><strong>Total Amount:</strong> 
+//     <span style="color: #2e7d32; font-size: 18px; font-weight: bold;">
+//         ₹<p><strong>Total Amount:</strong> ₹${booking.pricing.totalAmount.toLocaleString()}</p>
+
+//     </span>
+// </p>
+
+//                     </div>
+                    
+//                     ${booking.specialRequests && (booking.specialRequests.decorations || booking.specialRequests.cake || booking.specialRequests.photography || booking.specialRequests.customMessage) ? `
+//                     <div class="booking-details">
+//                         <h3>🎈 Special Requests:</h3>
+//                         ${booking.specialRequests.decorations ? '<p>• Decorations Arranged</p>' : ''}
+//                         ${booking.specialRequests.cake ? '<p>• Cake Arrangement</p>' : ''}
+//                         ${booking.specialRequests.photography ? '<p>• Photography Service</p>' : ''}
+//                         ${booking.specialRequests.customMessage ? `<p>• Special Message: "${booking.specialRequests.customMessage}"</p>` : ''}
+//                     </div>
+//                     ` : ''}
+                    
+//                     <div class="important">
+//                         <h3>📋 Important Instructions:</h3>
+//                         <p><strong>📅 Arrival Time:</strong> Please arrive 15 minutes before your scheduled time</p>
+//                         <p><strong>💳 Payment:</strong> Full payment to be made at the venue</p>
+//                         <p><strong>💰 Payment Methods:</strong> We accept Cash, UPI, Debit/Credit Cards</p>
+//                         <p><strong>🆔 ID Proof:</strong> Please bring a valid government ID for verification</p>
+//                         <p><strong>📱 Contact:</strong> Call us at +91 9964312117 for any assistance</p>
+//                     </div>
+                    
+//                     <div class="booking-details" style="text-align: center;">
+//                         <h3>🏢 Venue Address:</h3>
+//                         <p><strong>${booking.location?.name || 'EraFlix'}</strong></p>
+//                         <p>${booking.location?.address?.street || ''}</p>
+//                         <p>${booking.location?.address?.area || ''}, ${booking.location?.address?.city || 'Bangalore'}</p>
+//                         <p>📞 ${booking.location?.contactInfo?.phone || '+91 99451 02299'}</p>
+//                     </div>
+                    
+//                     <p style="text-align: center; margin-top: 30px;">
+//                         <strong>Thank you for choosing EraFlix!</strong><br>
+//                         We look forward to making your celebration memorable! 🎬✨
+//                     </p>
+//                 </div>
+                
+//                 <div class="footer">
+//                     <p>© ${new Date().getFullYear()} EraFlix. All rights reserved.</p>
+//                     <p>For support: ${process.env.EMAIL_USER} | +91 9964312117</p>
+//                 </div>
+//             </div>
+//         </body>
+//         </html>
+//       `
+//     }
+
+//     await transporter.sendMail(mailOptions)
+//     console.log('Booking confirmation email sent successfully to:', customerInfo.email)
+    
+//   } catch (error) {
+//     console.error('Error sending booking confirmation email:', error)
+//     throw error
+//   }
+// }
+
+// Test email configuration
+
 export async function sendBookingConfirmationEmail(customerInfo, booking) {
   try {
+    // ✅ Calculate service charges
+    const decorationCharge = booking.specialRequests?.decorations ? 500 : 0;
+    const cakeCharge = booking.specialRequests?.cake ? 800 : 0;
+    const photographyCharge = booking.specialRequests?.photography ? 1500 : 0;
+    const teddyCharge = booking.specialRequests?.teddy ? 700 : 0;
+    const chocolateCharge = booking.specialRequests?.chocolate ? 600 : 0;
+    const bouquetCharge = booking.specialRequests?.bouquet ? 900 : 0;
+
+    // ✅ Event amount
+    const eventAmount = booking.selectedEvent?.basePrice || 0;
+
+    // ✅ Total services
+    const servicesAmount =
+      decorationCharge +
+      cakeCharge +
+      photographyCharge +
+      teddyCharge +
+      chocolateCharge +
+      bouquetCharge;
+
+    // ✅ Screen price based on user selection (same logic as UI)
+    const screenPrice = booking.priceType === "combo"
+  ? (booking.screen?.comboPrice || 0)
+  : (booking.screen?.pricePerHour || 0);
+
+const totalAmount = screenPrice + eventAmount + servicesAmount;
+
+
+
+    // ✅ Mail options
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: customerInfo.email,
@@ -309,29 +458,39 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                           month: 'long', 
                           day: 'numeric' 
                         })}</p>
-                        <p><strong>Time:</strong> ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime} (${booking.timeSlot.duration} hours)</p>
-                        <p><strong>Event:</strong> ${booking.eventType}</p>
-                        <p><strong>Guests:</strong> ${booking.numberOfGuests} people</p>
-                        <p class="status-confirmed"><strong>Status:</strong> CONFIRMED ✅</p>
+                        <p><strong>Screen Price:</strong> ₹${screenPrice.toLocaleString()}</p>
+<p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
+<p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+<p><strong>Total Amount:</strong> ₹${totalAmount.toLocaleString()}</p>
+
                     </div>
-                    
+
                     <div class="booking-details">
                         <h3>💰 Payment Summary:</h3>
-                        <p><strong>Screen Rental:</strong> ₹${booking.pricing?.screenAmount?.toLocaleString() || 0}</p>
-                        ${booking.pricing?.eventAmount > 0 ? `<p><strong>Event Package:</strong> ₹${booking.pricing.eventAmount.toLocaleString()}</p>` : ''}
-                        <p><strong>Total Amount:</strong> <span style="color: #2e7d32; font-size: 18px; font-weight: bold;">₹${booking.pricing?.totalAmount?.toLocaleString() || 0}</span></p>
+                        <p><strong>Screen Price:</strong> ₹${screenPrice.toLocaleString()}</p>
+                        <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
+                        <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+                        <hr>
+                        <p><strong>Total Amount:</strong> 
+                            <span style="color: #2e7d32; font-size: 18px; font-weight: bold;">
+                                ₹${totalAmount.toLocaleString()}
+                            </span>
+                        </p>
                     </div>
                     
-                    ${booking.specialRequests && (booking.specialRequests.decorations || booking.specialRequests.cake || booking.specialRequests.photography || booking.specialRequests.customMessage) ? `
+                    ${booking.specialRequests ? `
                     <div class="booking-details">
                         <h3>🎈 Special Requests:</h3>
                         ${booking.specialRequests.decorations ? '<p>• Decorations Arranged</p>' : ''}
                         ${booking.specialRequests.cake ? '<p>• Cake Arrangement</p>' : ''}
                         ${booking.specialRequests.photography ? '<p>• Photography Service</p>' : ''}
+                        ${booking.specialRequests.teddy ? '<p>• Teddy Arrangement</p>' : ''}
+                        ${booking.specialRequests.chocolate ? '<p>• Chocolates</p>' : ''}
+                        ${booking.specialRequests.bouquet ? '<p>• Bouquet</p>' : ''}
                         ${booking.specialRequests.customMessage ? `<p>• Special Message: "${booking.specialRequests.customMessage}"</p>` : ''}
                     </div>
                     ` : ''}
-                    
+
                     <div class="important">
                         <h3>📋 Important Instructions:</h3>
                         <p><strong>📅 Arrival Time:</strong> Please arrive 15 minutes before your scheduled time</p>
@@ -340,19 +499,6 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                         <p><strong>🆔 ID Proof:</strong> Please bring a valid government ID for verification</p>
                         <p><strong>📱 Contact:</strong> Call us at +91 9964312117 for any assistance</p>
                     </div>
-                    
-                    <div class="booking-details" style="text-align: center;">
-                        <h3>🏢 Venue Address:</h3>
-                        <p><strong>${booking.location?.name || 'EraFlix'}</strong></p>
-                        <p>${booking.location?.address?.street || ''}</p>
-                        <p>${booking.location?.address?.area || ''}, ${booking.location?.address?.city || 'Bangalore'}</p>
-                        <p>📞 ${booking.location?.contactInfo?.phone || '+91 99451 02299'}</p>
-                    </div>
-                    
-                    <p style="text-align: center; margin-top: 30px;">
-                        <strong>Thank you for choosing EraFlix!</strong><br>
-                        We look forward to making your celebration memorable! 🎬✨
-                    </p>
                 </div>
                 
                 <div class="footer">
@@ -374,7 +520,7 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
   }
 }
 
-// Test email configuration
+
 export async function testEmailConnection() {
   try {
     await transporter.verify()
