@@ -536,25 +536,33 @@ const HeroSection = () => {
                 )}
               </Box>
             </Grid> */}
+
             {/* Right side (Stats grid) */}
+{/* Right side (Stats grid) */}
 <Grid
   item
   xs={12}
   lg={6}
   sx={{
     display: "flex",
-    justifyContent: { xs: "center", lg: "flex-end" },
+    justifyContent: "center",  // center horizontally for all screens
     alignItems: "center",
-    pr: { lg: 4 }, // pushes a little more to the right on desktop
+    pr: { lg: 4 },             // keep right padding for desktop
   }}
 >
   <Box
     sx={{
       display: "grid",
-      gridTemplateColumns: { xs: "repeat(2, 1fr)", sm: "repeat(2, 1fr)" },
-      gap: { xs: 2.5, sm: 3 },
-      maxWidth: 400, // increased width for larger boxes
-      justifyItems: "center",
+      gridTemplateColumns: {
+        xs: "repeat(2, 1fr)",  // 2 columns for mobile and up
+        sm: "repeat(2, 1fr)",
+        md: "repeat(2, 1fr)",
+        lg: "repeat(2, 1fr)",
+      },
+      gap: 3,
+      justifyContent: "center", // center the entire grid
+      justifyItems: "center",   // center each card inside its cell
+      mx: "auto",               // center grid in container
     }}
   >
     {stats.map((stat, index) => (
@@ -567,8 +575,8 @@ const HeroSection = () => {
             border: "1px solid rgba(255,255,255,0.2)",
             borderRadius: 3,
             transition: "all 0.3s ease",
-            height: 160, // slightly bigger
-            width: 160,  // slightly bigger
+            height: 160,
+            width: 160,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -626,6 +634,7 @@ const HeroSection = () => {
     ))}
   </Box>
 </Grid>
+
 
           </Grid>
         </Container>

@@ -479,7 +479,7 @@ export default function PublicBookingPage() {
     setCurrentScreenPage((prev) => Math.min(totalPages - 1, prev + 1));
   };
 
-  // MAIN STEPS
+  
   // MAIN STEPS
   function renderStepContent() {
     const currentStepName = steps[activeStep];
@@ -799,7 +799,7 @@ export default function PublicBookingPage() {
                               </Grid>
 
                               {/* Base Price */}
-                              <Grid item xs={6}>
+                              {/* <Grid item xs={6}>
                                 <Box
                                   sx={{
                                     textAlign: "center",
@@ -833,7 +833,7 @@ export default function PublicBookingPage() {
                                     Base Price
                                   </Typography>
                                 </Box>
-                              </Grid>
+                              </Grid> */}
                             </Grid>
                           </Box>
                           {/* Amenities */}
@@ -1065,7 +1065,7 @@ export default function PublicBookingPage() {
                           </Stack>
                         </Box>
 
-                        {/* Quick Stats Grid */}
+                        
 
                         {/* Quick Stats Grid */}
                         <Grid
@@ -1530,144 +1530,106 @@ export default function PublicBookingPage() {
 
             {/* IMPROVED TIME SLOTS */}
             {/* IMPROVED TIME SLOTS */}
-            {bookingForm.date && (
-              <Box>
-                <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
-                  Available Time Slots
-                </Typography>
+            <Grid
+  container
+  spacing={2}
+  justifyContent={{ xs: "center", sm: "flex-start" }}
+  sx={{
+    mx: { xs: "auto", sm: 0 },
+    textAlign: { xs: "center", sm: "left" },
+  }}
+>
+  {timeSlots
+    .slice()
+    .sort((a, b) => {
+      const aTime = `${format12Hour(a.startTime)} - ${format12Hour(a.endTime)}`;
+      const bTime = `${format12Hour(b.startTime)} - ${format12Hour(b.endTime)}`;
+      if (aTime === "12:00 AM - 2:00 AM") return 1;
+      if (bTime === "12:00 AM - 2:00 AM") return -1;
+      return 0;
+    })
+    .map((slot) => {
+      const isBooked = slot.isBooked;
+      const isSelected = bookingForm.timeSlot?.id === slot.id;
 
-                {loading ? (
-                  <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-                    <CircularProgress size={40} />
-                  </Box>
-                ) : timeSlots.length > 0 ? (
-                  <Grid
-                    container
-                    spacing={2}
-                    justifyContent={{ xs: "center", sm: "flex-start" }}
-                    sx={{
-                      mx: { xs: "auto", sm: 0 },
-                      textAlign: { xs: "center", sm: "left" },
-                    }}
-                  >
-                    {timeSlots
-                      .filter((slot) => !slot.isBooked) // ✅ hide booked slots
-                      .slice()
-                      .sort((a, b) => {
-                        const aTime = `${format12Hour(
-                          a.startTime
-                        )} - ${format12Hour(a.endTime)}`;
-                        const bTime = `${format12Hour(
-                          b.startTime
-                        )} - ${format12Hour(b.endTime)}`;
-                        if (aTime === "12:00 AM - 2:00 AM") return 1;
-                        if (bTime === "12:00 AM - 2:00 AM") return -1;
-                        return 0;
-                      })
-                      .map((slot) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
-                          <Card
-                            sx={{
-                              cursor: "pointer",
-                              border:
-                                bookingForm.timeSlot?.id === slot.id ? 2 : 1,
-                              borderColor:
-                                bookingForm.timeSlot?.id === slot.id
-                                  ? "primary.main"
-                                  : "grey.300",
-                              bgcolor:
-                                bookingForm.timeSlot?.id === slot.id
-                                  ? "primary.50"
-                                  : "white",
-                              transition: "all 0.3s ease",
-                              height: 120,
-                              display: "flex",
-                              flexDirection: "column",
-                              position: "relative",
-                              "&:hover": {
-                                transform:
-                                  bookingForm.timeSlot?.id !== slot.id
-                                    ? "translateY(-4px)"
-                                    : "none",
-                                boxShadow:
-                                  bookingForm.timeSlot?.id !== slot.id ? 4 : 6,
-                                borderColor:
-                                  bookingForm.timeSlot?.id !== slot.id
-                                    ? "primary.light"
-                                    : "primary.main",
-                              },
-                            }}
-                            onClick={() =>
-                              setBookingForm((prev) => ({
-                                ...prev,
-                                timeSlot: slot,
-                              }))
-                            }
-                          >
-                            {bookingForm.timeSlot?.id === slot.id && (
-                              <Box
-                                sx={{
-                                  position: "absolute",
-                                  top: 8,
-                                  right: 8,
-                                  zIndex: 1,
-                                }}
-                              >
-                                <CheckCircle color="primary" fontSize="small" />
-                              </Box>
-                            )}
-
-                            <CardContent
-                              sx={{
-                                textAlign: "center",
-                                py: 2,
-                                px: 1.5,
-                                flexGrow: 1,
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Typography
-                                variant="subtitle1"
-                                fontWeight="bold"
-                                color={
-                                  bookingForm.timeSlot?.id === slot.id
-                                    ? "primary.main"
-                                    : "text.primary"
-                                }
-                                sx={{ mb: 1.5, lineHeight: 1.2 }}
-                              >
-                                {slot.name}
-                              </Typography>
-
-                              <Typography
-                                variant="h6"
-                                fontWeight="600"
-                                color="text.secondary"
-                              >
-                                {format12Hour(slot.startTime)} -{" "}
-                                {format12Hour(slot.endTime)}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                  </Grid>
-                ) : (
-                  <Alert severity="info" sx={{ py: 3 }}>
-                    <Typography variant="body1" fontWeight="500">
-                      No time slots available for the selected date
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Please choose a different date to see available slots
-                    </Typography>
-                  </Alert>
-                )}
+      return (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
+          <Card
+            sx={{
+              cursor: isBooked ? "not-allowed" : "pointer",
+              border: isSelected ? 2 : 1,
+              borderColor: isSelected ? "primary.main" : "grey.300",
+              bgcolor: isSelected
+                ? "primary.50"
+                : isBooked
+                ? "grey.100"
+                : "white",
+              color: isBooked ? "text.disabled" : "inherit",
+              transition: "all 0.3s ease",
+              height: 120,
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              "&:hover": {
+                transform: !isBooked && !isSelected ? "translateY(-4px)" : "none",
+                boxShadow: !isBooked && !isSelected ? 4 : isSelected ? 6 : 0,
+                borderColor:
+                  !isBooked && !isSelected
+                    ? "primary.light"
+                    : isSelected
+                    ? "primary.main"
+                    : "grey.300",
+              },
+            }}
+            onClick={() => {
+              if (!isBooked) {
+                setBookingForm((prev) => ({
+                  ...prev,
+                  timeSlot: slot,
+                }));
+              }
+            }}
+          >
+            {isSelected && (
+              <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+                <CheckCircle color="primary" fontSize="small" />
               </Box>
             )}
 
+            <CardContent
+              sx={{
+                textAlign: "center",
+                py: 2,
+                px: 1.5,
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                color={isBooked ? "text.disabled" : isSelected ? "primary.main" : "text.primary"}
+                sx={{ mb: 1.5, lineHeight: 1.2 }}
+              >
+                {slot.name}
+              </Typography>
+
+              <Typography
+                variant="h6"
+                fontWeight="600"
+                color={isBooked ? "text.disabled" : "text.secondary"}
+              >
+                {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+    })}
+</Grid>
             {/* EVENTS DROPDOWN - Mobile Optimized with Text Truncation */}
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel>Event Package</InputLabel>
