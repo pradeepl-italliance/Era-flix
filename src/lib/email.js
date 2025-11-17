@@ -381,7 +381,11 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
 // Test email configuration
 
 export async function sendBookingConfirmationEmail(customerInfo, booking) {
+
+  console.log(customerInfo, "custttttttt", booking, "emaillllll");
+  
   try {
+
     // ✅ Calculate service charges
     const decorationCharge = booking.specialRequests?.decorations ? 500 : 0;
     const cakeCharge = booking.specialRequests?.cake ? 800 : 0;
@@ -402,16 +406,16 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
       chocolateCharge +
       bouquetCharge;
 
-    // ✅ Screen price based on user selection (same logic as UI)
-    const screenPrice = booking.priceType === "combo"
-  ? (booking.screen?.comboPrice || 0)
-  : (booking.screen?.pricePerHour || 0);
+    // ✅ FIXED: Screen price must use priceType (just like UI)
+    const screenPrice =
+      booking.priceType === "combo"
+        ? booking.selectedScreen?.comboPrice || 0
+        : booking.selectedScreen?.pricePerHour || 0;
 
-const totalAmount = screenPrice + eventAmount + servicesAmount;
+    // Total
+    const totalAmount = screenPrice + eventAmount + servicesAmount;
 
-
-
-    // ✅ Mail options
+    // Email content
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: customerInfo.email,
@@ -447,37 +451,44 @@ const totalAmount = screenPrice + eventAmount + servicesAmount;
                         <p>Get ready for an amazing private theatre experience at EraFlix!</p>
                     </div>
                     
+                    <!-- Booking Details -->
                     <div class="booking-details">
                         <h3>🎬 Your Booking Details:</h3>
                         <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
                         <p><strong>Screen:</strong> ${booking.screen?.name || 'Premium Screen'}</p>
                         <p><strong>Location:</strong> ${booking.location?.name || 'EraFlix'}</p>
+
                         <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString('en-IN', { 
                           weekday: 'long', 
                           year: 'numeric', 
                           month: 'long', 
                           day: 'numeric' 
                         })}</p>
-                        <p><strong>Screen Price:</strong> ₹${screenPrice.toLocaleString()}</p>
-<p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
-<p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
-<p><strong>Total Amount:</strong> ₹${totalAmount.toLocaleString()}</p>
 
-                    </div>
-
-                    <div class="booking-details">
-                        <h3>💰 Payment Summary:</h3>
-                        <p><strong>Screen Price:</strong> ₹${screenPrice.toLocaleString()}</p>
+                        <p><strong>Screen Price (${booking.priceType === "combo" ? "Combo" : "Base"}):</strong> ₹${screenPrice.toLocaleString()}</p>
                         <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
                         <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+                        <p><strong>Total Amount:</strong> ₹${booking.pricing.totalAmount.toLocaleString()}</p>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="booking-details">
+                        <h3>💰 Payment Summary:</h3>
+
+                        <p><strong>Screen Price (${booking.priceType === "combo" ? "Combo" : "Base"}):</strong> ₹${screenPrice.toLocaleString()}</p>
+                        <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
+                        <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+
                         <hr>
+
                         <p><strong>Total Amount:</strong> 
                             <span style="color: #2e7d32; font-size: 18px; font-weight: bold;">
                                 ₹${totalAmount.toLocaleString()}
                             </span>
                         </p>
                     </div>
-                    
+
+                    <!-- Special Requests -->
                     ${booking.specialRequests ? `
                     <div class="booking-details">
                         <h3>🎈 Special Requests:</h3>
@@ -491,6 +502,7 @@ const totalAmount = screenPrice + eventAmount + servicesAmount;
                     </div>
                     ` : ''}
 
+                    <!-- Important Instructions -->
                     <div class="important">
                         <h3>📋 Important Instructions:</h3>
                         <p><strong>📅 Arrival Time:</strong> Please arrive 15 minutes before your scheduled time</p>
@@ -509,16 +521,18 @@ const totalAmount = screenPrice + eventAmount + servicesAmount;
         </body>
         </html>
       `
-    }
+    };
 
-    await transporter.sendMail(mailOptions)
-    console.log('Booking confirmation email sent successfully to:', customerInfo.email)
-    
+    await transporter.sendMail(mailOptions);
+    console.log('Booking confirmation email sent successfully to:', customerInfo.email);
+
   } catch (error) {
-    console.error('Error sending booking confirmation email:', error)
-    throw error
+    console.error('Error sending booking confirmation email:', error);
+    throw error;
   }
 }
+
+
 
 
 export async function testEmailConnection() {

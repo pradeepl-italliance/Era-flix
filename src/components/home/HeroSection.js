@@ -373,7 +373,7 @@ const HeroSection = () => {
         >
           Your Celebration{' '}
           <Box component="span" sx={{ background: 'linear-gradient(45deg, #ff0505ff, #ff0000ff)', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            with a Cinematic Touch
+            with a Cinematic Touchs
           </Box>
         </Typography>
 
