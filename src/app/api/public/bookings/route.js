@@ -8,6 +8,7 @@ import { isSlotAvailable } from '@/lib/checkAvailability'
 import { sendBookingConfirmationEmail } from '@/lib/email'
 
 export async function POST(request) {
+  
   try {
     await dbConnect()
 
@@ -20,8 +21,11 @@ export async function POST(request) {
       eventType,
       eventId,
       numberOfGuests,
-      specialRequests
+      specialRequests,
+      pricing
     } = await request.json()
+    
+    
 
     // Validate required fields
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone ||
@@ -67,35 +71,29 @@ export async function POST(request) {
     }
     
    // Combo price taken from event (if any)
-const comboPrice = eventInfo?.comboPrice ? Number(eventInfo.comboPrice) : 0;
-const screenRental = screenPricePerHour * slotDuration;
-const basePrice = eventBasePrice;
-const eventPackage = basePrice + comboPrice;
-const additionalCharges = specialRequests?.additionalCharges || [];
-const totalAdditional = selectedCharges.reduce((sum, item) => sum + item.price, 0)
-const total = basePrice + comboPrice + totalAdditional
+// const comboPrice = eventInfo?.comboPrice ? Number(eventInfo.comboPrice) : 0;
+// const screenRental = screenPricePerHour * slotDuration;
+// const basePrice = eventBasePrice;
+// const eventPackage = basePrice + comboPrice;
+// const additionalCharges = specialRequests?.additionalCharges || [];
+// const totalAdditional = selectedCharges.reduce((sum, item) => sum + item.price, 0)
+// const totalAmount = basePrice + comboPrice 
+// + totalAdditional
 
     // ✅ Debug logging to identify NaN issues
-    console.log('Pricing calculation:', {
-      screenPricePerHour,
-      slotDuration,
-      eventBasePrice,
-      screenRental,
-      basePrice,
-      totalAmount
-    })
+
 
     // Ensure no NaN values
-    if (isNaN(screenRental) || isNaN(basePrice) || isNaN(totalAmount)) {
-      console.error('NaN detected in pricing calculation:', {
-        screenRental: isNaN(screenRental),
-        basePrice: isNaN(basePrice),
-        totalAmount: isNaN(totalAmount)
-      })
-      return NextResponse.json({ 
-        error: 'Pricing calculation error. Please contact support.' 
-      }, { status: 400 })
-    }
+    // if (isNaN(screenRental) || isNaN(basePrice) || isNaN(totalAmount)) {
+    //   console.error('NaN detected in pricing calculation:', {
+    //     screenRental: isNaN(screenRental),
+    //     basePrice: isNaN(basePrice),
+    //     totalAmount: isNaN(totalAmount)
+    //   })
+    //   return NextResponse.json({ 
+    //     error: 'Pricing calculation error. Please contact support.' 
+    //   }, { status: 400 })
+    // }
 
     // ✅ Create booking data matching YOUR exact schema
     const bookingData = {
@@ -125,20 +123,39 @@ const total = basePrice + comboPrice + totalAdditional
       },
       // ✅ Pricing object with validated numbers
       pricing: {
-        basePrice: basePrice,           // Required field - event price
-        screenRental: screenRental,     // Required field - screen rental cost
-        eventPackage: eventPackage,     // Event package cost
-        totalAmount: totalAmount,       // Required field - total cost
-        additionalCharges: additionalCharges,   // ✅ Correct - saves actual list          // Empty array as default
-        discountApplied: {
-          amount: 0                     // Default 0 discount
-        }
-      },
+          priceType: pricing.priceType,
+          selectedPrice: pricing.selectedPrice,
+          screenAmount: pricing.screenAmount,
+          eventAmount: pricing.eventAmount,
+          servicesBreakdown: {
+            decorations: pricing.decorations,
+            cake: pricing.cake,
+            photography: pricing.photography,
+            teddy: pricing.teddy,
+            chocolate: pricing.chocolate,
+            bouquet: pricing.bouquet
+          },
+          servicesAmount: pricing.servicesAmount,
+          baseTotal: pricing.baseTotal,
+          totalAmount: pricing.totalAmount,
+             basePrice: pricing.baseTotal ?? 0,           // Required field - event price
+        screenRental: pricing.baseTotal ?? 0,   
+        },
+      // pricing: {
+      //   basePrice: basePrice,           // Required field - event price
+      //   screenRental: screenRental,     // Required field - screen rental cost
+      //   eventPackage: eventPackage,     // Event package cost
+      //   totalAmount: totalAmount,       // Required field - total cost
+      //   additionalCharges: additionalCharges,   // ✅ Correct - saves actual list          // Empty array as default
+      //   discountApplied: {
+      //     amount: 0                     // Default 0 discount
+      //   }
+      // },
       // ✅ PaymentInfo with validated numbers
       paymentInfo: {
         method: 'cash',
         advancePaid: 0,
-        remainingAmount: totalAmount,   // Required field - validated number
+        remainingAmount: pricing.totalAmount,   // Required field - validated number
         paymentStatus: 'pending',
         paymentNote: 'Payment to be collected at the venue. UPI, Cards, and Cash accepted.'
       },
@@ -148,6 +165,9 @@ const total = basePrice + comboPrice + totalAdditional
 
     // ✅ Create new booking - your pre-save middleware will handle bookingId
     const newBooking = new Booking(bookingData)
+
+    console.log(bookingData, "bookingDatappp");
+    
     
     // ✅ Save the booking
     let savedBooking

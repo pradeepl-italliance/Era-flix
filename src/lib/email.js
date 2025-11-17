@@ -381,6 +381,9 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
 // Test email configuration
 
 export async function sendBookingConfirmationEmail(customerInfo, booking) {
+
+  console.log(customerInfo, "custttttttt", booking, "emaillllll");
+  
   try {
 
     // ✅ Calculate service charges
@@ -465,7 +468,7 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                         <p><strong>Screen Price (${booking.priceType === "combo" ? "Combo" : "Base"}):</strong> ₹${screenPrice.toLocaleString()}</p>
                         <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
                         <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
-                        <p><strong>Total Amount:</strong> ₹${totalAmount.toLocaleString()}</p>
+                        <p><strong>Total Amount:</strong> ₹${booking.pricing.totalAmount.toLocaleString()}</p>
                     </div>
 
                     <!-- Payment Summary -->

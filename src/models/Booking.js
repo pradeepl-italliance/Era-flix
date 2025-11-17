@@ -65,10 +65,10 @@ const bookingSchema = new mongoose.Schema({
   },
   // ✅ FIXED: Include basePrice field
   pricing: {
-    basePrice: { type: Number, required: true, min: 0 }, // This is required
-    screenRental: { type: Number, required: true, min: 0 },
+    basePrice: { type: Number, min: 0 }, // This is required
+    screenRental: { type: Number, min: 0 },
     eventPackage: { type: Number, default: 0, min: 0 },
-    totalAmount: { type: Number, required: true, min: 0 },
+    totalAmount: { type: Number, min: 0 },
     additionalCharges: [{
       description: String,
       amount: Number
@@ -77,7 +77,24 @@ const bookingSchema = new mongoose.Schema({
       code: String,
       description: String,
       amount: { type: Number, default: 0 }
-    }
+    },
+
+
+          priceType: { type: String, maxlength: 20, required: true },
+          selectedPrice: { type: Number, min: 0 },
+          screenAmount: { type: Number, min: 0 },
+          eventAmount: { type: Number, min: 0 },
+          servicesBreakdown: {
+            decorations: { type: Boolean, default: false },
+            cake: { type: Boolean, default: false },
+            photography: { type: Boolean, default: false },
+            teddy: { type: Boolean, default: false },
+            chocolate: { type: Boolean, default: false },
+            bouquet: { type: Boolean, default: false },
+          },
+          servicesAmount: { type: Number, min: 0 },
+          baseTotal: { type: Number, min: 0 },
+          totalAmount: { type: Number, min: 0, required: true },
   },
   paymentInfo: {
     method: {
