@@ -1364,148 +1364,129 @@ export default function PublicBookingPage() {
               </Card>
             )}
             {/* Pricing Selection Section */}
-            <Box
-              sx={{
-                mb: 2,
-                p: 2,
-                bgcolor: "grey.50",
-                borderRadius: 2,
-                border: "1px solid",
-                borderColor: "grey.200",
-              }}
-            >
-              <Typography
-                variant="subtitle1"
-                fontWeight="bold"
-                color="primary.main"
-                gutterBottom
-              >
-                Select Pricing Option
-              </Typography>
+           <Box
+  sx={{
+    mb: 2,
+    p: 2,
+    bgcolor: "grey.50",
+    borderRadius: 2,
+    border: "1px solid",
+    borderColor: "grey.200",
+  }}
+>
+  <Typography
+    variant="subtitle1"
+    fontWeight="bold"
+    color="primary.main"
+    gutterBottom
+  >
+    Select Pricing Option
+  </Typography>
 
-              <Box sx={{ display: "flex", gap: 2 }}>
-                {/* Base Price Option */}
-                <Box
-                  onClick={() =>
-                    setBookingForm((prev) => ({
-                      ...prev,
-                      priceType: "base",
-                      selectedPrice: selectedScreenInfo?.pricePerHour || 0,
-                    }))
-                  }
-                  sx={{
-                    flex: 1,
-                    p: 1.5,
-                    textAlign: "center",
-                    borderRadius: 2,
-                    border: "2px solid",
-                    borderColor:
-                      bookingForm.priceType === "base"
-                        ? "primary.main"
-                        : "grey.300",
-                    bgcolor:
-                      bookingForm.priceType === "base" ? "primary.50" : "white",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      borderColor: "primary.light",
-                      boxShadow: 2,
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="h4"
-                    fontWeight="bold"
-                    color="success.main"
-                  >
-                    ₹{selectedScreenInfo?.pricePerHour?.toLocaleString() || "—"}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mt: 0.5,
-                    }}
-                  >
-                    <StarIcon
-                      fontSize="small"
-                      color="primary"
-                      sx={{ mr: 0.5 }}
-                    />
-                    <Typography variant="body2" fontWeight="medium">
-                      Base Price
-                    </Typography>
-                  </Box>
-                </Box>
+  <Box sx={{ display: "flex", gap: 2 }}>
+    {/* Base Price Option */}
+    <Box
+      onClick={() =>
+        setBookingForm((prev) => ({
+          ...prev,
+          priceType: "base",
+          selectedPrice: Number(selectedScreenInfo?.pricePerHour ?? 0),
+        }))
+      }
+      sx={{
+        flex: 1,
+        p: 1.5,
+        textAlign: "center",
+        borderRadius: 2,
+        border: "2px solid",
+        borderColor:
+          bookingForm.priceType === "base" ? "primary.main" : "grey.300",
+        bgcolor: bookingForm.priceType === "base" ? "primary.50" : "white",
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: "primary.light",
+          boxShadow: 2,
+        },
+      }}
+    >
+      <Typography variant="h4" fontWeight="bold" color="success.main">
+        ₹{Number(selectedScreenInfo?.pricePerHour ?? 0).toLocaleString()}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: 0.5,
+        }}
+      >
+        <StarIcon fontSize="small" color="primary" sx={{ mr: 0.5 }} />
+        <Typography variant="body2" fontWeight="medium">
+          Base Price
+        </Typography>
+      </Box>
+    </Box>
 
-                {/* Combo Price Option */}
-                <Box
-                  onClick={() =>
-                    setBookingForm((prev) => ({
-                      ...prev,
-                      priceType: "combo",
-                      selectedPrice: selectedScreenInfo?.comboPrice || 0,
-                    }))
-                  }
-                  sx={{
-                    flex: 1,
-                    p: 1.5,
-                    textAlign: "center",
-                    borderRadius: 2,
-                    border: "2px solid",
-                    borderColor:
-                      bookingForm.priceType === "combo"
-                        ? "primary.main"
-                        : "grey.300",
-                    bgcolor:
-                      bookingForm.priceType === "combo"
-                        ? "primary.50"
-                        : "white",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      borderColor: "primary.light",
-                      boxShadow: 2,
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="h4"
-                    fontWeight="bold"
-                    color="warning.main"
-                  >
-                    ₹{selectedScreenInfo?.comboPrice?.toLocaleString() || "—"}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mt: 0.5,
-                    }}
-                  >
-                    <WorkspacePremiumIcon
-                      fontSize="small"
-                      color="warning"
-                      sx={{ mr: 0.5 }}
-                    />
-                    <Typography variant="body2" fontWeight="medium">
-                      Combo Price
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
+    {/* Combo Price Option */}
+    <Box
+      onClick={() =>
+        setBookingForm((prev) => ({
+          ...prev,
+          priceType: "combo",
+          selectedPrice: Number(selectedScreenInfo?.comboPrice ?? 0),
+        }))
+      }
+      sx={{
+        flex: 1,
+        p: 1.5,
+        textAlign: "center",
+        borderRadius: 2,
+        border: "2px solid",
+        borderColor:
+          bookingForm.priceType === "combo" ? "primary.main" : "grey.300",
+        bgcolor: bookingForm.priceType === "combo" ? "primary.50" : "white",
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: "primary.light",
+          boxShadow: 2,
+        },
+      }}
+    >
+      <Typography variant="h4" fontWeight="bold" color="warning.main">
+        ₹{Number(selectedScreenInfo?.comboPrice ?? 0).toLocaleString()}
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          mt: 0.5,
+        }}
+      >
+        <WorkspacePremiumIcon
+          fontSize="small"
+          color="warning"
+          sx={{ mr: 0.5 }}
+        />
+        <Typography variant="body2" fontWeight="medium">
+          Combo Price
+        </Typography>
+      </Box>
+    </Box>
+  </Box>
 
-              {/* Info Line */}
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ display: "block", textAlign: "center", mt: 1 }}
-              >
-                Please select one pricing option to continue.
-              </Typography>
-            </Box>
+  {/* Info Line */}
+  <Typography
+    variant="caption"
+    color="text.secondary"
+    sx={{ display: "block", textAlign: "center", mt: 1 }}
+  >
+    Please select one pricing option to continue.
+  </Typography>
+</Box>
+
 
             {/* DATE */}
             <TextField

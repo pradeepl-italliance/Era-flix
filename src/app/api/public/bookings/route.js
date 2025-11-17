@@ -65,12 +65,15 @@ export async function POST(request) {
         error: 'Invalid pricing information. Please contact support.' 
       }, { status: 400 })
     }
-
-    // Calculate pricing with proper number handling
-    const screenRental = screenPricePerHour * slotDuration
-    const basePrice = eventBasePrice
-    const eventPackage = eventBasePrice
-    const totalAmount = screenRental + eventPackage 
+    
+   // Combo price taken from event (if any)
+const comboPrice = eventInfo?.comboPrice ? Number(eventInfo.comboPrice) : 0;
+const screenRental = screenPricePerHour * slotDuration;
+const basePrice = eventBasePrice;
+const eventPackage = basePrice + comboPrice;
+const additionalCharges = specialRequests?.additionalCharges || [];
+const totalAdditional = selectedCharges.reduce((sum, item) => sum + item.price, 0)
+const total = basePrice + comboPrice + totalAdditional
 
     // ✅ Debug logging to identify NaN issues
     console.log('Pricing calculation:', {
@@ -126,7 +129,7 @@ export async function POST(request) {
         screenRental: screenRental,     // Required field - screen rental cost
         eventPackage: eventPackage,     // Event package cost
         totalAmount: totalAmount,       // Required field - total cost
-        additionalCharges: [],          // Empty array as default
+        additionalCharges: additionalCharges,   // ✅ Correct - saves actual list          // Empty array as default
         discountApplied: {
           amount: 0                     // Default 0 discount
         }

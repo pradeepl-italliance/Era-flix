@@ -11,7 +11,7 @@ export async function PUT(request, { params }) {
 
     const { name, description, capacity, location, amenities, pricePerHour, comboPrice, images, isActive } = await request.json()
 
-    if (!name || !location || !capacity || pricePerHour === undefined) {
+    if (!name || !location || !capacity || pricePerHour === undefined || comboPrice === undefined) {
       return NextResponse.json({ 
         error: 'Name, location, capacity, and price are required' 
       }, { status: 400 })
@@ -26,7 +26,7 @@ export async function PUT(request, { params }) {
         location,
         amenities: amenities || [],
         pricePerHour: parseFloat(pricePerHour),
-        comboPrice: comboPrice,
+        comboPrice: parseFloat(comboPrice),
         images: images || [],
         isActive: isActive !== undefined ? isActive : true,
         updatedAt: new Date()
@@ -46,7 +46,7 @@ export async function PUT(request, { params }) {
         location: screen.location,
         capacity: screen.capacity,
         pricePerHour: screen.pricePerHour,
-        comboPrice: comboPrice,
+        comboPrice: screen.comboPrice,
       }
     })
 
