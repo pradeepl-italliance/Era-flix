@@ -59,6 +59,8 @@ import {
   KeyboardArrowUp,
 } from "@mui/icons-material";
 
+
+
 import YouTube from "@mui/icons-material/YouTube";
 import { Modal } from "@mui/material";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
@@ -1605,8 +1607,6 @@ export default function PublicBookingPage() {
               }}
               required
             />
-
-            {/* IMPROVED TIME SLOTS */}
             {/* IMPROVED TIME SLOTS */}
             <Grid
   container
@@ -1770,127 +1770,87 @@ export default function PublicBookingPage() {
               </Alert>
             )} */}
 
-            {/* Selected Event Display - Enhanced */}
             {/* Selected Event Card */}
-            {bookingForm.selectedEvent && (
-              <Card
-                variant="outlined"
-                sx={{
-                  mt: 2,
-                  bgcolor: "success.50",
-                  borderColor: "success.200",
-                  border: "2px solid",
-                }}
-              >
-                <CardContent sx={{ p: isMobile ? 2 : 2.5 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={8}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 1,
-                          mb: 1,
-                        }}
-                      >
-                        <Star color="success" fontSize="small" />
-                        <Typography
-                          variant="h6"
-                          fontWeight="bold"
-                          color="success.main"
-                        >
-                          {bookingForm.selectedEvent.name}
-                        </Typography>
-                      </Box>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1.5 }}
-                      >
-                        {bookingForm.selectedEvent.description}
-                      </Typography>
+{bookingForm.selectedEvent && (
+  <Card
+    variant="outlined"
+    sx={{
+      mt: 2,
+      bgcolor: "success.50",
+      borderColor: "success.200",
+      border: "2px solid",
+    }}
+  >
+    <CardContent sx={{ p: isMobile ? 2 : 2.5 }}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12} sm={8}>
+          {/* Event Name with Star Icon */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+            <Star color="success" fontSize="small" />
+            <Typography variant="h6" fontWeight="bold" color="success.main">
+              {bookingForm.selectedEvent.name}
+            </Typography>
+          </Box>
 
-                      {/* Selected event details - mobile optimized */}
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: isMobile ? "column" : "row",
-                          gap: isMobile ? 0.5 : 1,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {isMobile ? (
-                          <Grid container spacing={1}>
-                            <Grid item xs={6}>
-                              <Chip
-                                label={bookingForm.selectedEvent.category}
-                                size="small"
-                                color="success"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Chip
-                                label={`${bookingForm.selectedEvent.duration} min`}
-                                size="small"
-                                sx={{ fontSize: "0.75rem" }}
-                              />
-                            </Grid>
-                            {/* <Grid item xs={6}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+            {bookingForm.selectedEvent.description}
+          </Typography>
+
+          {/* Selected Event Details */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              gap: isMobile ? 0.5 : 1,
+              flexWrap: "wrap",
+            }}
+          >
+            {isMobile ? (
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
                   <Chip
-                    label={`Max ${bookingForm.selectedEvent.maxCapacity}`}
+                    label={bookingForm.selectedEvent.category}
+                    size="small"
+                    color="success"
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Chip
+                    icon={<AccessTime fontSize="small" />} // Clock icon for duration
+                    label={`${bookingForm.selectedEvent.duration} min`}
                     size="small"
                     sx={{ fontSize: "0.75rem" }}
                   />
-                </Grid> */}
-                          </Grid>
-                        ) : (
-                          <>
-                            <Chip
-                              label={bookingForm.selectedEvent.category}
-                              size="small"
-                              color="success"
-                            />
-                            <Chip
-                              label={`${bookingForm.selectedEvent.duration} min`}
-                              size="small"
-                            />
-                            {/* <Chip
-                  icon={<People fontSize="small" />}
-                  label={`${bookingForm.selectedEvent.maxCapacity} max`}
+                </Grid>
+              </Grid>
+            ) : (
+              <>
+                <Chip
+                  icon={<AccessTime fontSize="small" />}
+                  label={`${bookingForm.selectedEvent.duration} min`}
                   size="small"
-                /> */}
-                          </>
-                        )}
-                      </Box>
-                    </Grid>
-
-                    {/* Price highlight - desktop only
-        {!isMobile && (
-          <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
-            <Typography variant="h5" fontWeight="bold" color="success.main">
-              ₹{bookingForm.selectedEvent.basePrice.toLocaleString()}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Package Price
-            </Typography>
-          </Grid>
-        )} */}
-                  </Grid>
-                </CardContent>
-              </Card>
+                />
+              </>
             )}
+          </Box>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+)}
 
-            {bookingForm.selectedEvent && (
-              <Alert severity="info" sx={{ mt: 2 }}>
-                <Typography variant="body2" fontWeight="bold">
-                  {bookingForm.selectedEvent.name}
-                </Typography>
-                <Typography variant="body2">
-                  {bookingForm.selectedEvent.description}
-                </Typography>
-              </Alert>
-            )}
+{/* Info Alert */}
+{bookingForm.selectedEvent && (
+  <Alert severity="info" sx={{ mt: 2 }}>
+    <Typography variant="body2" fontWeight="bold">
+      {bookingForm.selectedEvent.name}
+    </Typography>
+    <Typography variant="body2">
+      {bookingForm.selectedEvent.description}
+    </Typography>
+  </Alert>
+)}
           </Stack>
         );
       }

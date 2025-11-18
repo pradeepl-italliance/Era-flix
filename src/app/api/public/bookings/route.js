@@ -26,7 +26,6 @@ export async function POST(request) {
     } = await request.json()
     
     
-
     // Validate required fields
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone ||
         !screen || !location || !bookingDate || !timeSlot) {
@@ -116,11 +115,16 @@ export async function POST(request) {
       eventId: eventId || undefined,
       numberOfGuests: Number(numberOfGuests) || 1,
       specialRequests: {
-        decorations: Boolean(specialRequests?.decorations),
-        cake: Boolean(specialRequests?.cake),
-        photography: Boolean(specialRequests?.photography),
-        customMessage: specialRequests?.customMessage?.trim() || undefined
-      },
+  decorations: specialRequests?.decorations === true, 
+  cake: specialRequests?.cake === true,
+  photography: specialRequests?.photography === true,
+  teddy: specialRequests?.teddy === true,
+  chocolate: specialRequests?.chocolate === true,
+  bouquet: specialRequests?.bouquet === true,
+  customMessage: specialRequests?.customMessage?.trim() || undefined
+},
+
+
       // ✅ Pricing object with validated numbers
       pricing: {
           priceType: pricing.priceType,
@@ -128,13 +132,14 @@ export async function POST(request) {
           screenAmount: pricing.screenAmount,
           eventAmount: pricing.eventAmount,
           servicesBreakdown: {
-            decorations: pricing.decorations,
-            cake: pricing.cake,
-            photography: pricing.photography,
-            teddy: pricing.teddy,
-            chocolate: pricing.chocolate,
-            bouquet: pricing.bouquet
-          },
+    decorations: Boolean(specialRequests?.decorations),
+    cake: Boolean(specialRequests?.cake),
+    photography: Boolean(specialRequests?.photography),
+    teddy: Boolean(specialRequests?.teddy),
+    chocolate: Boolean(specialRequests?.chocolate),
+    bouquet: Boolean(specialRequests?.bouquet)
+  },
+
           servicesAmount: pricing.servicesAmount,
           baseTotal: pricing.baseTotal,
           totalAmount: pricing.totalAmount,

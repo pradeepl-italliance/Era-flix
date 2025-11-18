@@ -58,11 +58,15 @@ const bookingSchema = new mongoose.Schema({
     min: [1, 'At least 1 guest required']
   },
   specialRequests: {
-    decorations: { type: Boolean, default: false },
-    cake: { type: Boolean, default: false },
-    photography: { type: Boolean, default: false },
-    customMessage: { type: String, trim: true, maxlength: 500 }
-  },
+  decorations: { type: Boolean, default: false },
+  cake: { type: Boolean, default: false },
+  photography: { type: Boolean, default: false },
+  teddy: { type: Boolean, default: false },
+  chocolate: { type: Boolean, default: false },
+  bouquet: { type: Boolean, default: false },
+  customMessage: { type: String, trim: true, maxlength: 500 }
+},
+
   // ✅ FIXED: Include basePrice field
   pricing: {
     basePrice: { type: Number, min: 0 }, // This is required

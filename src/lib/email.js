@@ -382,7 +382,25 @@ export async function sendBookingUpdateEmail(customerInfo, booking, updates) {
 
 export async function sendBookingConfirmationEmail(customerInfo, booking) {
 
-  console.log(customerInfo, "custttttttt", booking, "emaillllll");
+// console.log(
+//   "SPECIAL REQUESTS RECEIVED:", booking?.specialRequests,
+//   "\nSERVICES BREAKDOWN:", booking?.pricing?.servicesBreakdown,
+//   "\nSERVICES AMOUNT:", booking?.pricing?.servicesAmount
+// );
+
+
+// console.log(
+//   `Screen Price (${booking?.pricing?.priceType === "combo" ? "Combo" : "Base"}): ₹${
+//     booking?.pricing?.priceType === "combo"
+//       ? booking?.pricing?.selectedPrice
+//       : booking?.pricing?.screenAmount
+//   }`
+// );
+
+// console.log("SPECIAL REQUESTS RECEIVED:", booking.specialRequests);
+
+
+//   console.log(customerInfo, "custttttttt", booking, "emaillllll");
   
   try {
 
@@ -465,9 +483,19 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                           day: 'numeric' 
                         })}</p>
 
-                        <p><strong>Screen Price (${booking.priceType === "combo" ? "Combo" : "Base"}):</strong> ₹${screenPrice.toLocaleString()}</p>
-                        <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
-                        <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+                        <p><strong>Screen Price (${
+  booking.pricing.priceType === "combo" ? "Combo" : "Base"
+}):</strong> ₹${
+  (booking.pricing.priceType === "combo"
+    ? booking.pricing.selectedPrice
+    : booking.pricing.screenAmount
+  ).toLocaleString()
+}</p>
+                        
+                        <p><strong>Additional Services (Pricing):</strong> ₹${
+  booking.pricing.servicesAmount.toLocaleString()
+}</p>
+
                         <p><strong>Total Amount:</strong> ₹${booking.pricing.totalAmount.toLocaleString()}</p>
                     </div>
 
@@ -475,15 +503,26 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                     <div class="booking-details">
                         <h3>💰 Payment Summary:</h3>
 
-                        <p><strong>Screen Price (${booking.priceType === "combo" ? "Combo" : "Base"}):</strong> ₹${screenPrice.toLocaleString()}</p>
-                        <p><strong>Event Amount:</strong> ₹${eventAmount.toLocaleString()}</p>
-                        <p><strong>Additional Services:</strong> ₹${servicesAmount.toLocaleString()}</p>
+                        <p><strong>Screen Price (${
+  booking.pricing.priceType === "combo" ? "Combo" : "Base"
+}):</strong> ₹${
+  (
+    booking.pricing.priceType === "combo"
+      ? booking.pricing.selectedPrice
+      : booking.pricing.screenAmount
+  ).toLocaleString()
+}</p>
+
+                        
+                        <p><strong>Additional Services (Pricing):</strong> ₹${
+  booking.pricing.servicesAmount.toLocaleString()
+}</p>
 
                         <hr>
 
                         <p><strong>Total Amount:</strong> 
                             <span style="color: #2e7d32; font-size: 18px; font-weight: bold;">
-                                ₹${totalAmount.toLocaleString()}
+                                ₹${booking.pricing.totalAmount.toLocaleString()}
                             </span>
                         </p>
                     </div>
