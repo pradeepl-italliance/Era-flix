@@ -432,6 +432,15 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
 
     // Total
     const totalAmount = screenPrice + eventAmount + servicesAmount;
+// Helper function to convert "HH:mm" 24-hour string to 12-hour format with AM/PM
+function format12Hour(time) {
+  if (!time) return "";
+  const [hourStr, minute] = time.split(":");
+  let hour = parseInt(hourStr, 10);
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  return `${hour}:${minute} ${ampm}`;
+}
 
     // Email content
     const mailOptions = {
@@ -482,6 +491,10 @@ export async function sendBookingConfirmationEmail(customerInfo, booking) {
                           month: 'long', 
                           day: 'numeric' 
                         })}</p>
+<p>
+  <strong>Time:</strong> 
+  ${booking.timeSlot ? `${format12Hour(booking.timeSlot.startTime)} - ${format12Hour(booking.timeSlot.endTime)} (${booking.timeSlot.duration} hours)` : "-"}
+</p>
 
                         <p><strong>Screen Price (${
   booking.pricing.priceType === "combo" ? "Combo" : "Base"
