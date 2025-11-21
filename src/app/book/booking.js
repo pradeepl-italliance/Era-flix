@@ -424,31 +424,41 @@ export default function PublicBookingPage() {
   }
 
   async function loadTimeSlots() {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `/api/public/timeslots?screen=${bookingForm.screen}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setTimeSlots(data.timeSlots || []);
-        // Deselect timeslot if unavailable now
-        if (bookingForm.timeSlot) {
-          const isStill = data.timeSlots.some(
-            (slot) => slot.id === bookingForm.timeSlot.id
-          );
-          if (!isStill) setBookingForm((prev) => ({ ...prev, timeSlot: null }));
+  if (!bookingForm.screen || !bookingForm.date) return;
+
+  setLoading(true);
+  try {
+    const dateParam = new Date(bookingForm.date).toISOString().split('T')[0];
+    const response = await fetch(
+      `/api/public/timeslots?screen=${bookingForm.screen}&date=${dateParam}`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      setTimeSlots(data.timeSlots || []);
+
+      // Deselect timeslot if unavailable now
+      if (bookingForm.timeSlot) {
+        const isStillAvailable = data.timeSlots.some(
+          (slot) => slot.id === bookingForm.timeSlot.id
+        );
+        if (!isStillAvailable) {
+          setBookingForm((prev) => ({ ...prev, timeSlot: null }));
         }
-      } else {
-        setTimeSlots([]);
-        setError("No time slots available for the selected date");
       }
-    } catch {
-      setError("Failed to check availability");
-    } finally {
-      setLoading(false);
+    } else {
+      const errData = await response.json();
+      console.error(errData);
+      setTimeSlots([]);
+      setError(errData.error || "No time slots available for the selected date");
     }
+  } catch (err) {
+    console.error(err);
+    setError("Failed to check availability");
+  } finally {
+    setLoading(false);
   }
+}
 
   async function createBooking() {
     setLoading(true);
@@ -530,38 +540,45 @@ export default function PublicBookingPage() {
 
   // VALIDATOR
   function isStepValid() {
-    const currentStepName = steps[activeStep];
-    switch (currentStepName) {
-      case "Select Location & Screen":
-        return bookingForm.location && bookingForm.screen;
+  const currentStepName = steps[activeStep];
 
-      case "Select Date & Time":
-        return (
-          bookingForm.date && bookingForm.timeSlot && bookingForm.selectedEvent
-        );
+  switch (currentStepName) {
 
-      case "Customer Details": {
-        const phoneRegex = /^[6-9]\d{9}$/;
-        return (
-          bookingForm.customerInfo.name &&
-          bookingForm.customerInfo.email &&
-          phoneRegex.test(bookingForm.customerInfo.phone) &&
-          bookingForm.numberOfGuests > 0 &&
-          bookingForm.numberOfGuests <=
-            Math.min(
-              selectedScreenInfo?.capacity || 50,
-              bookingForm.selectedEvent?.maxCapacity || 50
-            )
-        );
-      }
+    case "Select Location & Screen":
+      return bookingForm.location && bookingForm.screen;
 
-      case "Confirmation":
-        return true;
+    case "Select Date & Time":
+      return (
+        bookingForm.date &&
+        bookingForm.timeSlot &&
+        bookingForm.selectedEvent &&
+        bookingForm.priceType &&                  // ⬅ MUST choose base or combo
+        bookingForm.selectedPrice > 0             // ⬅ Must have valid price
+      );
 
-      default:
-        return false;
+    case "Customer Details": {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      return (
+        bookingForm.customerInfo.name &&
+        bookingForm.customerInfo.email &&
+        phoneRegex.test(bookingForm.customerInfo.phone) &&
+        bookingForm.numberOfGuests > 0 &&
+        bookingForm.numberOfGuests <=
+          Math.min(
+            selectedScreenInfo?.capacity || 50,
+            bookingForm.selectedEvent?.maxCapacity || 50
+          )
+      );
     }
+
+    case "Confirmation":
+      return true;
+
+    default:
+      return false;
   }
+}
+
 
   // Screen pagination functions
   const totalPages = Math.ceil(availableScreens.length / screensPerPage);
@@ -858,83 +875,117 @@ export default function PublicBookingPage() {
                           )}
 
                           {/* Stats */}
-                          <Box>
-                            <Grid container spacing={1.5}>
-                              {/* Capacity */}
-                              <Grid item xs={6}>
-                                <Box
-                                  sx={{
-                                    textAlign: "center",
-                                    p: 1.5,
-                                    bgcolor: "grey.50",
-                                    borderRadius: 1.5,
-                                    border: "1px solid",
-                                    borderColor: "grey.200",
-                                    "&:hover": {
-                                      bgcolor: "primary.50",
-                                      borderColor: "primary.200",
-                                    },
-                                  }}
-                                >
-                                  <People
-                                    fontSize="small"
-                                    color="primary"
-                                    sx={{ mb: 0.5 }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    fontWeight="bold"
-                                    color="text.primary"
-                                  >
-                                    {screen.capacity}
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    People
-                                  </Typography>
-                                </Box>
-                              </Grid>
+                         <Box>
+  <Grid container spacing={1.2}>
 
-                              {/* Base Price */}
-                              {/* <Grid item xs={6}>
-                                <Box
-                                  sx={{
-                                    textAlign: "center",
-                                    p: 1.5,
-                                    bgcolor: "grey.50",
-                                    borderRadius: 1.5,
-                                    border: "1px solid",
-                                    borderColor: "grey.200",
-                                    "&:hover": {
-                                      bgcolor: "primary.50",
-                                      borderColor: "primary.200",
-                                    },
-                                  }}
-                                >
-                                  <CurrencyRupeeIcon
-                                    fontSize="small"
-                                    color="primary"
-                                    sx={{ mb: 0.5 }}
-                                  />
-                                  <Typography
-                                    variant="body2"
-                                    fontWeight="bold"
-                                    color="text.primary"
-                                  >
-                                    {screen.pricePerHour?.toLocaleString()}
-                                  </Typography>
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                  >
-                                    Base Price
-                                  </Typography>
-                                </Box>
-                              </Grid> */}
-                            </Grid>
-                          </Box>
+    {/* Capacity */}
+    <Grid item xs={4}>
+      <Box
+        sx={{
+          textAlign: "center",
+          p: 1.2,
+          height: 110,
+          bgcolor: "grey.50",
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor: "grey.200",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 0.2,
+          transition: "0.3s",
+          "&:hover": {
+            bgcolor: "primary.50",
+            borderColor: "primary.200",
+          },
+        }}
+      >
+        <People sx={{ fontSize: 22, color: "primary.main" }} />
+        <Typography variant="body2" fontWeight="bold">
+          {screen.capacity}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          People
+        </Typography>
+      </Box>
+    </Grid>
+
+    {/* Video */}
+    <Grid item xs={4}>
+      <Box
+        onClick={() => setOpenVideo(true)}
+        sx={{
+          textAlign: "center",
+          p: 1.2,
+          height: 110,
+          bgcolor: "grey.50",
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor: "grey.200",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 0.2,
+          cursor: "pointer",
+          transition: "0.3s",
+          "&:hover": {
+            bgcolor: "primary.50",
+            borderColor: "primary.200",
+          },
+        }}
+      >
+        <YouTube sx={{ fontSize: 22, color: "primary.main" }} />
+        <Typography variant="body2" fontWeight="bold">
+          Video
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          Watch now
+        </Typography>
+      </Box>
+    </Grid>
+
+    {/* Food Menu */}
+    <Grid item xs={4}>
+      <Box
+        onClick={() =>
+          window.open("/food-menu.pdf", "_blank", "noopener,noreferrer")
+        }
+        sx={{
+          textAlign: "center",
+          p: 1.2,
+          height: 110,
+          bgcolor: "grey.50",
+          borderRadius: 1.5,
+          border: "1px solid",
+          borderColor: "grey.200",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 0.2,
+          cursor: "pointer",
+          transition: "0.3s",
+          "&:hover": {
+            bgcolor: "primary.50",
+            borderColor: "primary.200",
+          },
+        }}
+      >
+        <RestaurantMenuIcon sx={{ fontSize: 22, color: "primary.main" }} />
+        <Typography variant="body2" fontWeight="bold">
+          Menu
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          View items
+        </Typography>
+      </Box>
+    </Grid>
+
+  </Grid>
+</Box>
+
                           {/* Amenities */}
                           {screen.amenities && screen.amenities.length > 0 && (
                             <Box sx={{ mt: "auto", pt: 1 }}>
@@ -1463,7 +1514,7 @@ export default function PublicBookingPage() {
               </Card>
             )}
             {/* Pricing Selection Section */}
-           <Box
+<Box
   sx={{
     mb: 2,
     p: 2,
@@ -1483,7 +1534,7 @@ export default function PublicBookingPage() {
   </Typography>
 
   <Box sx={{ display: "flex", gap: 2 }}>
-    {/* Base Price Option */}
+    {/* Base Price */}
     <Box
       onClick={() =>
         setBookingForm((prev) => ({
@@ -1512,6 +1563,7 @@ export default function PublicBookingPage() {
       <Typography variant="h4" fontWeight="bold" color="success.main">
         ₹{Number(selectedScreenInfo?.pricePerHour ?? 0).toLocaleString()}
       </Typography>
+
       <Box
         sx={{
           display: "flex",
@@ -1527,7 +1579,7 @@ export default function PublicBookingPage() {
       </Box>
     </Box>
 
-    {/* Combo Price Option */}
+    {/* Combo Price */}
     <Box
       onClick={() =>
         setBookingForm((prev) => ({
@@ -1556,6 +1608,7 @@ export default function PublicBookingPage() {
       <Typography variant="h4" fontWeight="bold" color="warning.main">
         ₹{Number(selectedScreenInfo?.comboPrice ?? 0).toLocaleString()}
       </Typography>
+
       <Box
         sx={{
           display: "flex",
@@ -1576,15 +1629,34 @@ export default function PublicBookingPage() {
     </Box>
   </Box>
 
-  {/* Info Line */}
-  <Typography
-    variant="caption"
-    color="text.secondary"
-    sx={{ display: "block", textAlign: "center", mt: 1 }}
+  {/* Customer-Visible Description */}
+  <Box
+    sx={{
+      mt: 2,
+      p: 1.5,
+      bgcolor: "white",
+      borderRadius: 2,
+      border: "1px solid",
+      borderColor: "grey.300",
+    }}
   >
-    Please select one pricing option to continue.
-  </Typography>
+    <Typography
+      variant="body2"
+      color="text.primary"
+      sx={{ textAlign: "center", fontWeight: 500 }}
+    >
+      {bookingForm.priceType === "base" &&
+        "Base Price includes the private screen booking for the selected duration. No snacks or add-ons are included. Perfect for customers who prefer customizing their experience separately."}
+
+      {bookingForm.priceType === "combo" &&
+        "Combo Price includes screen booking + a curated snack combo (popcorn, soft drinks, and finger foods). Ideal for customers who prefer an all-in-one convenient package."}
+
+      {!bookingForm.priceType &&
+        "Select a pricing option above to view details about what is included."}
+    </Typography>
+  </Box>
 </Box>
+
 
 
             {/* DATE */}
@@ -1617,97 +1689,106 @@ export default function PublicBookingPage() {
     textAlign: { xs: "center", sm: "left" },
   }}
 >
-  {timeSlots
-    .slice()
-    .sort((a, b) => {
-      const aTime = `${format12Hour(a.startTime)} - ${format12Hour(a.endTime)}`;
-      const bTime = `${format12Hour(b.startTime)} - ${format12Hour(b.endTime)}`;
-      if (aTime === "12:00 AM - 2:00 AM") return 1;
-      if (bTime === "12:00 AM - 2:00 AM") return -1;
-      return 0;
-    })
-    .map((slot) => {
-      const isBooked = slot.isBooked;
-      const isSelected = bookingForm.timeSlot?.id === slot.id;
+  {timeSlots.length === 0 && bookingForm.date ? (
+    <Grid item xs={12}>
+      <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', mt: 2 }}>
+        No time slots available for the selected date. Please select another date.
+      </Typography>
+    </Grid>
+  ) : (
+    timeSlots
+      .slice()
+      .sort((a, b) => {
+        const aTime = `${format12Hour(a.startTime)} - ${format12Hour(a.endTime)}`;
+        const bTime = `${format12Hour(b.startTime)} - ${format12Hour(b.endTime)}`;
+        if (aTime === "12:00 AM - 2:00 AM") return 1;
+        if (bTime === "12:00 AM - 2:00 AM") return -1;
+        return 0;
+      })
+      .map((slot) => {
+        const isBooked = slot.isBooked;
+        const isSelected = bookingForm.timeSlot?.id === slot.id;
 
-      return (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
-          <Card
-            sx={{
-              cursor: isBooked ? "not-allowed" : "pointer",
-              border: isSelected ? 2 : 1,
-              borderColor: isSelected ? "primary.main" : "grey.300",
-              bgcolor: isSelected
-                ? "primary.50"
-                : isBooked
-                ? "grey.100"
-                : "white",
-              color: isBooked ? "text.disabled" : "inherit",
-              transition: "all 0.3s ease",
-              height: 120,
-              display: "flex",
-              flexDirection: "column",
-              position: "relative",
-              "&:hover": {
-                transform: !isBooked && !isSelected ? "translateY(-4px)" : "none",
-                boxShadow: !isBooked && !isSelected ? 4 : isSelected ? 6 : 0,
-                borderColor:
-                  !isBooked && !isSelected
-                    ? "primary.light"
-                    : isSelected
-                    ? "primary.main"
-                    : "grey.300",
-              },
-            }}
-            onClick={() => {
-              if (!isBooked) {
-                setBookingForm((prev) => ({
-                  ...prev,
-                  timeSlot: slot,
-                }));
-              }
-            }}
-          >
-            {isSelected && (
-              <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
-                <CheckCircle color="primary" fontSize="small" />
-              </Box>
-            )}
-
-            <CardContent
+        return (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={slot.id}>
+            <Card
               sx={{
-                textAlign: "center",
-                py: 2,
-                px: 1.5,
-                flexGrow: 1,
+                cursor: isBooked ? "not-allowed" : "pointer",
+                border: isSelected ? 2 : 1,
+                borderColor: isSelected ? "primary.main" : "grey.300",
+                bgcolor: isSelected
+                  ? "primary.50"
+                  : isBooked
+                  ? "grey.100"
+                  : "white",
+                color: isBooked ? "text.disabled" : "inherit",
+                transition: "all 0.3s ease",
+                height: 120,
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
+                position: "relative",
+                "&:hover": {
+                  transform: !isBooked && !isSelected ? "translateY(-4px)" : "none",
+                  boxShadow: !isBooked && !isSelected ? 4 : isSelected ? 6 : 0,
+                  borderColor:
+                    !isBooked && !isSelected
+                      ? "primary.light"
+                      : isSelected
+                      ? "primary.main"
+                      : "grey.300",
+                },
+              }}
+              onClick={() => {
+                if (!isBooked) {
+                  setBookingForm((prev) => ({
+                    ...prev,
+                    timeSlot: slot,
+                  }));
+                }
               }}
             >
-              <Typography
-                variant="subtitle1"
-                fontWeight="bold"
-                color={isBooked ? "text.disabled" : isSelected ? "primary.main" : "text.primary"}
-                sx={{ mb: 1.5, lineHeight: 1.2 }}
-              >
-                {slot.name}
-              </Typography>
+              {isSelected && (
+                <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+                  <CheckCircle color="primary" fontSize="small" />
+                </Box>
+              )}
 
-              <Typography
-                variant="h6"
-                fontWeight="600"
-                color={isBooked ? "text.disabled" : "text.secondary"}
+              <CardContent
+                sx={{
+                  textAlign: "center",
+                  py: 2,
+                  px: 1.5,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      );
-    })}
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  color={isBooked ? "text.disabled" : isSelected ? "primary.main" : "text.primary"}
+                  sx={{ mb: 1.5, lineHeight: 1.2 }}
+                >
+                  {slot.name}
+                </Typography>
+
+                <Typography
+                  variant="h6"
+                  fontWeight="600"
+                  color={isBooked ? "text.disabled" : "text.secondary"}
+                >
+                  {format12Hour(slot.startTime)} - {format12Hour(slot.endTime)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        );
+      })
+  )}
 </Grid>
+
             {/* EVENTS DROPDOWN - Mobile Optimized with Text Truncation */}
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel>Event Package</InputLabel>
@@ -1882,51 +1963,60 @@ export default function PublicBookingPage() {
               }}
             >
               <CardContent sx={{ p: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={4}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Movie color="primary" />
-                      <Box>
-                        <Typography variant="body2" fontWeight="bold">
-                          {selectedScreenInfo?.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {selectedLocationInfo?.name}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <AccessTime color="primary" />
-                      <Box>
-                        <Typography variant="body2" fontWeight="bold">
-                          {bookingForm.timeSlot?.startTime} -{" "}
-                          {bookingForm.timeSlot?.endTime}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {new Date(bookingForm.date).toLocaleDateString(
-                            "en-IN"
-                          )}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Star color="primary" />
-                      <Box>
-                        <Typography variant="body2" fontWeight="bold">
-                          {bookingForm.selectedEvent?.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Event Package
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              </CardContent>
+  <Grid container spacing={2} alignItems="center">
+    <Grid item xs={12} sm={4}>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Movie color="primary" />
+        <Box>
+          <Typography variant="body2" fontWeight="bold">
+            {selectedScreenInfo?.name}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {selectedLocationInfo?.name}
+          </Typography>
+        </Box>
+      </Stack>
+    </Grid>
+
+    <Grid item xs={12} sm={4}>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <AccessTime color="primary" />
+        <Box>
+          <Typography variant="body2" fontWeight="bold">
+            {bookingForm.timeSlot
+              ? `${format12Hour(bookingForm.timeSlot.startTime)} - ${format12Hour(bookingForm.timeSlot.endTime)}`
+              : "-"}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {bookingForm.date
+              ? new Date(bookingForm.date).toLocaleDateString("en-IN", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              : "-"}
+          </Typography>
+        </Box>
+      </Stack>
+    </Grid>
+
+    <Grid item xs={12} sm={4}>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Star color="primary" />
+        <Box>
+          <Typography variant="body2" fontWeight="bold">
+            {bookingForm.selectedEvent?.name}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            Event Package
+          </Typography>
+        </Box>
+      </Stack>
+    </Grid>
+  </Grid>
+</CardContent>
+
             </Card>
 
             {/* Personal Information Section */}
@@ -2104,116 +2194,86 @@ export default function PublicBookingPage() {
                   Enhance your experience with our additional services
                 </Typography>
 
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    gap: 2, // space between cards
-                  }}
-                >
-                  {[
-                    {
-                      key: "decorations",
-                      title: "Decorations",
-                      desc: "Balloons, banners & theme setup",
-                      img: decorationsImg.src,
-                    },
-                    {
-                      key: "cake",
-                      title: "Cake Arrangement",
-                      desc: "Custom cake with celebration setup",
-                      img: cakeImg.src,
-                    },
-                    {
-                      key: "photography",
-                      title: "Photography",
-                      desc: "Professional photos of your event",
-                      img: photographyImg.src,
-                    },
-                    {
-                      key: "teddy",
-                      title: "Teddy",
-                      desc: "Cute soft toy gift for a special touch",
-                      img: teddyImg.src,
-                    },
-                    {
-                      key: "chocolate",
-                      title: "Chocolate Box",
-                      desc: "Delicious assorted chocolates to surprise",
-                      img: chocolateImg.src,
-                    },
-                    {
-                      key: "bouquet",
-                      title: "Bouquet",
-                      desc: "Fresh flowers to make your day brighter",
-                      img: bouquetImg.src,
-                    },
-                  ].map((item) => (
-                    <Card
-                      key={item.key}
-                      variant="outlined"
-                      sx={{
-                        width: 250, // fixed width for all cards
-                        height: 250, // fixed height
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        p: 2,
-                        cursor: "pointer",
-                        textAlign: "center",
-                        bgcolor: bookingForm.specialRequests[item.key]
-                          ? "primary.50"
-                          : "transparent",
-                        border: bookingForm.specialRequests[item.key]
-                          ? "2px solid"
-                          : "1px solid",
-                        borderColor: bookingForm.specialRequests[item.key]
-                          ? "primary.main"
-                          : "grey.300",
-                      }}
-                      onClick={() =>
-                        setBookingForm((prev) => ({
-                          ...prev,
-                          specialRequests: {
-                            ...prev.specialRequests,
-                            [item.key]: !prev.specialRequests[item.key],
-                          },
-                        }))
-                      }
-                    >
-                      <Box
-                        sx={{
-                          width: "100%",
-                          height: 140,
-                          mb: 1,
-                          borderRadius: 2,
-                          overflow: "hidden",
-                          position: "relative",
-                        }}
-                      >
-                        <img
-                          src={item.img}
-                          alt={item.title}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </Box>
+               <Box
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 2, // space between cards
+  }}
+>
+  {[
+    { key: "decorations", title: "Decorations", desc: "Balloons, banners & theme setup", img: decorationsImg.src },
+    { key: "cake", title: "Cake Arrangement", desc: "Custom cake with celebration setup", img: cakeImg.src },
+    { key: "photography", title: "Photography", desc: "Professional photos of your event", img: photographyImg.src },
+    { key: "teddy", title: "Teddy", desc: "Cute soft toy gift for a special touch", img: teddyImg.src },
+    { key: "chocolate", title: "Chocolate Box", desc: "Delicious assorted chocolates to surprise", img: chocolateImg.src },
+    { key: "bouquet", title: "Bouquet", desc: "Fresh flowers to make your day brighter", img: bouquetImg.src },
+  ]
+    // FILTER SPECIAL REQUESTS BASED ON SELECTED PRICE
+    .filter((item) => {
+      if (bookingForm.priceType === "combo") {
+        // Hide photography and cake for combo price
+        return item.key !== "cake" && item.key !== "photography";
+      }
+      return true; // show all for base price
+    })
+    .map((item) => (
+      <Card
+        key={item.key}
+        variant="outlined"
+        sx={{
+          width: 250,
+          height: 250,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          p: 2,
+          cursor: "pointer",
+          textAlign: "center",
+          bgcolor: bookingForm.specialRequests[item.key] ? "primary.50" : "transparent",
+          border: bookingForm.specialRequests[item.key] ? "2px solid" : "1px solid",
+          borderColor: bookingForm.specialRequests[item.key] ? "primary.main" : "grey.300",
+        }}
+        onClick={() =>
+          setBookingForm((prev) => ({
+            ...prev,
+            specialRequests: {
+              ...prev.specialRequests,
+              [item.key]: !prev.specialRequests[item.key],
+            },
+          }))
+        }
+      >
+        <Box
+          sx={{
+            width: "100%",
+            height: 140,
+            mb: 1,
+            borderRadius: 2,
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <img
+            src={item.img}
+            alt={item.title}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </Box>
 
-                      <Box>
-                        <Typography variant="body1" fontWeight="bold">
-                          {item.title}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {item.desc}
-                        </Typography>
-                      </Box>
-                    </Card>
-                  ))}
-                </Box>
+        <Box>
+          <Typography variant="body1" fontWeight="bold">
+            {item.title}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {item.desc}
+          </Typography>
+        </Box>
+      </Card>
+    ))}
+</Box>
+
 
                 {/* Custom message box */}
                 <Box sx={{ mt: 3 }}>
@@ -2241,25 +2301,27 @@ export default function PublicBookingPage() {
 
             {/* Important Information */}
             <Alert severity="info" icon={<CheckCircle />}>
-              <Typography variant="body2" fontWeight="bold" gutterBottom>
-                📋 Important Information
-              </Typography>
-              <Box component="ul" sx={{ m: 0, pl: 2 }}>
-                <Typography component="li" variant="body2">
-                  Please bring a valid government ID for verification
-                </Typography>
-                <Typography component="li" variant="body2">
-                  Arrive 15 minutes before your scheduled time slot
-                </Typography>
-                <Typography component="li" variant="body2">
-                  Food and beverages can be brought or ordered during your
-                  session
-                </Typography>
-                <Typography component="li" variant="body2">
-                  Cancellation allowed up to 2 hours before booking time
-                </Typography>
-              </Box>
-            </Alert>
+  <Typography variant="body2" fontWeight="bold" gutterBottom>
+    📋 Important Information
+  </Typography>
+  <Box component="ul" sx={{ m: 0, pl: 2 }}>
+    <Typography component="li" variant="body2">
+      ✅ Please bring a valid government ID for verification
+    </Typography>
+    <Typography component="li" variant="body2">
+      ⏰ Arrive 15 minutes before your scheduled time slot
+    </Typography>
+    <Typography component="li" variant="body2">
+      🍽 Outside food is not allowed. You can place your orders from our in-house cafe.
+    </Typography>
+    <Typography component="li" variant="body2">
+      ❌ Cancellations will be accepted only if made 48 hours prior to the scheduled booking time.
+    </Typography>
+    <Typography component="li" variant="body2">
+      ⚠ In case of any damages or excessive mess, damage charges and cleaning fees will be added to the final bill.
+    </Typography>
+  </Box>
+</Alert>
 
             {/* Contact Support */}
             <Card sx={{ bgcolor: "grey.50" }}>
@@ -2512,77 +2574,77 @@ export default function PublicBookingPage() {
 
                   {/* Date & Time */}
                   <Grid item xs={12} md={6}>
-                    <Card variant="outlined" sx={{ height: "100%" }}>
-                      <CardContent>
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          spacing={2}
-                          mb={2}
-                        >
-                          <AccessTime color="primary" />
-                          <Typography variant="subtitle1" fontWeight="bold">
-                            Schedule
-                          </Typography>
-                        </Stack>
+  <Card variant="outlined" sx={{ height: "100%" }}>
+    <CardContent>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={2}
+        mb={2}
+      >
+        <AccessTime color="primary" />
+        <Typography variant="subtitle1" fontWeight="bold">
+          Schedule
+        </Typography>
+      </Stack>
 
-                        <Typography
-                          variant="h6"
-                          color="primary.main"
-                          gutterBottom
-                        >
-                          {new Date(bookingForm.date).toLocaleDateString(
-                            "en-IN",
-                            {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            }
-                          )}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          fontWeight="bold"
-                          gutterBottom
-                        >
-                          {bookingForm.timeSlot?.startTime} -{" "}
-                          {bookingForm.timeSlot?.endTime}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Duration: {bookingForm.timeSlot?.duration} hours
-                        </Typography>
+      <Typography
+        variant="h6"
+        color="primary.main"
+        gutterBottom
+      >
+        {new Date(bookingForm.date).toLocaleDateString("en-IN", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </Typography>
 
-                        <Box
-                          sx={{
-                            mt: 2,
-                            pt: 2,
-                            borderTop: "1px solid",
-                            borderColor: "grey.200",
-                          }}
-                        >
-                          <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            sx={{
-                              textTransform: "uppercase",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Session Type
-                          </Typography>
-                          <Typography variant="body1" fontWeight="bold">
-                            {bookingForm.timeSlot?.name}
-                          </Typography>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        gutterBottom
+      >
+        {bookingForm.timeSlot
+          ? `${format12Hour(bookingForm.timeSlot.startTime)} - ${format12Hour(bookingForm.timeSlot.endTime)}`
+          : "-"}
+      </Typography>
+
+      <Typography variant="body2" color="text.secondary">
+        Duration: {bookingForm.timeSlot?.duration} hours
+      </Typography>
+
+      <Box
+        sx={{
+          mt: 2,
+          pt: 2,
+          borderTop: "1px solid",
+          borderColor: "grey.200",
+        }}
+      >
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{
+            textTransform: "uppercase",
+            fontWeight: "bold",
+          }}
+        >
+          Session Type
+        </Typography>
+        <Typography variant="body1" fontWeight="bold">
+          {bookingForm.timeSlot?.name}
+        </Typography>
+      </Box>
+    </CardContent>
+  </Card>
+</Grid>
 
                   {/* Event Package */}
 
                   <Grid item xs={12}>
-                    <Card
+                    {/* <Card
                       variant="outlined"
                       sx={{ bgcolor: "success.50", borderColor: "success.200" }}
                     >
@@ -2665,7 +2727,7 @@ export default function PublicBookingPage() {
                           </Grid>
                         )}
                       </CardContent>
-                    </Card>
+                    </Card> */}
                   </Grid>
                 </Grid>
               </CardContent>
@@ -3151,78 +3213,69 @@ export default function PublicBookingPage() {
 
 
             {/* Payment Information */}
-            <Alert severity="info" icon={<CurrencyRupeeIcon />}>
-              <Typography variant="body1" fontWeight="bold" gutterBottom>
-                💳 Payment Information
-              </Typography>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">
-                    • No advance payment required
-                  </Typography>
-                  <Typography variant="body2">
-                    • Pay at venue before your session
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Typography variant="body2">
-                    • Cash, UPI, Cards accepted
-                  </Typography>
-                  <Typography variant="body2">
-                    • GST included in all prices
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Alert>
+            <Alert severity="info">
+  <Typography variant="body1" fontWeight="bold" gutterBottom>
+    💳 Payment Information
+  </Typography>
+  <Grid container spacing={2}>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">
+        • No advance payment required
+      </Typography>
+      <Typography variant="body2">
+        • Pay at venue before your session
+      </Typography>
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <Typography variant="body2">
+        • Cash, UPI, Cards accepted
+      </Typography>
+      <Typography variant="body2">
+        • GST included in all prices
+      </Typography>
+    </Grid>
+  </Grid>
+</Alert>
+
 
             {/* Important Guidelines */}
             <Card
-              sx={{
-                bgcolor: "error.50",
-                border: "1px solid",
-                borderColor: "error.200",
-              }}
-            >
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
-                  <CheckCircle sx={{ color: "error.main" }} />
-                  Important Guidelines
-                </Typography>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2" gutterBottom>
-                      🕐 <strong>Arrival:</strong> 15 minutes before slot time
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      🆔 <strong>ID Required:</strong> Valid government ID for
-                      verification
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      🍿 <strong>Food:</strong> Outside food allowed or order
-                      during session
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body2" gutterBottom>
-                      ❌ <strong>Cancellation:</strong> Up to 2 hours before
-                      booking
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      📱 <strong>Support:</strong> +91 9964312117 for assistance
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      🎬 <strong>Setup:</strong> Screen ready 5 minutes before
-                      slot
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+  sx={{
+    bgcolor: "error.50",
+    border: "1px solid",
+    borderColor: "error.200",
+  }}
+>
+  <CardContent>
+    <Typography
+      variant="h6"
+      fontWeight="bold"
+      sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+    >
+      <CheckCircle sx={{ color: "error.main" }} />
+      Important Guidelines
+    </Typography>
+
+    <Box component="ul" sx={{ m: 0, p: 0, listStyle: "none" }}>
+      <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+        ✅ <strong>ID Required:</strong> Please bring a valid government ID for verification
+      </Typography>
+      <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+        ⏰ <strong>Arrival:</strong> Arrive 15 minutes before your scheduled time slot
+      </Typography>
+      <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+        🍽 <strong>Food:</strong> Outside food is not allowed. You can place your orders from our in-house cafe
+      </Typography>
+      <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+        ❌ <strong>Cancellation:</strong> Cancellations will be accepted only if made 48 hours prior to the scheduled booking time
+      </Typography>
+      <Typography component="li" variant="body2" sx={{ mb: 0.5 }}>
+        ⚠ <strong>Damages:</strong> In case of any damages or excessive mess, damage charges and cleaning fees will be added to the final bill
+      </Typography>
+    </Box>
+  </CardContent>
+</Card>
+
 
             {/* Booking ID Placeholder */}
             <Box
